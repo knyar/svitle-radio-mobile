@@ -1,4 +1,4 @@
-package com.svitleredirect;
+package com.svitleradio;
 
 import android.app.Application;
 import android.util.Log;

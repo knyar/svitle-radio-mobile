@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-export default class SvitleRedirect extends Component {
+export default class SvitleRadio extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('SvitleRedirect', () => SvitleRedirect);
+AppRegistry.registerComponent('SvitleRadio', () => SvitleRadio);

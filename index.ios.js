@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 
-export default class SvitleRedirect extends Component {
+export default class SvitleRadio extends Component {
   _onPressBottomLink() {
     Linking.openURL('http://svitle.org/');
   }
@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('SvitleRedirect', () => SvitleRedirect);
+AppRegistry.registerComponent('SvitleRadio', () => SvitleRadio);
