@@ -13,7 +13,8 @@ import {
 
 import { ReactNativeAudioStreaming } from 'react-native-audio-streaming';
 
-const STREAM_URL = "https://m.svitle.org/listen.php";
+// const STREAM_URL = "https://m.svitle.org/listen.php";
+const STREAM_URL = "http://online.svitle.org:6728/sre";
 
 export class PlayerControls extends Component {
   _onPress: Function;
@@ -22,21 +23,16 @@ export class PlayerControls extends Component {
   subscription: Object;
 
   state = {
-    status: String,
-    playingCurrent: String,
-    playingNext: String,
-  }
+    status: "STOPPED",
+    playingCurrent: "",
+    playingNext: "",
+    playingLastUpdated: 0,
+  };
 
   constructor(props: Object) {
     super(props);
     this._onPress = this._onPress.bind(this);
     this._updateNowPlaying = this._updateNowPlaying.bind(this);
-    this.state = {
-      status: "STOPPED",
-      playingCurrent: "",
-      playingNext: "",
-    };
-    this._updateNowPlaying();
   }
   componentDidMount() {
     this.subscription = DeviceEventEmitter.addListener(
@@ -53,10 +49,11 @@ export class PlayerControls extends Component {
       (error) ? console.log(error) : this.setState({status: msg.status})
     });
 
-    // Update "Now Playing" every 60 seconds.
+    // Update "Now Playing" now and every 60 seconds.
     this.timer = setInterval(() => {
       this._updateNowPlaying();
     }, 60000);
+    this._updateNowPlaying();
   }
   componentWillUnmount() {
     clearInterval(this.timer);
@@ -64,6 +61,14 @@ export class PlayerControls extends Component {
     ReactNativeAudioStreaming.stop();
   }
   _updateNowPlaying() {
+    var ts = Date.now();
+    if (ts - this.state.playingLastUpdated < 5000) {
+      console.log("NowPlaying last updated less than 5 seconds ago, skipping")
+      return
+    } else {
+      this.setState({playingLastUpdated: ts});
+    }
+
     fetch("https://m.svitle.org/nowplaying.php")
     .then((response) => response.json())
     .then((responseData) => {
