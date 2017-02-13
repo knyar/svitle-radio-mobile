@@ -14,19 +14,18 @@ import { SvitleLogo } from './Logo';
 import { SvitleRedirectBlocks } from './TextBlocks';
 import { PlayerControls } from './PlayerControls';
 
-type ContainerProps = {}
 export default class SvitleContainer extends Component {
   state = {
     redirect: Boolean,
   };
-  constructor(props: ContainerProps) {
+  constructor(props: Object) {
     super(props);
     this.state = {
       redirect: false,
     };
   }
   _onPressBottomLink() {
-    Linking.openURL('http://svitle.org/');
+    Linking.openURL('https://svitle.org/');
   }
   render() {
     var logo, contents;
