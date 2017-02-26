@@ -1,6 +1,7 @@
 /** @flow */
 
-import React, { Component } from 'react';
+import React from 'react';
+import Reflux from 'reflux';
 import {
   Image,
   StyleSheet,
@@ -13,32 +14,24 @@ import {
 
 import { ReactNativeAudioStreaming } from 'react-native-audio-streaming';
 
-// const STREAM_URL = "https://m.svitle.org/listen.php";
-const STREAM_URL = "http://online.svitle.org:6728/sre";
+import { Actions, MetadataStore } from './Metadata';
 
-export class PlayerControls extends Component {
+export class PlayerControls extends Reflux.Component {
   _onPress: Function;
-  _updateNowPlaying: Function;
-  timer: number;
   subscription: Object;
-
-  state = {
-    status: "STOPPED",
-    playingCurrent: "",
-    playingNext: "",
-    playingLastUpdated: 0,
-  };
 
   constructor(props: Object) {
     super(props);
+    this.store = MetadataStore;
+    this.state = {status: "STOPPED"};
     this._onPress = this._onPress.bind(this);
-    this._updateNowPlaying = this._updateNowPlaying.bind(this);
   }
   componentDidMount() {
     this.subscription = DeviceEventEmitter.addListener(
       "AudioBridgeEvent", (evt) => {
         if (evt.status === "METADATA_UPDATED") {
-          this._updateNowPlaying();
+          console.log("Got status " + evt.status);
+          Actions.updateMetadata();
         } else {
           this.setState({status: evt.status});
         }
@@ -48,46 +41,10 @@ export class PlayerControls extends Component {
     ReactNativeAudioStreaming.getStatus((error, msg) => {
       (error) ? console.log(error) : this.setState({status: msg.status})
     });
-
-    // Update "Now Playing" now and every 60 seconds.
-    this.timer = setInterval(() => {
-      this._updateNowPlaying();
-    }, 60000);
-    this._updateNowPlaying();
   }
   componentWillUnmount() {
-    clearInterval(this.timer);
     this.subscription.remove();
     ReactNativeAudioStreaming.stop();
-  }
-  _updateNowPlaying() {
-    var ts = Date.now();
-    if (ts - this.state.playingLastUpdated < 5000) {
-      console.log("NowPlaying last updated less than 5 seconds ago, skipping")
-      return
-    } else {
-      this.setState({playingLastUpdated: ts});
-    }
-
-    fetch("https://m.svitle.org/nowplaying.php")
-    .then((response) => response.json())
-    .then((responseData) => {
-      var state = {
-        playingCurrent: responseData.current,
-        playingNext: "",
-      };
-      if (responseData.next) {
-        state.playingNext = responseData.next;
-      }
-      this.setState(state);
-    })
-    .catch((error) => {
-      console.log("Error fetching nowplaying: " + error);
-      this.setState({
-        playingCurrent: "",
-        playingNext: "",
-      });
-    });
   }
   _onPress() {
     switch (this.state.status) {
@@ -96,7 +53,7 @@ export class PlayerControls extends Component {
         break;
       case "STOPPED":
       case "ERROR":
-        ReactNativeAudioStreaming.play(STREAM_URL,
+        ReactNativeAudioStreaming.play(this.state.streamUrl,
           {showIniOSMediaCenter: true, showInAndroidNotifications: true});
         break;
       case "PLAYING":
@@ -113,7 +70,7 @@ export class PlayerControls extends Component {
                       styleTitle={styles.nowTitle}
                       styleSubTitle={styles.nowSubTitle}
                       title="Зараз:"
-                      text={this.state.playingCurrent}/>
+                      text={this.state.current}/>
         <TouchableOpacity onPress={this._onPress}>
           <PlayButton status={this.state.status}/>
         </TouchableOpacity>
@@ -121,13 +78,13 @@ export class PlayerControls extends Component {
                       styleTitle={styles.nextTitle}
                       styleSubTitle={styles.nextSubTitle}
                       title="Наступне:"
-                      text={this.state.playingNext}/>
+                      text={this.state.next}/>
       </View>
     )
   }
 }
 
-class PlayingBlock extends Component {
+class PlayingBlock extends React.Component {
   render() {
     var title = " ";
     var text = " ";
@@ -148,7 +105,7 @@ class PlayingBlock extends Component {
   }
 }
 
-class PlayButton extends Component {
+class PlayButton extends React.Component {
   render() {
     var button;
     switch (this.props.status) {

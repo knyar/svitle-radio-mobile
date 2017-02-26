@@ -1,11 +1,13 @@
 /** @flow */
 
-import React, { Component } from 'react';
+import React from 'react';
+import Reflux from 'reflux';
 import {
   Image,
   Linking,
   StyleSheet,
   Text,
+  ActivityIndicator,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,28 +15,30 @@ import {
 import { SvitleLogo } from './Logo';
 import { SvitleRedirectBlocks } from './TextBlocks';
 import { PlayerControls } from './PlayerControls';
+import { Actions, MetadataStore } from './Metadata';
 
-export default class SvitleContainer extends Component {
-  state = {
-    redirect: Boolean,
-  };
+const REDIRECT_WHEN_OBSOLETE = true;
+
+export default class SvitleContainer extends Reflux.Component {
   constructor(props: Object) {
     super(props);
-    this.state = {
-      redirect: false,
-    };
+    this.store = MetadataStore;
   }
   _onPressBottomLink() {
     Linking.openURL('https://svitle.org/');
   }
   render() {
     var logo, contents;
-    if (this.state.redirect) {
+    if (REDIRECT_WHEN_OBSOLETE && this.state.flags.includes('redirect-obsolete')) {
       logo = <SvitleLogo url="https://itunes.apple.com/ua/app/svitle-radio/id1087280759"/>;
       contents = <SvitleRedirectBlocks/>;
     } else {
       logo = <SvitleLogo/>;
-      contents = <PlayerControls/>;
+      if (!this.state.streamUrl) {
+        contents = <ActivityIndicator animating={true}/>;
+      } else {
+        contents = <PlayerControls/>;
+      }
     }
     return (
       <View style={styles.container}>
