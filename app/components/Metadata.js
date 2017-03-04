@@ -41,7 +41,6 @@ export class MetadataStore extends Reflux.Store {
     clearTimeout(this.timer);
   }
   update() {
-    console.log("MetadataStore.update triggered");
     var ts = Date.now();
     if (ts - this.state.lastUpdated < 5000) {
       console.log("Metadata last updated less than 5 seconds ago, skipping")
@@ -61,7 +60,7 @@ export class MetadataStore extends Reflux.Store {
       });
     })
     .catch((error) => {
-      console.log("Error fetching nowplaying: " + error);
+      console.log("Error updating metadata: " + error);
       this.setState({
         current: "",
         next: "",

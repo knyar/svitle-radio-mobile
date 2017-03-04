@@ -30,7 +30,6 @@ export class PlayerControls extends Reflux.Component {
     this.subscription = DeviceEventEmitter.addListener(
       "AudioBridgeEvent", (evt) => {
         if (evt.status === "METADATA_UPDATED") {
-          console.log("Got status " + evt.status);
           Actions.updateMetadata();
         } else {
           this.setState({status: evt.status});
