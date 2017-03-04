@@ -53,7 +53,7 @@ export class PlayerControls extends Reflux.Component {
       case "STOPPED":
       case "ERROR":
         ReactNativeAudioStreaming.play(this.state.streamUrl,
-          {showIniOSMediaCenter: true, showInAndroidNotifications: true});
+          {showIniOSMediaCenter: true, showInAndroidNotifications: false});
         break;
       case "PLAYING":
       case "STREAMING":
