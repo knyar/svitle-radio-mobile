@@ -17,7 +17,7 @@ import { SvitleRedirectBlocks } from './TextBlocks';
 import { PlayerControls } from './PlayerControls';
 import { Actions, MetadataStore } from './Metadata';
 
-const REDIRECT_WHEN_OBSOLETE = true;
+const REDIRECT_WHEN_OBSOLETE = false;
 
 export default class SvitleContainer extends Reflux.Component {
   constructor(props: Object) {
