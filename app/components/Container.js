@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch',
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
   },
   topHalf: {
     flex: 46,
