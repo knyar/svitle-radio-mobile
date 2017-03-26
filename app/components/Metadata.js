@@ -1,5 +1,6 @@
 /** @flow */
 
+import DeviceInfo from 'react-native-device-info';
 import Reflux from 'reflux';
 
 export var Actions = Reflux.createActions([
@@ -40,6 +41,10 @@ export class MetadataStore extends Reflux.Store {
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+  generateUserAgent() {
+    return "Svitle/" + DeviceInfo.getReadableVersion() + " " +
+      DeviceInfo.getSystemName() + "/" + DeviceInfo.getSystemVersion();
+  }
   update() {
     var ts = Date.now();
     if (ts - this.state.lastUpdated < 5000) {
@@ -48,7 +53,9 @@ export class MetadataStore extends Reflux.Store {
       return
     }
 
-    fetch("https://m.svitle.org/nowplaying.php")
+    fetch("https://m.svitle.org/nowplaying.php", {
+      headers: { "User-Agent": this.generateUserAgent() },
+    })
     .then((response) => response.json())
     .then((responseData) => {
       this.setState({
