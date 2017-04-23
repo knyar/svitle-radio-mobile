@@ -53,7 +53,7 @@ export class MetadataStore extends Reflux.Store {
       return
     }
 
-    fetch("https://m.svitle.org/nowplaying.php", {
+    fetch("https://m.svitle.org/v1/status", {
       headers: { "User-Agent": this.generateUserAgent() },
     })
     .then((response) => response.json())
