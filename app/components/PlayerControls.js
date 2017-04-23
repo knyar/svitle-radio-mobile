@@ -152,11 +152,13 @@ const styles = StyleSheet.create({
     fontFamily: 'SFUIText-Regular',
     fontSize: 11,
     color: '#7c4f96',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   nowSubTitle: {
     fontFamily: 'SFUIText-Semibold',
     fontSize: 15,
     color: '#7c4f96',
+    backgroundColor: 'rgba(0,0,0,0)',
     textAlign: 'center',
   },
   nextBlock: {
@@ -169,11 +171,13 @@ const styles = StyleSheet.create({
     fontFamily: 'SFUIText-Regular',
     fontSize: 11,
     color: '#595959',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   nextSubTitle: {
     fontFamily: 'SFUIText-Semibold',
     fontSize: 13,
     color: '#595959',
+    backgroundColor: 'rgba(0,0,0,0)',
     textAlign: 'center',
   },
 });
