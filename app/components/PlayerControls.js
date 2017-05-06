@@ -10,14 +10,22 @@ import {
   Text,
   DeviceEventEmitter,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import { ReactNativeAudioStreaming } from 'react-native-audio-streaming';
+import MusicControl from 'react-native-music-control';
 
 import { Actions, MetadataStore } from './Metadata';
 
 export class PlayerControls extends Reflux.Component {
   _onPress: Function;
+  _initializeMusicControl: Function;
+  _updateMusicControlTitle: Function;
+  _updateMusicControlState: Function;
+  _playerStop: Function;
+  _playerStart: Function;
   subscription: Object;
 
   constructor(props: Object) {
@@ -40,9 +48,71 @@ export class PlayerControls extends Reflux.Component {
     ReactNativeAudioStreaming.getStatus((error, msg) => {
       (error) ? console.log(error) : this.setState({status: msg.status})
     });
+    this._initializeMusicControl();
+  }
+  _initializeMusicControl() {
+    MusicControl.enableBackgroundMode(true);
+    MusicControl.on('play', this._playerStart.bind(this));
+    MusicControl.on('pause', this._playerStop.bind(this));
+    this._updateMusicControlTitle(true);
+    this._updateMusicControlState();
+  }
+  _updateMusicControlTitle(force_full) {
+    // Android does not support changing title via MusicControl.updatePlayback,
+    // so we need to send all information via setNowPlaying every time.
+    if (Platform.OS === 'android' || force_full) {
+      MusicControl.setNowPlaying({
+        artist: "Світле Радіо",
+        title: this.state.current,
+        artwork: Platform.select({
+          // https://github.com/tanguyantoine/react-native-music-control/issues/46
+          ios: resolveAssetSource(require('../img/artwork.png')).uri,
+          android: require('../img/artwork.png'),
+        }),
+      });
+    } else {
+      MusicControl.updatePlayback({title: this.state.current});
+    }
+
+  }
+  _updateMusicControlState() {
+    new_state = MusicControl.STATE_STOPPED;
+    switch (this.state.status) {
+      case "PLAYING":
+      case "STREAMING":
+        new_state = MusicControl.STATE_PLAYING;
+        break;
+      case "BUFFERING":
+        new_state = MusicControl.STATE_BUFFERING;
+        break;
+    }
+    if (new_state == MusicControl.STATE_STOPPED) {
+      MusicControl.enableControl('play', true);
+      MusicControl.enableControl('pause', false);
+    } else {
+      MusicControl.enableControl('play', false);
+      MusicControl.enableControl('pause', true);
+    }
+    MusicControl.updatePlayback({state: new_state});
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.current != this.state.current) {
+      this._updateMusicControlTitle(false);
+    }
+    if (prevState.status != this.state.status) {
+      this._updateMusicControlState();
+    }
   }
   componentWillUnmount() {
     this.subscription.remove();
+    MusicControl.resetNowPlaying();
+    ReactNativeAudioStreaming.stop();
+  }
+  _playerStart() {
+    ReactNativeAudioStreaming.play(this.state.streamUrl,
+      {showIniOSMediaCenter: false, showInAndroidNotifications: false});
+  }
+  _playerStop() {
     ReactNativeAudioStreaming.stop();
   }
   _onPress() {
@@ -52,13 +122,12 @@ export class PlayerControls extends Reflux.Component {
         break;
       case "STOPPED":
       case "ERROR":
-        ReactNativeAudioStreaming.play(this.state.streamUrl,
-          {showIniOSMediaCenter: true, showInAndroidNotifications: false});
+        this._playerStart();
         break;
       case "PLAYING":
       case "STREAMING":
       case "BUFFERING":
-        ReactNativeAudioStreaming.stop();
+        this._playerStop();
         break;
     }
   }

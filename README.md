@@ -4,7 +4,7 @@
 
     ```sh
     npm install
-    react-native link react-native-audio-streaming
+    react-native link
     ```
 
 1. Run `npm start` to start the Webpack watcher, Webpack Dev Server and the React Packager in a single shot.
