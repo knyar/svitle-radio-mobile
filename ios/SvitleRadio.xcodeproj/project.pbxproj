@@ -1183,7 +1183,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Hexapp-Studio.Svitle";
+				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app1;
 				PRODUCT_NAME = SvitleRadio;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1207,7 +1207,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Hexapp-Studio.Svitle";
+				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app1;
 				PRODUCT_NAME = SvitleRadio;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
