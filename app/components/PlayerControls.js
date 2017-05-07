@@ -57,10 +57,10 @@ export class PlayerControls extends Reflux.Component {
     this._updateMusicControlTitle(true);
     this._updateMusicControlState();
   }
-  _updateMusicControlTitle(force_full) {
+  _updateMusicControlTitle(initial) {
     // Android does not support changing title via MusicControl.updatePlayback,
     // so we need to send all information via setNowPlaying every time.
-    if (Platform.OS === 'android' || force_full) {
+    if (Platform.OS === 'android' || initial) {
       MusicControl.setNowPlaying({
         artist: "Світле Радіо",
         title: this.state.current,
@@ -69,33 +69,36 @@ export class PlayerControls extends Reflux.Component {
           ios: resolveAssetSource(require('../img/artwork.png')).uri,
           android: require('../img/artwork.png'),
         }),
+        // iOS determines playback state depending on 'speed', so we need to set
+        // it in the initial setNowPlaying for correct initial state to be set.
+        speed: this._musicControlState() == MusicControl.STATE_STOPPED ? 0 : 1,
       });
     } else {
       MusicControl.updatePlayback({title: this.state.current});
     }
-
   }
-  _updateMusicControlState() {
-    new_state = MusicControl.STATE_STOPPED;
+  _musicControlState() {
     switch (this.state.status) {
       case "PLAYING":
       case "STREAMING":
-        new_state = MusicControl.STATE_PLAYING;
-        break;
+        return MusicControl.STATE_PLAYING;
       case "BUFFERING":
-        new_state = MusicControl.STATE_BUFFERING;
-        break;
+        return MusicControl.STATE_BUFFERING;
     }
-    if (new_state == MusicControl.STATE_STOPPED) {
+    return MusicControl.STATE_STOPPED;
+  }
+  _updateMusicControlState() {
+    state = this._musicControlState();
+    if (state == MusicControl.STATE_STOPPED) {
       MusicControl.enableControl('play', true);
       MusicControl.enableControl('pause', false);
     } else {
       MusicControl.enableControl('play', false);
       MusicControl.enableControl('pause', true);
     }
-    MusicControl.updatePlayback({state: new_state});
+    MusicControl.updatePlayback({state: state});
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: Object, prevState: Object) {
     if (prevState.current != this.state.current) {
       this._updateMusicControlTitle(false);
     }
