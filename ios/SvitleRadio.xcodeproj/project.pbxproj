@@ -37,7 +37,9 @@
 		2DCD954D1E0B4F2C00145EB5 /* SvitleRadioTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SvitleRadioTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9842F1FF12504DC2A078FF9F /* SF-UI-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 31C0BD81C73347C6AAAFDF3D /* SF-UI-Text-Semibold.otf */; };
 		9A0697674BA9477595B04207 /* libMusicControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5B24F242324D1FB919D505 /* libMusicControl.a */; };
+		B6FA7F3DC11B4BB5937505C3 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D84508EA9AB34CE993F68247 /* SF-UI-Text-Regular.otf */; };
 		F50A92911E512F170024CF70 /* libStreamingKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F50A92901E512EE40024CF70 /* libStreamingKit.a */; };
 		F57237A21E22D9BB003B5439 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F57237A01E22D9BA003B5439 /* SF-UI-Text-Regular.otf */; };
 		F57237A31E22D9BB003B5439 /* SF-UI-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F57237A11E22D9BB003B5439 /* SF-UI-Text-Semibold.otf */; };
@@ -262,6 +264,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = MusicControl;
 		};
+		F57D01C11F6EF56900BDD810 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC5D9F4ED14149D58812BA14 /* MusicControl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A3FC285E1EA7A8350097B6A9;
+			remoteInfo = "MusicControl-tvOS";
+		};
 		F598E9401E88627A00F08455 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C51BB7A98CA54137934B2E4F /* RNDeviceInfo.xcodeproj */;
@@ -292,6 +301,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* SvitleRadio-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SvitleRadio-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SvitleRadio-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SvitleRadio-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		31C0BD81C73347C6AAAFDF3D /* SF-UI-Text-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Semibold.otf"; path = "../app/fonts/SF-UI-Text-Semibold.otf"; sourceTree = "<group>"; };
 		4A63DC12C9344B5F9E8D26B7 /* ReactNativeAudioStreaming.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeAudioStreaming.xcodeproj; path = "../node_modules/react-native-audio-streaming/ios/ReactNativeAudioStreaming.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		71CC850507DC4BB8B96B8BEE /* libReactNativeAudioStreaming.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeAudioStreaming.a; sourceTree = "<group>"; };
@@ -301,6 +311,7 @@
 		ACEB8AB359CC49F096682B20 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		BC5D9F4ED14149D58812BA14 /* MusicControl.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = MusicControl.xcodeproj; path = "../node_modules/react-native-music-control/ios/MusicControl.xcodeproj"; sourceTree = "<group>"; };
 		C51BB7A98CA54137934B2E4F /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		D84508EA9AB34CE993F68247 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../app/fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
 		F50A92881E512EE30024CF70 /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = "../node_modules/react-native-audio-streaming/ios/Pods/Pods.xcodeproj"; sourceTree = "<group>"; };
 		F57237A01E22D9BA003B5439 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "../../svitle-radio-app/iOS/Resources/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
 		F57237A11E22D9BB003B5439 /* SF-UI-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Semibold.otf"; path = "../../svitle-radio-app/iOS/Resources/SF-UI-Text-Semibold.otf"; sourceTree = "<group>"; };
@@ -527,6 +538,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SvitleRadioTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				F892A37702674CCF816986C5 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -564,6 +576,7 @@
 			isa = PBXGroup;
 			children = (
 				F557D4D81EACF80F00ECF805 /* libMusicControl.a */,
+				F57D01C21F6EF56900BDD810 /* libMusicControl-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -574,6 +587,15 @@
 				F598E9411E88627A00F08455 /* libRNDeviceInfo.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F892A37702674CCF816986C5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D84508EA9AB34CE993F68247 /* SF-UI-Text-Regular.otf */,
+				31C0BD81C73347C6AAAFDF3D /* SF-UI-Text-Semibold.otf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -966,6 +988,13 @@
 			remoteRef = F557D4D71EACF80F00ECF805 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F57D01C21F6EF56900BDD810 /* libMusicControl-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libMusicControl-tvOS.a";
+			remoteRef = F57D01C11F6EF56900BDD810 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F598E9411E88627A00F08455 /* libRNDeviceInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -991,6 +1020,8 @@
 				F57237A31E22D9BB003B5439 /* SF-UI-Text-Semibold.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				F57237A21E22D9BB003B5439 /* SF-UI-Text-Regular.otf in Resources */,
+				B6FA7F3DC11B4BB5937505C3 /* SF-UI-Text-Regular.otf in Resources */,
+				9842F1FF12504DC2A078FF9F /* SF-UI-Text-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
