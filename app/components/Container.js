@@ -34,14 +34,15 @@ export default class SvitleContainer extends Reflux.Component {
     return (
       <View style={styles.container}>
         <View style={styles.topHalf}><SvitleLogo/></View>
-        <Image style={styles.bottomHalf} source={require('../img/bg.png')}>
+        <View style={styles.bottomHalf}>
+          <Image style={styles.bottomHalfBG} source={require('../img/bg.png')}/>
           {contents}
           <TouchableOpacity onPress={this._onPressBottomLink}>
             <Text style={styles.bottomLink}>
               Сайт радіо
             </Text>
           </TouchableOpacity>
-        </Image>
+        </View>
       </View>
     );
   }
@@ -64,6 +65,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: null,
     height: null,
+  },
+  bottomHalfBG: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
   bottomLink: {
     fontFamily: 'SFUIText-Regular',
