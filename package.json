@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "react": "^16.0.0",
-    "react-native": "^0.50.1",
+    "react-native": "^0.50.4",
     "react-native-audio-streaming": "https://github.com/tlenclos/react-native-audio-streaming.git#2a4a95784426e55cc16e7acfd38c683b7d87f233",
     "react-native-device-info": "^0.10.2",
     "react-native-music-control": "^0.4.12",
