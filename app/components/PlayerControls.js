@@ -50,6 +50,7 @@ export class PlayerControls extends Reflux.Component {
     this._initializeMusicControl();
   }
   _initializeMusicControl() {
+    MusicControl.handleAudioInterruptions(true);
     MusicControl.enableBackgroundMode(true);
     MusicControl.on('play', this._playerStart.bind(this));
     MusicControl.on('pause', this._playerStop.bind(this));
