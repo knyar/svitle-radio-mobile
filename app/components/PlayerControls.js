@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import { ReactNativeAudioStreaming } from 'react-native-audio-streaming';
 import MusicControl from 'react-native-music-control';
@@ -64,11 +63,7 @@ export class PlayerControls extends Reflux.Component {
       MusicControl.setNowPlaying({
         artist: "Світле Радіо",
         title: this.state.current,
-        artwork: Platform.select({
-          // https://github.com/tanguyantoine/react-native-music-control/issues/46
-          ios: resolveAssetSource(require('../img/artwork.png')).uri,
-          android: require('../img/artwork.png'),
-        }),
+        artwork: require('../img/artwork.png'),
         // iOS determines playback state depending on 'speed', so we need to set
         // it in the initial setNowPlaying for correct initial state to be set.
         speed: this._musicControlState() == MusicControl.STATE_STOPPED ? 0 : 1,
