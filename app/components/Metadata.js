@@ -23,6 +23,8 @@ export class MetadataStore extends Reflux.Store {
 
   constructor(props: Object) {
     super(props);
+    this.user_agent = "Svitle/" + DeviceInfo.getReadableVersion() + " " +
+      DeviceInfo.getSystemName() + "/" + DeviceInfo.getSystemVersion();
     this.update = this.update.bind(this);
     this.periodic = this.periodic.bind(this);
     this.listenTo(Actions.updateMetadata, this.update);
@@ -41,10 +43,6 @@ export class MetadataStore extends Reflux.Store {
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
-  generateUserAgent() {
-    return "Svitle/" + DeviceInfo.getReadableVersion() + " " +
-      DeviceInfo.getSystemName() + "/" + DeviceInfo.getSystemVersion();
-  }
   update() {
     var ts = Date.now();
     if (ts - this.state.lastUpdated < 5000) {
@@ -54,7 +52,7 @@ export class MetadataStore extends Reflux.Store {
     }
 
     fetch("https://m.svitle.org/v1/status", {
-      headers: { "User-Agent": this.generateUserAgent() },
+      headers: { "User-Agent": this.user_agent },
     })
     .then((response) => response.json())
     .then((responseData) => {
