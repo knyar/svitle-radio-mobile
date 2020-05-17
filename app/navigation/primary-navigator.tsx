@@ -1,21 +1,47 @@
 import React from "react"
-import { createNativeStackNavigator } from "react-native-screens/native-stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
-import { PrimaryParamList } from "./types"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { LiveScreen, StreamsScreen, ContactsScreen } from "../screens"
+import i18n from "i18n-js"
+import IconLive from '../images/tab.live.svg'
+import IconContacts from '../images/tab.contacts.svg'
+import IconStreams from '../images/tab.streams.svg'
+import { colors } from '../theme';
 
-const Stack = createNativeStackNavigator<PrimaryParamList>()
+const Tab = createBottomTabNavigator()
 
 export function PrimaryNavigator() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        gestureEnabled: true,
-      }}
-    >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        const c = focused ? colors.active : colors.primary;
+        switch (route.name) {
+          case "contacts":
+            return <IconContacts width={size} height={size} fill={c}/>
+          case "streams":
+            return <IconStreams width={size} height={size} fill={c}/>
+          default:
+            return <IconLive width={size} height={size} fill={c}/>
+        }
+      },
+    })}
+    tabBarOptions={{
+      inactiveBackgroundColor: colors.menuBackground,
+      activeBackgroundColor: colors.menuBackgroundActive,
+      inactiveTintColor: colors.primary,
+      activeTintColor: colors.active,
+      labelPosition: "below-icon",
+    }}>
+      <Tab.Screen name="live" component={LiveScreen} options={{
+        tabBarLabel: i18n.t("live_screen.title")
+      }}/>
+      <Tab.Screen name="streams" component={StreamsScreen} options={{
+        tabBarLabel: i18n.t("streams_screen.title")
+      }}/>
+      <Tab.Screen name="contacts" component={ContactsScreen} options={{
+        tabBarLabel: i18n.t("contacts_screen.menu_title")
+      }}/>
+    </Tab.Navigator>
   )
 }
 

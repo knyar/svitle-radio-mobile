@@ -1,59 +1,32 @@
 import * as React from "react"
-import { View, ViewStyle, TextStyle } from "react-native"
-import { HeaderProps } from "./header.props"
-import { Button, Icon, Text } from "../"
-import { spacing } from "../../theme"
-import { translate } from "../../i18n/"
+import { Text, View, StyleSheet} from "react-native"
+import IconSvetloe from '../../images/svetloe.icon.svg'
+import { colors } from "../../theme"
 
-// static styles
-const ROOT: ViewStyle = {
-  flexDirection: "row",
-  paddingHorizontal: spacing[4],
-  alignItems: "center",
-  paddingTop: spacing[5],
-  paddingBottom: spacing[5],
-  justifyContent: "flex-start",
+interface Props {
+  title: string,
 }
-const TITLE: TextStyle = { textAlign: "center" }
-const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
-const LEFT: ViewStyle = { width: 32 }
-const RIGHT: ViewStyle = { width: 32 }
 
-/**
- * Header that appears on many screens. Will hold navigation buttons and screen title.
- */
-export const Header: React.FunctionComponent<HeaderProps> = props => {
-  const {
-    onLeftPress,
-    onRightPress,
-    rightIcon,
-    leftIcon,
-    headerText,
-    headerTx,
-    style,
-    titleStyle,
-  } = props
-  const header = headerText || (headerTx && translate(headerTx)) || ""
-
+export const Header: React.FunctionComponent<Props> = props => {
   return (
-    <View style={{ ...ROOT, ...style }}>
-      {leftIcon ? (
-        <Button preset="link" onPress={onLeftPress}>
-          <Icon icon={leftIcon} />
-        </Button>
-      ) : (
-        <View style={LEFT} />
-      )}
-      <View style={TITLE_MIDDLE}>
-        <Text style={{ ...TITLE, ...titleStyle }} text={header} />
-      </View>
-      {rightIcon ? (
-        <Button preset="link" onPress={onRightPress}>
-          <Icon icon={rightIcon} />
-        </Button>
-      ) : (
-        <View style={RIGHT} />
-      )}
+    <View style={styles.header}>
+      <IconSvetloe style={styles.icon} height={40} width={40} fill={colors.primary}/>
+      <Text style={styles.text}>{props.title}</Text>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    margin: 10,
+  },
+  text: {
+    fontSize: 22,
+    fontWeight: "300",
+    color: colors.text,
+  },
+})

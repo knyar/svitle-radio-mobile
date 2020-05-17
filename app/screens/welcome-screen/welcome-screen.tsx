@@ -80,7 +80,7 @@ export interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
-  const nextScreen = React.useMemo(() => () => props.navigation.navigate("demo"), [
+  const nextScreen = React.useMemo(() => () => props.navigation.navigate("live"), [
     props.navigation,
   ])
 

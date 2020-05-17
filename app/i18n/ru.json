@@ -1,0 +1,26 @@
+{ 
+    "live_screen": {
+        "title": "Слушать",
+        "player_now": "Прямо сейчас:",
+        "player_next": "Далее:",
+        "support_radio": "Поддержать радио",
+        "save_traffic": "Экономить трафик"
+    },
+    "streams_screen": {
+        "title": "Каналы",
+        "archive": "Архив передач",
+        "youtube": "Видеоверсии на Youtube",
+        "radios": {
+            "svitle": "Світле Радіо Еммануїл",
+            "svetloe": "Светлое Радио",
+            "kids": "Дитяче Світле Радіо"
+        }
+    },
+    "contacts_screen": {
+        "menu_title": "Контакты",
+        "title": "ТРК «Еммануїл»",
+        "live": "Прямой эфир",
+        "editor": "Редакция",
+        "accounting": "Бухгалтерия"
+    }
+}

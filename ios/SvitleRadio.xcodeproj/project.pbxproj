@@ -20,24 +20,6 @@
 		78F1FFF3D0617503FC1CA08C /* libPods-SvitleRadio-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3232C1B4B2D2C5D099CA73 /* libPods-SvitleRadio-tvOSTests.a */; };
 		A8D39280B41EDC125CDB82B2 /* libPods-SvitleRadioTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */; };
 		B503F5CD94E649071E294F45 /* libPods-SvitleRadio-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDE4A2D9C8F335285041F87 /* libPods-SvitleRadio-tvOS.a */; };
-		87058449C6A54AAF8541BEED /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4715AA5E6D4940A8BB9665A3 /* Montserrat-Black.ttf */; };
-		A31C8A25499442778F8C44CB /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F048D1D2CB4B4611883FE957 /* Montserrat-BlackItalic.ttf */; };
-		9AF0AD453FC448E4ABAEFA3C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F99DDFEEA0B45A68F47DCFA /* Montserrat-Bold.ttf */; };
-		B9E8F39297454E2394785EE8 /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D237B903C174607BA3FFBB1 /* Montserrat-BoldItalic.ttf */; };
-		60ABD6BCA57C4058BAB4828F /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A251411670E34002B07CE579 /* Montserrat-ExtraBold.ttf */; };
-		C778B2B45368496C9D0937AF /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8D09E60668042EEAC952905 /* Montserrat-ExtraBoldItalic.ttf */; };
-		BCEF6040F83A42B09FF1F8E8 /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FFF4FD7BB0546459CC5E8A1 /* Montserrat-ExtraLight.ttf */; };
-		9DFB73B9C6924D74B9642CFA /* Montserrat-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA1D6D08B10C4852B6440E4A /* Montserrat-ExtraLightItalic.ttf */; };
-		413807531F804BFA9E5FC4C2 /* Montserrat-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75A80B1A6944D9887058BB8 /* Montserrat-Italic.ttf */; };
-		BF0AE219E6D34C40A19D5B36 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC6D1DFB6C57409DA2F25E54 /* Montserrat-Light.ttf */; };
-		18EEDA18F45E4ACD9CB3EA80 /* Montserrat-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1C1534682C04FA79300A509 /* Montserrat-LightItalic.ttf */; };
-		11B0A35BF2844D93B58A9877 /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84D5F1C86CD143BF8E76554A /* Montserrat-Medium.ttf */; };
-		017A2283C8804D5F8AD94771 /* Montserrat-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C5A6BFCD78B480EA0CEC712 /* Montserrat-MediumItalic.ttf */; };
-		3592E3FCA8404154A89F3412 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0D51EB949B84F2BAC6A0C4A /* Montserrat-Regular.ttf */; };
-		9C4FE38E6C0B42CCA7FE8B09 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB0DFB920F5947FAB5B48C49 /* Montserrat-SemiBold.ttf */; };
-		4D71EF81C4264C9BAD066DD2 /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09FF1AE3C4E4A4E8A1CCBBD /* Montserrat-SemiBoldItalic.ttf */; };
-		A1756838161B4EA482A2D81E /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA1F40CC93274894807601A7 /* Montserrat-Thin.ttf */; };
-		69695EEF8EB44340AF7C35F4 /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FB7C79471AC467A9D0915B8 /* Montserrat-ThinItalic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,32 +59,32 @@
 		2D02E47B1E0B4A5D006451C7 /* SvitleRadio-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SvitleRadio-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SvitleRadio-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SvitleRadio-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadioTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4715AA5E6D4940A8BB9665A3 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../app/theme/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
 		480EA033A0057A2C1FDAC7FD /* libPods-SvitleRadio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadio.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B5B8E90DA3B8C05E092F4EB /* Pods-SvitleRadio-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOS.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOS/Pods-SvitleRadio-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		5C5A6BFCD78B480EA0CEC712 /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-MediumItalic.ttf"; path = "../app/theme/fonts/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; };
+		5FB7C79471AC467A9D0915B8 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ThinItalic.ttf"; path = "../app/theme/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
+		6D237B903C174607BA3FFBB1 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
+		7FFF4FD7BB0546459CC5E8A1 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLight.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
+		84D5F1C86CD143BF8E76554A /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../app/theme/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		87FA3A6877B0D8C5A6ED61BC /* Pods-SvitleRadio.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio.debug.xcconfig"; sourceTree = "<group>"; };
+		9F99DDFEEA0B45A68F47DCFA /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../app/theme/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		A09FF1AE3C4E4A4E8A1CCBBD /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		A251411670E34002B07CE579 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../app/theme/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
+		AA1F40CC93274894807601A7 /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Thin.ttf"; path = "../app/theme/fonts/Montserrat-Thin.ttf"; sourceTree = "<group>"; };
+		B0D51EB949B84F2BAC6A0C4A /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../app/theme/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		BDDE4A2D9C8F335285041F87 /* libPods-SvitleRadio-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadio-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1C1534682C04FA79300A509 /* Montserrat-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-LightItalic.ttf"; path = "../app/theme/fonts/Montserrat-LightItalic.ttf"; sourceTree = "<group>"; };
 		C94681EEA916E43281200720 /* Pods-SvitleRadio-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOS/Pods-SvitleRadio-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		CA1D6D08B10C4852B6440E4A /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		D75A80B1A6944D9887058BB8 /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic.ttf"; path = "../app/theme/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; };
+		DC6D1DFB6C57409DA2F25E54 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../app/theme/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		E4681C576F03A21046EDE732 /* Pods-SvitleRadioTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadioTests.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadioTests/Pods-SvitleRadioTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E8D09E60668042EEAC952905 /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		EB0DFB920F5947FAB5B48C49 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBold.ttf"; path = "../app/theme/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		4715AA5E6D4940A8BB9665A3 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; name = "Montserrat-Black.ttf"; path = "../app/theme/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F048D1D2CB4B4611883FE957 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-BlackItalic.ttf"; path = "../app/theme/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		9F99DDFEEA0B45A68F47DCFA /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; name = "Montserrat-Bold.ttf"; path = "../app/theme/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		6D237B903C174607BA3FFBB1 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-BoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A251411670E34002B07CE579 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Montserrat-ExtraBold.ttf"; path = "../app/theme/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E8D09E60668042EEAC952905 /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-ExtraBoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		7FFF4FD7BB0546459CC5E8A1 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Montserrat-ExtraLight.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CA1D6D08B10C4852B6440E4A /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-ExtraLightItalic.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D75A80B1A6944D9887058BB8 /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; name = "Montserrat-Italic.ttf"; path = "../app/theme/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DC6D1DFB6C57409DA2F25E54 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; name = "Montserrat-Light.ttf"; path = "../app/theme/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C1C1534682C04FA79300A509 /* Montserrat-LightItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-LightItalic.ttf"; path = "../app/theme/fonts/Montserrat-LightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		84D5F1C86CD143BF8E76554A /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; name = "Montserrat-Medium.ttf"; path = "../app/theme/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5C5A6BFCD78B480EA0CEC712 /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-MediumItalic.ttf"; path = "../app/theme/fonts/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B0D51EB949B84F2BAC6A0C4A /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; name = "Montserrat-Regular.ttf"; path = "../app/theme/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		EB0DFB920F5947FAB5B48C49 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; name = "Montserrat-SemiBold.ttf"; path = "../app/theme/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A09FF1AE3C4E4A4E8A1CCBBD /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-SemiBoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		AA1F40CC93274894807601A7 /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; name = "Montserrat-Thin.ttf"; path = "../app/theme/fonts/Montserrat-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5FB7C79471AC467A9D0915B8 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-ThinItalic.ttf"; path = "../app/theme/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F048D1D2CB4B4611883FE957 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BlackItalic.ttf"; path = "../app/theme/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,24 +201,8 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9FFBE06440211E7413B9394B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				87FA3A6877B0D8C5A6ED61BC /* Pods-SvitleRadio.debug.xcconfig */,
-				158B50EEE2642990A2B33EF8 /* Pods-SvitleRadio.release.xcconfig */,
-				C94681EEA916E43281200720 /* Pods-SvitleRadio-tvOS.debug.xcconfig */,
-				4B5B8E90DA3B8C05E092F4EB /* Pods-SvitleRadio-tvOS.release.xcconfig */,
-				1D378B2D7983FCF0ABA075A0 /* Pods-SvitleRadio-tvOSTests.debug.xcconfig */,
-				0445E5F51EC39C592283174B /* Pods-SvitleRadio-tvOSTests.release.xcconfig */,
-				E4681C576F03A21046EDE732 /* Pods-SvitleRadioTests.debug.xcconfig */,
-				245EF4986FA61DD31A36C759 /* Pods-SvitleRadioTests.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		8E3471EEAAF94A76A2AC1000 /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				4715AA5E6D4940A8BB9665A3 /* Montserrat-Black.ttf */,
 				F048D1D2CB4B4611883FE957 /* Montserrat-BlackItalic.ttf */,
@@ -259,7 +225,21 @@
 			);
 			name = Resources;
 			sourceTree = "<group>";
-			path = "";
+		};
+		9FFBE06440211E7413B9394B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				87FA3A6877B0D8C5A6ED61BC /* Pods-SvitleRadio.debug.xcconfig */,
+				158B50EEE2642990A2B33EF8 /* Pods-SvitleRadio.release.xcconfig */,
+				C94681EEA916E43281200720 /* Pods-SvitleRadio-tvOS.debug.xcconfig */,
+				4B5B8E90DA3B8C05E092F4EB /* Pods-SvitleRadio-tvOS.release.xcconfig */,
+				1D378B2D7983FCF0ABA075A0 /* Pods-SvitleRadio-tvOSTests.debug.xcconfig */,
+				0445E5F51EC39C592283174B /* Pods-SvitleRadio-tvOSTests.release.xcconfig */,
+				E4681C576F03A21046EDE732 /* Pods-SvitleRadioTests.debug.xcconfig */,
+				245EF4986FA61DD31A36C759 /* Pods-SvitleRadioTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -355,6 +335,9 @@
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = HF73R2CBE6;
+					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -368,7 +351,7 @@
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "SvitleRadio" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -401,24 +384,6 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				87058449C6A54AAF8541BEED /* Montserrat-Black.ttf in Resources */,
-				A31C8A25499442778F8C44CB /* Montserrat-BlackItalic.ttf in Resources */,
-				9AF0AD453FC448E4ABAEFA3C /* Montserrat-Bold.ttf in Resources */,
-				B9E8F39297454E2394785EE8 /* Montserrat-BoldItalic.ttf in Resources */,
-				60ABD6BCA57C4058BAB4828F /* Montserrat-ExtraBold.ttf in Resources */,
-				C778B2B45368496C9D0937AF /* Montserrat-ExtraBoldItalic.ttf in Resources */,
-				BCEF6040F83A42B09FF1F8E8 /* Montserrat-ExtraLight.ttf in Resources */,
-				9DFB73B9C6924D74B9642CFA /* Montserrat-ExtraLightItalic.ttf in Resources */,
-				413807531F804BFA9E5FC4C2 /* Montserrat-Italic.ttf in Resources */,
-				BF0AE219E6D34C40A19D5B36 /* Montserrat-Light.ttf in Resources */,
-				18EEDA18F45E4ACD9CB3EA80 /* Montserrat-LightItalic.ttf in Resources */,
-				11B0A35BF2844D93B58A9877 /* Montserrat-Medium.ttf in Resources */,
-				017A2283C8804D5F8AD94771 /* Montserrat-MediumItalic.ttf in Resources */,
-				3592E3FCA8404154A89F3412 /* Montserrat-Regular.ttf in Resources */,
-				9C4FE38E6C0B42CCA7FE8B09 /* Montserrat-SemiBold.ttf in Resources */,
-				4D71EF81C4264C9BAD066DD2 /* Montserrat-SemiBoldItalic.ttf in Resources */,
-				A1756838161B4EA482A2D81E /* Montserrat-Thin.ttf in Resources */,
-				69695EEF8EB44340AF7C35F4 /* Montserrat-ThinItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,6 +674,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -716,8 +682,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app2;
 				PRODUCT_NAME = SvitleRadio;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -728,6 +695,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -735,8 +703,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app2;
 				PRODUCT_NAME = SvitleRadio;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

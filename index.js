@@ -15,16 +15,4 @@ import { AppRegistry } from "react-native"
  */
 const APP_NAME = "SvitleRadio"
 
-// Should we show storybook instead of our app?
-//
-// ⚠️ Leave this as `false` when checking into git.
-const SHOW_STORYBOOK = false
-
-let RootComponent = App
-if (__DEV__ && SHOW_STORYBOOK) {
-  // Only include Storybook if we're in dev mode
-  const { StorybookUIRoot } = require("./storybook")
-  RootComponent = StorybookUIRoot
-}
-
-AppRegistry.registerComponent(APP_NAME, () => RootComponent)
+AppRegistry.registerComponent(APP_NAME, () => App)
