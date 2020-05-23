@@ -51,5 +51,8 @@ export async function setupRootStore() {
   // track changes & save to storage
   onSnapshot(rootStore, snapshot => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
 
+  // Fetch preferences
+  rootStore.preferencesStore.getPreferences()
+
   return rootStore
 }

@@ -11,3 +11,5 @@
 export * from "./screen/screen"
 export * from "./player/player"
 export * from "./header/header"
+export * from "./footer-link/footer-link"
+export * from "./footer-checkbox/footer-checkbox"
