@@ -40,6 +40,7 @@ export class Api {
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
+        'Cache-Control': 'no-cache',
       },
     })
   }

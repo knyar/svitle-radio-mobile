@@ -1,23 +1,22 @@
 import * as React from "react"
-import { observer, useObserver } from "mobx-react-lite"
+import { useObserver } from "mobx-react-lite"
 import { View, StyleSheet } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
 import { NativeStackNavigationProp } from "react-native-screens/native-stack"
-import { Screen, Player, FooterLink, FooterCheckbox } from "../components"
+import { Screen, Player, FooterLink, FooterCheckbox, Logo } from "../components"
 import { useStores } from "../models/root-store"
-import SvetloeLogo from "../images/svetloe.svg"
 
 export interface LiveScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-export const LiveScreen: React.FunctionComponent<LiveScreenProps> = observer((props) => {
+export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
   const { preferencesStore } = useStores()
 
   return useObserver(() => (
     <Screen>
       <View style={styles.logo}>
-        <SvetloeLogo width={300} style={styles.logoImage}/>
+        <Logo station={preferencesStore.local.station} width={300} style={styles.logoImage}/>
       </View>
       <View style={styles.player}>
         <Player />
@@ -25,11 +24,14 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = observer((pr
       <View style={styles.footer}>
         <FooterLink url={preferencesStore.preferences.url_support}
           icon="support" text="live_screen.support_radio"/>
-        <FooterCheckbox text="live_screen.save_traffic"/>
+        <FooterCheckbox
+          active={preferencesStore.local.low_quality}
+          toggle={preferencesStore.local.toggleQuality}
+          text="live_screen.save_traffic"/>
       </View>
     </Screen>
   ))
-})
+}
 
 const styles = StyleSheet.create({
   logo: {

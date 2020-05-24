@@ -1,47 +1,44 @@
 import * as React from "react"
-import { observer, useObserver } from "mobx-react-lite"
-import { TouchableOpacity, Text, View, StyleSheet } from "react-native"
+import { useObserver } from "mobx-react-lite"
+import { TouchableOpacity, Text, View, StyleSheet, ViewStyle } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
 import { NativeStackNavigationProp } from "react-native-screens/native-stack"
-import { Screen, FooterLink } from "../components"
+import { Screen, FooterLink, Logo } from "../components"
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import { colors } from "../theme"
 import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
-import SvetloeLogo from "../images/svetloe.svg"
-import SvitleLogo from "../images/svitle.svg"
 
 export interface StreamsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = observer((props) => {
+export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props) => {
   const { preferencesStore } = useStores()
+
+  const stationComponent = (station: string) => {
+    const onPress = () => preferencesStore.local.setStation(station)
+    let style: ViewStyle[] = [styles.stream]
+    if (preferencesStore.local.station == station) {
+      style.push(styles.streamSelected)
+    }
+
+    return useObserver(() => (
+      <TouchableOpacity style={style} onPress={onPress} key={station}>
+        <View style={styles.streamContainer}>
+          <PauseButton style={styles.streamButton} height={80} fill={colors.primary} />
+          <Logo station={station} style={styles.streamLogo} height={80}/>
+          <Text style={styles.streamText}>{i18n.t("streams_screen.radios." + station)}</Text>
+        </View>
+      </TouchableOpacity>
+    ))
+  }
+
   return useObserver(() => (
     <Screen title={i18n.t("streams_screen.title")}>
       <View style={styles.selector}>
-        <TouchableOpacity style={[styles.stream, styles.streamSelected]}>
-          <View style={styles.streamContainer}>
-            <PauseButton style={styles.streamButton} height={80} fill={colors.primary} />
-            <SvetloeLogo style={styles.streamLogo} height={80} />
-            <Text style={styles.streamText}>{i18n.t("streams_screen.radios.svetloe")}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.stream}>
-          <View style={styles.streamContainer}>
-            <PlayButton style={styles.streamButton} height={80} fill={colors.primary} />
-            <SvitleLogo style={styles.streamLogo} height={80} />
-            <Text style={styles.streamText}>{i18n.t("streams_screen.radios.svitle")}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.stream}>
-          <View style={styles.streamContainer}>
-            <PlayButton style={styles.streamButton} height={80} fill={colors.primary} />
-            <SvetloeLogo style={styles.streamLogo} height={80} />
-            <Text style={styles.streamText}>{i18n.t("streams_screen.radios.kids")}</Text>
-          </View>
-        </TouchableOpacity>
+        {preferencesStore.preferences.stations.map(stationComponent)}
       </View>
       <View style={styles.footer}>
         <FooterLink url={preferencesStore.preferences.url_archive}
@@ -51,7 +48,7 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = observ
       </View>
     </Screen>
   ))
-})
+}
 
 const styles = StyleSheet.create({
   selector: {

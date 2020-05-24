@@ -1,5 +1,5 @@
 import * as React from "react"
-import { observer, useObserver } from "mobx-react-lite"
+import { useObserver } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet, Linking } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
 import { NativeStackNavigationProp } from "react-native-screens/native-stack"
@@ -19,28 +19,28 @@ export interface ContactsScreenProps {
 const iconLinkComponent = (item: ContactItem) => {
   if (!item.url) { return null }
   const onPress = () => Linking.openURL(item.url)
-  let icon = null
-  switch (item.text) {
-    case "skype":
-      icon = <IconSkype height={40} fill={colors.primary}/>
-      break
-    case "viber":
-      icon = <IconViber height={40} fill={colors.primary}/>
-      break
-    default:
-      return null
+  const icons = {
+    skype: IconSkype,
+    viber: IconViber,
   }
-  return <TouchableOpacity key={item.url} style={styles.icon} onPress={onPress}>{icon}</TouchableOpacity>
+  if (!(item.text in icons)) { return null }
+  const IconComponent = icons[item.text]
+
+  return useObserver(() => (
+    <TouchableOpacity key={item.url} style={styles.icon} onPress={onPress}>
+      <IconComponent height={40} fill={colors.primary}/>
+    </TouchableOpacity>
+  ))
 }
 
 const textLinkComponent = (item: ContactItem) => {
   if (!item.url) { return null }
   const onPress = () => Linking.openURL(item.url)
-  return (
+  return useObserver(() => (
     <TouchableOpacity onPress={onPress} key={item.url}>
       <Text style={styles.text}>{item.text}</Text>
     </TouchableOpacity>
-  )
+  ))
 }
 
 const blockComponent = (block: ContactBlock) => {
@@ -52,26 +52,29 @@ const blockComponent = (block: ContactBlock) => {
       </View>
     )
   }
-  return (
+  return useObserver(() => (
     <View style={styles.container} key={block.title}>
       <Text style={styles.header}>{block.title}</Text>
       {icons}
       {block.text_links.map(textLinkComponent)}
     </View>
-  )
+  ))
 }
 
-export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = observer((props) => {
+export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {
   const { preferencesStore } = useStores()
+  const openWebsite = () => Linking.openURL("https://svetloe.org/")
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")}>
       <View style={styles.container}>
-        <TouchableOpacity><Text style={styles.website}>svetloe.org</Text></TouchableOpacity>
+        <TouchableOpacity onPress={openWebsite}>
+          <Text style={styles.website}>svetloe.org</Text>
+        </TouchableOpacity>
       </View>
       {preferencesStore.preferences.contacts.map(blockComponent)}
     </Screen>
   ))
-})
+}
 
 const spacing = 7
 const styles = StyleSheet.create({

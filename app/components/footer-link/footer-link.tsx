@@ -14,31 +14,29 @@ export interface FooterLinkProps {
   style?: ViewStyle | ViewStyle[]
 }
 
-export const FooterLink: React.FunctionComponent<FooterLinkProps> = props => {
+export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   if (!props.url) {
     return useObserver(() => (null))
   }
 
   const onPress = () => Linking.openURL(props.url);
 
-  let textStyle: ViewStyle = { padding: 3 }
-  let icon = null
-  switch (props.icon) {
-    case "support":
-      icon = <IconSupport height={18} style={styles.icon} fill={colors.primary}/>
-      textStyle = { padding: 5 }
-      break;
-    case "archive":
-      icon = <IconArchive height={17} style={styles.icon} fill={colors.primary}/>
-      break;
-    case "video":
-      icon = <IconVideo height={18} style={styles.icon} fill={colors.primary}/>
-      break;
+  let icons = {
+    support: IconSupport,
+    archive: IconArchive,
+    video: IconVideo,
   }
+  const IconComponent = icons[props.icon]
+
+  let iconHeight = 18
+  if (props.icon == "archive") { iconHeight = 16 }
+
+  let textStyle: ViewStyle = { padding: 3 }
+  if (props.icon == "support") { textStyle["padding"] = 5 }
 
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={onPress}>
-      {icon}
+      <IconComponent height={iconHeight}  style={styles.icon} fill={colors.primary}/>
       <Text style={[styles.text, textStyle]}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>
   ))
