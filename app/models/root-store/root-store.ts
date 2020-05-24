@@ -1,3 +1,4 @@
+import { StationsStoreModel } from "../../models/stations-store"
 import { PreferencesStoreModel } from "../../models/preferences-store"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
@@ -7,6 +8,7 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 // prettier-ignore
 export const RootStoreModel = types.model("RootStore").props({
   preferencesStore: types.optional(PreferencesStoreModel, {} as any),
+  stationsStore: types.optional(StationsStoreModel, {} as any),
 })
 
 /**

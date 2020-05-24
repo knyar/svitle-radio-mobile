@@ -54,5 +54,8 @@ export async function setupRootStore() {
   // Fetch preferences
   rootStore.preferencesStore.getPreferences()
 
+  // Fetch stations
+  rootStore.stationsStore.getStations()
+
   return rootStore
 }

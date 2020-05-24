@@ -18,7 +18,6 @@ export const PreferencesStoreModel = types
   .actions(self => ({
     savePreferences: (preferencesSnapshot: PreferencesSnapshot) => {
       self.preferences = PreferencesModel.create(preferencesSnapshot)
-      console.log("Got preferences: ", self.preferences)
       if (!self.local.station && self.preferences.stations.length > 0) {
         self.local.setStation(self.preferences.stations[0])
       } 

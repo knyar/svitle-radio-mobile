@@ -6,30 +6,35 @@ import { useStores } from "../../models/root-store"
 import PlayButton from "../../images/button.play.svg"
 import { colors } from "../../theme"
 
-export interface PlayerProps {
+interface NowPlayingProps {
+  header: string,
+  text?: string
+}
+const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
+  if (!props.text) { return null }
+  return (
+    <View>
+      <Text style={styles.npHeader}>{i18n.t(props.header)}</Text>
+      <Text style={styles.npText}>{props.text}</Text>
+    </View>
+  )
 }
 
-/**
- * React.FunctionComponent for your hook(s) needs
- *
- * Component description here for TypeScript tips.
- */
+export interface PlayerProps {}
 export const Player: React.FunctionComponent<PlayerProps> = props => {
-  // const { someStore } = useStores()
+  const { stationsStore } = useStores()
 
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={require('../../images/lines.png')}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={stationsStore.getStations}>
           <PlayButton height="200" style={styles.buttonImage} fill={colors.primary} />
         </TouchableOpacity>
       </ImageBackground>
-        <View style={styles.npContainer}>
-          <Text style={styles.npHeader}>{i18n.t("live_screen.player_now")}</Text>
-          <Text style={styles.npText}>Скороход Василий - Этот День</Text>
-          <Text style={styles.npHeader}>{i18n.t("live_screen.player_next")}</Text>
-          <Text style={styles.npText}>«Світле освідчення»</Text>
-        </View>
+      <View style={styles.npContainer}>
+        <NowPlaying header="live_screen.player_now" text={stationsStore.current_track} />
+        <NowPlaying header="live_screen.player_next" text={stationsStore.next_track} />
+      </View>
     </View>
   ))
 }
