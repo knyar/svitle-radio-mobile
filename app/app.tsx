@@ -1,7 +1,3 @@
-// Welcome to the main entry point of the app.
-//
-// In this file, we'll be kicking off our app or storybook.
-
 import "./i18n"
 import React, { useState, useEffect, useRef } from "react"
 import { YellowBox } from "react-native"
@@ -15,6 +11,9 @@ import { useBackButtonHandler } from "./navigation/use-back-button-handler"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
+
+// https://github.com/mobxjs/mobx-react-lite#observer-batching
+import 'mobx-react-lite/batchingForReactNative'
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
