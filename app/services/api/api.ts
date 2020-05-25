@@ -1,7 +1,7 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { StationSnapshot, Station } from "../../models/station"
+import { StreamInfo } from "../../models/stream-info"
 import * as Types from "./api.types"
 
 /**
@@ -60,7 +60,7 @@ export class Api {
     }
   }
 
-  async getStations(): Promise<Types.GetStationsResult> {
+  async getStreamInfo(): Promise<Types.GetStreamInfoResult> {
     const response: ApiResponse<any> = await this.apisauce.get(`/v2/status?recent_tracks=0`)
 
     if (!response.ok) {
@@ -69,7 +69,7 @@ export class Api {
     }
 
     try {
-      return { kind: "ok", stations: convertStations(response.data) }
+      return { kind: "ok", streams: convertStreamInfo(response.data) }
     } catch (error) {
       console.log(error)
       return { kind: "bad-data" }
@@ -77,11 +77,11 @@ export class Api {
   }
 }
 
-const convertStations = (raw: any): Map<string, StationSnapshot> => {
+const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
   let result = new Map()
   for (const name in raw.stations) {
     const station = raw.stations[name]
-    let s: StationSnapshot = {
+    let s: StreamInfo = {
       current_track: station.current_track == "" ? undefined : station.current_track,
       next_track: station.next_track == "" ? undefined : station.next_track,
       stream_url: undefined,

@@ -11,22 +11,22 @@ export interface LiveScreenProps {
 }
 
 export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
-  const { preferencesStore } = useStores()
+  const { mainStore } = useStores()
 
   return useObserver(() => (
     <Screen>
       <View style={styles.logo}>
-        <Logo station={preferencesStore.local.station} width={300} style={styles.logoImage}/>
+        <Logo id={mainStore.current_station.logo} width={300} style={styles.logoImage}/>
       </View>
       <View style={styles.player}>
         <Player />
       </View>
       <View style={styles.footer}>
-        <FooterLink url={preferencesStore.preferences.url_support}
+        <FooterLink url={mainStore.preferences.url_support}
           icon="support" text="live_screen.support_radio"/>
         <FooterCheckbox
-          active={preferencesStore.local.low_quality}
-          toggle={preferencesStore.local.toggleQuality}
+          active={mainStore.local.low_quality}
+          toggle={mainStore.local.toggleQuality}
           text="live_screen.save_traffic"/>
       </View>
     </Screen>

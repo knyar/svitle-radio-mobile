@@ -1,5 +1,4 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { omit } from "ramda"
 
 /**
  * Model description here for TypeScript hints.
@@ -7,15 +6,12 @@ import { omit } from "ramda"
 export const StationModel = types
   .model("Station")
   .props({
-    current_track: types.maybe(types.string),
-    next_track: types.maybe(types.string),
-    stream_url: types.maybe(types.string),
-    stream_url_low: types.maybe(types.string),
+    id: types.string,
+    name: types.string,
+    logo: types.string,
   })
   .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  // track information gets outdated fast; don't save it into storage.
-  .postProcessSnapshot(omit(["current_track", "next_track"]))
 
   /**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).

@@ -62,7 +62,7 @@ const blockComponent = (block: ContactBlock) => {
 }
 
 export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {
-  const { preferencesStore } = useStores()
+  const { mainStore } = useStores()
   const openWebsite = () => Linking.openURL("https://svetloe.org/")
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")}>
@@ -71,7 +71,7 @@ export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (pro
           <Text style={styles.website}>svetloe.org</Text>
         </TouchableOpacity>
       </View>
-      {preferencesStore.preferences.contacts.map(blockComponent)}
+      {mainStore.preferences.contacts.map(blockComponent)}
     </Screen>
   ))
 }

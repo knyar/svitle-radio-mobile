@@ -9,12 +9,7 @@
     "streams_screen": {
         "title": "Каналы",
         "archive": "Архив передач",
-        "youtube": "Видеоверсии на Youtube",
-        "radios": {
-            "svitle": "Світле Радіо Еммануїл",
-            "svetloe": "Светлое Радио",
-            "kids": "Дитяче Світле Радіо"
-        }
+        "youtube": "Видеоверсии на Youtube"
     },
     "contacts_screen": {
         "menu_title": "Контакты",

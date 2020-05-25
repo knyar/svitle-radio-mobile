@@ -22,18 +22,18 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
 
 export interface PlayerProps {}
 export const Player: React.FunctionComponent<PlayerProps> = props => {
-  const { stationsStore } = useStores()
+  const { mainStore } = useStores()
 
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={require('../../images/lines.png')}>
-        <TouchableOpacity style={styles.button} onPress={stationsStore.getStations}>
+        <TouchableOpacity style={styles.button} onPress={mainStore.updateStreamInfo}>
           <PlayButton height="200" style={styles.buttonImage} fill={colors.primary} />
         </TouchableOpacity>
       </ImageBackground>
       <View style={styles.npContainer}>
-        <NowPlaying header="live_screen.player_now" text={stationsStore.current_track} />
-        <NowPlaying header="live_screen.player_next" text={stationsStore.next_track} />
+        <NowPlaying header="live_screen.player_now" text={mainStore.current_track} />
+        <NowPlaying header="live_screen.player_next" text={mainStore.next_track} />
       </View>
     </View>
   ))

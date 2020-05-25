@@ -6,7 +6,7 @@ import SvetloeLogo from "../../images/svetloe.svg"
 import SvitleLogo from "../../images/svitle.svg"
 
 export interface LogoProps {
-  station: string
+  id: string
   width?: NumberProp
   height?: NumberProp
   style?: ViewStyle | ViewStyle[]
@@ -16,9 +16,8 @@ export const Logo: React.FunctionComponent<LogoProps> = props => {
   const logos = {
     svitle: SvitleLogo,
     svetloe: SvetloeLogo,
-    kids: SvitleLogo,
   }
-  const LogoComponent = logos[props.station]
+  const LogoComponent = logos[props.id] || SvetloeLogo
   
   let pr = {style: props.style}
   if (props.width) { pr["width"] = props.width }

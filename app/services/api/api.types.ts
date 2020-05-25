@@ -1,5 +1,5 @@
 import { GeneralApiProblem } from "./api-problem"
-import { StationSnapshot } from "../../models/station"
+import { StreamInfo } from "../../models/stream-info"
 
 export type GetPreferencesResult = { kind: "ok"; preferences: any} | GeneralApiProblem
-export type GetStationsResult = { kind: "ok"; stations: Map<string, StationSnapshot> } | GeneralApiProblem
+export type GetStreamInfoResult = { kind: "ok"; streams: Map<string, StreamInfo> } | GeneralApiProblem
