@@ -1,3 +1,5 @@
+const { API_URL } = require("../../config/env")
+
 /**
  * The options used to configure the API.
  */
@@ -17,6 +19,6 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  url: "https://m.svitle.org",
+  url: API_URL,
   timeout: 10000,
 }

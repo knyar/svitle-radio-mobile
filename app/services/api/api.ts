@@ -46,7 +46,7 @@ export class Api {
   }
 
   async getPreferences(): Promise<Types.GetPreferencesResult> {
-    const response: ApiResponse<any> = await this.apisauce.get(`/preferences.js`)
+    const response: ApiResponse<any> = await this.apisauce.get(`/preferences`)
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -61,7 +61,7 @@ export class Api {
   }
 
   async getStreamInfo(): Promise<Types.GetStreamInfoResult> {
-    const response: ApiResponse<any> = await this.apisauce.get(`/v2/status?recent_tracks=0`)
+    const response: ApiResponse<any> = await this.apisauce.get(`/status?recent_tracks=0`)
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

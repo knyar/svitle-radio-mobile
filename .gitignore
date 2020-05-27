@@ -66,5 +66,4 @@ buck-out/
 .vscode
 
 # Configurations
-app/config/env.*.js
 !env.js
