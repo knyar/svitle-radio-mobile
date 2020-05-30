@@ -11,6 +11,7 @@ import { useBackButtonHandler } from "./navigation/use-back-button-handler"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
+import { Timer } from "./components"
 
 // https://github.com/mobxjs/mobx-react-lite#observer-batching
 import 'mobx-react-lite/batchingForReactNative'
@@ -119,6 +120,7 @@ const App: React.FunctionComponent<{}> = () => {
           initialState={initialNavigationState}
           onStateChange={onNavigationStateChange}
         />
+        <Timer/>
       </SafeAreaProvider>
     </RootStoreProvider>
   )

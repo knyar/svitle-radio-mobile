@@ -15,6 +15,7 @@ export const MainStoreModel = types
     preferences: types.optional(PreferencesModel, {}),
     local: types.optional(LocalSettingsModel, {}),
     streams: types.map(StreamInfoModel),
+    streamsUpdated: 0, // timestamp of last update
   })
   .extend(withEnvironment)
   .views(self => ({
@@ -65,6 +66,7 @@ export const MainStoreModel = types
     },
     saveStreamInfo: (streams: Map<string, StreamInfo>) => {
       self.streams.replace(streams)
+      self.streamsUpdated = Date.now()
     },
   }))
   .actions(self => ({
