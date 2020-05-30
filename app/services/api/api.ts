@@ -1,4 +1,5 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
+import { getReadableVersion, getSystemName, getSystemVersion } from 'react-native-device-info'
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { StreamInfo } from "../../models/stream-info"
@@ -39,8 +40,10 @@ export class Api {
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
-        Accept: "application/json",
+        'Accept': "application/json",
         'Cache-Control': 'no-cache',
+        'User-Agent': "Svitle/" + getReadableVersion() + " " +
+          getSystemName() + "/" + getSystemVersion(),
       },
     })
   }
