@@ -25,6 +25,7 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
         <FooterLink url={mainStore.preferences.url_support}
           icon="support" text="live_screen.support_radio"/>
         <FooterCheckbox
+          visible={!!mainStore.current_stream.stream_url_low}
           active={mainStore.local.low_quality}
           toggle={mainStore.local.toggleQuality}
           text="live_screen.save_traffic"/>

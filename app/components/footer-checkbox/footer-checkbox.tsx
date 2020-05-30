@@ -7,6 +7,7 @@ import IconInactive from '../../images/icon.check.inactive.svg'
 import { colors } from "../../theme"
 
 export interface FooterCheckboxProps {
+  visible: boolean
   active: boolean
   toggle: () => void
   text: string
@@ -15,6 +16,7 @@ export interface FooterCheckboxProps {
 
 export const FooterCheckbox: React.FunctionComponent<FooterCheckboxProps> = (props) => {
   const IconComponent = props.active ? IconActive : IconInactive
+  if (!props.visible) { return null }
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={props.toggle}>
       <IconComponent height={18} style={styles.icon} fill={colors.primary}/>
