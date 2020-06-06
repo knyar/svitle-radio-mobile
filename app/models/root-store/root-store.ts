@@ -1,4 +1,4 @@
-import { MainStoreModel } from "../../models/main-store"
+import { MainStoreModel } from "../main-store"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
 /**
