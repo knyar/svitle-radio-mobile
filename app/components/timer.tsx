@@ -10,9 +10,10 @@ export const Timer: React.FunctionComponent = props => {
 
     async function refresh() {
       let next = REFRESH_INTERVAL
-      if ((Date.now() - mainStore.streamsUpdated) < 5000) {
-        console.log("StreamInfo last updated less than 5 seconds ago, skipping")
-        // If refresh happened recently, retry in 5-6 seconds.
+      let age = Date.now() - mainStore.streamsUpdated
+      if ((age < 5000) || (age > 180000)) {
+        console.log("StreamInfo updated less than 5s or more than 3m ago. Retrying in 5s.")
+        // Retry in 5-6 seconds.
         next = 5000 + 1000 * Math.random()
       } else {
         await mainStore.updateStreamInfo()

@@ -16,7 +16,7 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
   return useObserver(() => (
     <Screen>
       <View style={styles.logo}>
-        <Logo id={mainStore.current_station.logo} width={300} style={styles.logoImage}/>
+        <Logo station={mainStore.current_station} width={300} style={styles.logoImage}/>
       </View>
       <View style={styles.player}>
         <Player url={mainStore.current_url}/>

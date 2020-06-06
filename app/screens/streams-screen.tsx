@@ -26,7 +26,7 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
     return useObserver(() => (
       <TouchableOpacity style={style} onPress={onPress} key={station.id}>
         <View style={styles.streamContainer}>
-          <Logo id={station.logo} style={styles.streamLogo} height={80}/>
+          <Logo station={station} style={styles.streamLogo} height={80}/>
           <Text style={styles.streamText}>{station.name}</Text>
         </View>
       </TouchableOpacity>

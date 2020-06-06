@@ -1,10 +1,11 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { PreferencesModel, PreferencesSnapshot } from "./preferences"
-import { StreamInfo, StreamInfoModel } from "./stream-info"
+import { StreamInfo, StreamInfoModel, StreamInfoSnapshot } from "./stream-info"
 import { Station } from "./station"
 import { LocalSettingsModel } from "./local-settings"
 import { withEnvironment} from "./with-environment"
 import { GetStreamInfoResult, GetPreferencesResult } from "../services/api"
+import { indefinitely } from "../utils/retry"
 
 /**
  * Model description here for TypeScript hints.
@@ -35,21 +36,18 @@ export const MainStoreModel = types
           return stream
         }
       }
-      return null
+      return {current_track: null, next_track: null, stream_url_low: null, stream_url: null}
     },
     get current_track(): string {
       const stream = this.current_stream
-      if (!stream) { return null }
       return stream.current_track
     },
     get next_track(): string {
       const stream = this.current_stream
-      if (!stream) { return null }
       return stream.next_track
     },
     get current_url(): string {
       const stream = this.current_stream
-      if (!stream) { return null }
       if (self.local.low_quality && stream.stream_url_low) {
         return stream.stream_url_low
       }
@@ -79,12 +77,16 @@ export const MainStoreModel = types
   }))
   .actions(self => ({
     getPreferences: flow(function*() {
-      const result: GetPreferencesResult = yield self.environment.api.getPreferences()
-      if (result.kind === "ok") {
-        self.savePreferences(result.preferences)
-      } else {
-        __DEV__ && console.tron.log(result.kind)
-      }
+      indefinitely(async() => {
+        const result: GetPreferencesResult = await self.environment.api.getPreferences()
+        if (result.kind === "ok") {
+          self.savePreferences(result.preferences)
+          return
+        } else {
+          __DEV__ && console.tron.log(result.kind)
+          throw "getPreferences error: " + result.kind
+        }
+      })
     }),
     updateStreamInfo: flow(function*() {
       const result: GetStreamInfoResult = yield self.environment.api.getStreamInfo()
