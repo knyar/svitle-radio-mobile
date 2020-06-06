@@ -1,9 +1,11 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import { useObserver } from "mobx-react-lite"
-import { Text, View, ImageBackground, StyleSheet, TouchableOpacity } from "react-native"
+import { Text, View, ImageBackground, StyleSheet, ViewStyle, TouchableOpacity } from "react-native"
+import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../../models/root-store"
 import PlayButton from "../../images/button.play.svg"
+import PauseButton from "../../images/button.pause.svg"
 import { colors } from "../../theme"
 
 interface NowPlayingProps {
@@ -20,15 +22,106 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
   )
 }
 
-export interface PlayerProps {}
+export interface PlayerProps {
+  url?: string,
+}
 export const Player: React.FunctionComponent<PlayerProps> = props => {
   const { mainStore } = useStores()
+  const playbackState = usePlaybackState();
+  useTrackPlayerEvents(["playback-metadata-received"], async () => {
+    mainStore.updateStreamInfo()
+  })
+
+  async function setupPlayer() {
+    try {
+      const buffer = 0.2;
+      await TrackPlayer.setupPlayer({
+        playBuffer: buffer,
+        minBuffer: buffer * 2,
+        maxBuffer: buffer * 2,
+        waitForBuffer: true,
+      });
+      await TrackPlayer.updateOptions({
+        capabilities: [
+          TrackPlayer.CAPABILITY_PLAY,
+          TrackPlayer.CAPABILITY_PAUSE,
+          TrackPlayer.CAPABILITY_STOP
+        ],
+        compactCapabilities: [
+          TrackPlayer.CAPABILITY_PLAY,
+          TrackPlayer.CAPABILITY_PAUSE
+        ]
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    setupPlayer()
+  }, [])
+
+  async function updateTrack() {
+    try {
+      const currentTrack = await TrackPlayer.getCurrentTrack()
+      if (props.url && (currentTrack != props.url)) {
+        const prevState = playbackState
+        console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
+        await TrackPlayer.reset()
+        await TrackPlayer.add({
+          id: props.url,
+          url: props.url,
+          artist: mainStore.current_station.name || "",
+          title: mainStore.current_track || "",
+        })
+        if (prevState == TrackPlayer.STATE_PLAYING) {
+          await TrackPlayer.play()
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    console.log("Playbook state: " + playbackState)
+  }, [playbackState])
+
+  useEffect(() => {
+    updateTrack()
+  }, [props.url])
+
+  async function togglePlayback() {
+    try {
+      if (playbackState == TrackPlayer.STATE_PLAYING) {
+        await TrackPlayer.stop()
+      } else {
+        await updateTrack()
+        await TrackPlayer.play()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  let ButtonComponent = PlayButton
+  let buttonStyle: ViewStyle = { }
+  switch (playbackState) {
+    case TrackPlayer.STATE_PLAYING:
+      ButtonComponent = PauseButton
+      break
+    case TrackPlayer.STATE_BUFFERING:
+    case TrackPlayer.STATE_PAUSED:
+    case TrackPlayer.STATE_CONNECTING:
+      buttonStyle.opacity = 0.5
+      break
+  }
 
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={require('../../images/lines.png')}>
-        <TouchableOpacity style={styles.button} onPress={mainStore.updateStreamInfo}>
-          <PlayButton height="200" style={styles.buttonImage} fill={colors.primary} />
+        <TouchableOpacity style={styles.button} onPress={togglePlayback}>
+          <ButtonComponent height="200" style={[styles.buttonImage, buttonStyle]} fill={colors.primary} />
         </TouchableOpacity>
       </ImageBackground>
       <View style={styles.npContainer}>

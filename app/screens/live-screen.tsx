@@ -19,7 +19,7 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
         <Logo id={mainStore.current_station.logo} width={300} style={styles.logoImage}/>
       </View>
       <View style={styles.player}>
-        <Player />
+        <Player url={mainStore.current_url}/>
       </View>
       <View style={styles.footer}>
         <FooterLink url={mainStore.preferences.url_support}

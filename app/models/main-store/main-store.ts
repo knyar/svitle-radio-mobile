@@ -47,6 +47,14 @@ export const MainStoreModel = types
       if (!stream) { return null }
       return stream.next_track
     },
+    get current_url(): string {
+      const stream = this.current_stream
+      if (!stream) { return null }
+      if (self.local.low_quality && stream.stream_url_low) {
+        return stream.stream_url_low
+      }
+      return stream.stream_url
+    },
   }))
   .actions(self => ({
     savePreferences: (preferencesSnapshot: PreferencesSnapshot) => {

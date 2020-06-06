@@ -20,6 +20,7 @@
 		78F1FFF3D0617503FC1CA08C /* libPods-SvitleRadio-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3232C1B4B2D2C5D099CA73 /* libPods-SvitleRadio-tvOSTests.a */; };
 		A8D39280B41EDC125CDB82B2 /* libPods-SvitleRadioTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */; };
 		B503F5CD94E649071E294F45 /* libPods-SvitleRadio-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDE4A2D9C8F335285041F87 /* libPods-SvitleRadio-tvOS.a */; };
+		F5B46AB3248C047C000533A4 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B46AB2248C047C000533A4 /* dummy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F048D1D2CB4B4611883FE957 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BlackItalic.ttf"; path = "../app/theme/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
+		F5B46AB1248C047C000533A4 /* SvitleRadio-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SvitleRadio-Bridging-Header.h"; sourceTree = "<group>"; };
+		F5B46AB2248C047C000533A4 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = dummy.swift; path = SvitleRadio/dummy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +153,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				F5B46AB2248C047C000533A4 /* dummy.swift */,
+				F5B46AB1248C047C000533A4 /* SvitleRadio-Bridging-Header.h */,
 			);
 			name = SvitleRadio;
 			sourceTree = "<group>";
@@ -337,6 +342,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = HF73R2CBE6;
+						LastSwiftMigration = 1150;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -575,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				F5B46AB3248C047C000533A4 /* dummy.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -628,6 +635,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4681C576F03A21046EDE732 /* Pods-SvitleRadioTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -651,6 +659,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 245EF4986FA61DD31A36C759 /* Pods-SvitleRadioTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = SvitleRadioTests/Info.plist;
@@ -672,6 +681,7 @@
 			baseConfigurationReference = 87FA3A6877B0D8C5A6ED61BC /* Pods-SvitleRadio.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = HF73R2CBE6;
@@ -684,6 +694,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app2;
 				PRODUCT_NAME = SvitleRadio;
+				SWIFT_OBJC_BRIDGING_HEADER = "SvitleRadio-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -694,6 +707,7 @@
 			baseConfigurationReference = 158B50EEE2642990A2B33EF8 /* Pods-SvitleRadio.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
@@ -705,6 +719,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.svitle.app2;
 				PRODUCT_NAME = SvitleRadio;
+				SWIFT_OBJC_BRIDGING_HEADER = "SvitleRadio-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
