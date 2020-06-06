@@ -22,6 +22,36 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
   )
 }
 
+interface ButtonProps {
+  url?: string,
+  playbackState: string,
+  toggle: () => void,
+}
+export const Button: React.FunctionComponent<ButtonProps> = props => {
+  let ButtonComponent = PlayButton
+  let enabled = !!props.url
+  switch (props.playbackState) {
+    case TrackPlayer.STATE_PLAYING:
+      ButtonComponent = PauseButton
+      break
+    case TrackPlayer.STATE_BUFFERING:
+    case TrackPlayer.STATE_PAUSED:
+    case TrackPlayer.STATE_CONNECTING:
+      enabled = false
+      break
+  }
+
+  if (!enabled) {
+    return <ButtonComponent height="200" style={[styles.buttonImage, styles.buttonDisabled]} fill={colors.primary}/>
+  }
+
+  return useObserver(() => (
+    <TouchableOpacity onPress={props.toggle}>
+      <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
+    </TouchableOpacity>
+  ))
+}
+
 export interface PlayerProps {
   url?: string,
 }
@@ -104,25 +134,10 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     }
   }
 
-  let ButtonComponent = PlayButton
-  let buttonStyle: ViewStyle = { }
-  switch (playbackState) {
-    case TrackPlayer.STATE_PLAYING:
-      ButtonComponent = PauseButton
-      break
-    case TrackPlayer.STATE_BUFFERING:
-    case TrackPlayer.STATE_PAUSED:
-    case TrackPlayer.STATE_CONNECTING:
-      buttonStyle.opacity = 0.5
-      break
-  }
-
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={require('../../images/lines.png')}>
-        <TouchableOpacity style={styles.button} onPress={togglePlayback}>
-          <ButtonComponent height="200" style={[styles.buttonImage, buttonStyle]} fill={colors.primary} />
-        </TouchableOpacity>
+        <Button url={props.url} playbackState={playbackState} toggle={togglePlayback}/>
       </ImageBackground>
       <View style={styles.npContainer}>
         <NowPlaying header="live_screen.player_now" text={mainStore.current_track} />
@@ -146,11 +161,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  button: {
-  },
   buttonImage: {
     maxWidth: "33%",
     flexShrink: 1,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   npContainer: {
     flex: 0.6,
