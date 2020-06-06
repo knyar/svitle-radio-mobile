@@ -8,8 +8,6 @@ import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import { Station } from "../models/station"
 import { colors } from "../theme"
-import PlayButton from "../images/button.play.svg"
-import PauseButton from "../images/button.pause.svg"
 
 export interface StreamsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
@@ -28,7 +26,6 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
     return useObserver(() => (
       <TouchableOpacity style={style} onPress={onPress} key={station.id}>
         <View style={styles.streamContainer}>
-          <PauseButton style={styles.streamButton} height={80} fill={colors.primary} />
           <Logo id={station.logo} style={styles.streamLogo} height={80}/>
           <Text style={styles.streamText}>{station.name}</Text>
         </View>
@@ -68,9 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-  },
-  streamButton: {
-    maxHeight: "21%",
   },
   streamLogo: {
     margin: 10,
