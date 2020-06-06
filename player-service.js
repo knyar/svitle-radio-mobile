@@ -6,7 +6,7 @@ module.exports = async function() {
   })
 
   TrackPlayer.addEventListener('remote-pause', () => {
-    TrackPlayer.stop()
+    TrackPlayer.pause()
   });
 
   TrackPlayer.addEventListener('remote-stop', () => {
@@ -14,8 +14,8 @@ module.exports = async function() {
   });
 
   TrackPlayer.addEventListener('remote-duck', (paused, permanent) => {
-    if (paused || permanent) {
-      TrackPlayer.stop()
+    if (paused) {
+      TrackPlayer.pause()
     } else {
       TrackPlayer.play()
     }

@@ -105,8 +105,8 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         await TrackPlayer.add({
           id: props.url,
           url: props.url,
-          artist: mainStore.current_station.name || "",
-          title: mainStore.current_track || "",
+          title: mainStore.current_station.name,
+          artist: "",
         })
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await TrackPlayer.play()

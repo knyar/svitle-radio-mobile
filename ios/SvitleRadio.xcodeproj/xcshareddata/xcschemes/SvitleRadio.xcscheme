@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "&#x421;&#x432;&#x435;&#x442;&#x43b;&#x43e;&#x435; &#x420;&#x430;&#x434;&#x438;&#x43e;.app"
+               BuildableName = "SvitleRadio.app"
                BlueprintName = "SvitleRadio"
                ReferencedContainer = "container:SvitleRadio.xcodeproj">
             </BuildableReference>
@@ -59,7 +59,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "&#x421;&#x432;&#x435;&#x442;&#x43b;&#x43e;&#x435; &#x420;&#x430;&#x434;&#x438;&#x43e;.app"
+            BuildableName = "SvitleRadio.app"
             BlueprintName = "SvitleRadio"
             ReferencedContainer = "container:SvitleRadio.xcodeproj">
          </BuildableReference>
@@ -92,7 +92,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "&#x421;&#x432;&#x435;&#x442;&#x43b;&#x43e;&#x435; &#x420;&#x430;&#x434;&#x438;&#x43e;.app"
+            BuildableName = "SvitleRadio.app"
             BlueprintName = "SvitleRadio"
             ReferencedContainer = "container:SvitleRadio.xcodeproj">
          </BuildableReference>
@@ -109,7 +109,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "&#x421;&#x432;&#x435;&#x442;&#x43b;&#x43e;&#x435; &#x420;&#x430;&#x434;&#x438;&#x43e;.app"
+            BuildableName = "SvitleRadio.app"
             BlueprintName = "SvitleRadio"
             ReferencedContainer = "container:SvitleRadio.xcodeproj">
          </BuildableReference>
