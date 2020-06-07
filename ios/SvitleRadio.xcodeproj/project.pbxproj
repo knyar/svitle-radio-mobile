@@ -693,6 +693,7 @@
 				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -719,6 +720,7 @@
 				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
