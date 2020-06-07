@@ -1,12 +1,20 @@
 import React, { useEffect } from "react"
 import { useObserver } from "mobx-react-lite"
-import { Text, View, ImageBackground, StyleSheet, ViewStyle, TouchableOpacity, Platform } from "react-native"
+import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, Platform } from "react-native"
 import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
+
+const PLAYER_BUFFER = 0.2
+const PLAYER_OPTIONS = {
+  playBuffer: PLAYER_BUFFER,
+  minBuffer: PLAYER_BUFFER * 2,
+  maxBuffer: PLAYER_BUFFER * 2,
+  waitForBuffer: true,
+}
 
 interface NowPlayingProps {
   header: string,
@@ -34,8 +42,13 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
     case TrackPlayer.STATE_PLAYING:
       ButtonComponent = PauseButton
       break
-    case TrackPlayer.STATE_BUFFERING:
     case TrackPlayer.STATE_PAUSED:
+      if (Platform.OS === 'android') {
+        // Android player is PAUSED when no track is loaded, so the button should be
+        // enabled.
+        break
+      }
+    case TrackPlayer.STATE_BUFFERING:
     case TrackPlayer.STATE_CONNECTING:
       enabled = false
       break
@@ -68,13 +81,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function setupPlayer() {
     try {
-      const buffer = 0.2;
-      await TrackPlayer.setupPlayer({
-        playBuffer: buffer,
-        minBuffer: buffer * 2,
-        maxBuffer: buffer * 2,
-        waitForBuffer: true,
-      });
+      await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
       await TrackPlayer.updateOptions({
         capabilities: [
           TrackPlayer.CAPABILITY_PLAY,
@@ -97,19 +104,21 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function updateTrack() {
     try {
+      const running = await TrackPlayer.isServiceRunning()
+      if (!running) { await setupPlayer() }
       const currentTrack = await TrackPlayer.getCurrentTrack()
       if (props.url && (currentTrack != props.url)) {
         const prevState = playbackState
         console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
-        await TrackPlayer.reset()
-        await TrackPlayer.add({
+        await safely(TrackPlayer.reset)
+        await safely(TrackPlayer.add, {
           id: props.url,
           url: props.url,
           title: mainStore.current_station.name,
           artist: "",
         })
         if (prevState == TrackPlayer.STATE_PLAYING) {
-          await TrackPlayer.play()
+          await safely(TrackPlayer.play)
         }
       }
     } catch (error) {
@@ -118,16 +127,20 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   useEffect(() => {
+    console.log("Playback state: " + playbackState)
+  }, [playbackState])
+
+  useEffect(() => {
     updateTrack()
   }, [props.url])
 
   async function togglePlayback() {
     try {
       if (playbackState == TrackPlayer.STATE_PLAYING) {
-        await TrackPlayer.stop()
+        await safely(TrackPlayer.stop)
       } else {
         await updateTrack()
-        await TrackPlayer.play()
+        await safely(TrackPlayer.play)
       }
     } catch (error) {
       console.log(error)
@@ -181,3 +194,22 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
 })
+
+async function safely(action, ...args) {
+  try {
+    return await action(...args)
+  } catch (e) {
+    if (e.message === 'The playback is not initialized') {
+      // reinitialize player and retry
+      try {
+        await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
+        return await action(...args)
+      } catch (e) {
+        console.error(e)
+        return null
+      }
+    }
+    console.error(e)
+    return null
+  }
+}

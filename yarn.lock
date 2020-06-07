@@ -10721,10 +10721,9 @@ react-native-swipe-gestures@^1.0.4:
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
 
-react-native-track-player@^1.2.3:
+"react-native-track-player@https://github.com/knyar/react-native-track-player.git#svitle":
   version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-track-player/-/react-native-track-player-1.2.3.tgz#cd147b1fc93a229c49392abd7b37f087285e673a"
-  integrity sha512-h8HWOC9Zo54hen0ttlGzdofEMH38CPfT6+UWAcbEoHFgGcvxsRlJAgubdtM3QWwWZh20Q2zvQA8+8/l4Bu0yfA==
+  resolved "https://github.com/knyar/react-native-track-player.git#c7d9effb91895dac125ba3da0315048637d8e5dc"
 
 react-native@0.61.5:
   version "0.61.5"
