@@ -42,12 +42,6 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
     case TrackPlayer.STATE_PLAYING:
       ButtonComponent = PauseButton
       break
-    case TrackPlayer.STATE_PAUSED:
-      if (Platform.OS === 'android') {
-        // Android player is PAUSED when no track is loaded, so the button should be
-        // enabled.
-        break
-      }
     case TrackPlayer.STATE_BUFFERING:
     case TrackPlayer.STATE_CONNECTING:
       enabled = false
