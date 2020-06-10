@@ -110,6 +110,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
           url: props.url,
           title: mainStore.current_station.name,
           artist: "",
+          type: props.url.endsWith(".m3u8") ? "hls" : "default",
         })
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await safely(TrackPlayer.play)
@@ -131,7 +132,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   async function togglePlayback() {
     try {
       if (playbackState == TrackPlayer.STATE_PLAYING) {
-        await safely(TrackPlayer.stop)
+        await safely(TrackPlayer.pause)
       } else {
         await updateTrack()
         await safely(TrackPlayer.play)

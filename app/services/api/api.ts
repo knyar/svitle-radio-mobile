@@ -91,10 +91,10 @@ const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
       stream_url_low: undefined,
     }
     for (const stream of station.streams) {
-      if (stream["name"] == "normal") {
-        s.stream_url = stream["url"]
-      } else if (stream["name"] == "low") {
+      if (stream["name"] == "low") {
         s.stream_url_low = stream["url"]
+      } else {
+        s.stream_url = stream["url"]
       }
     }
     result.set(name, s)
