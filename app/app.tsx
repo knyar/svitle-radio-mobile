@@ -12,6 +12,11 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-stor
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
 import { Timer } from "./components"
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({ 
+  dsn: 'https://75271eed80a14b14943fd330406f1b3e@o405793.ingest.sentry.io/5272159', 
+});
 
 // https://github.com/mobxjs/mobx-react-lite#observer-batching
 import 'mobx-react-lite/batchingForReactNative'

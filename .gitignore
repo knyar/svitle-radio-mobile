@@ -67,3 +67,5 @@ buck-out/
 
 # Configurations
 !env.js
+
+ios/sentry.properties
