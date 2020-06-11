@@ -49,7 +49,7 @@ export class Api {
   }
 
   async getPreferences(): Promise<Types.GetPreferencesResult> {
-    const response: ApiResponse<any> = await this.apisauce.get(`/preferences`)
+    const response: ApiResponse<any> = await this.apisauce.get(`/preferences.svetloe`)
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
