@@ -5,6 +5,7 @@ import { NumberProp } from "react-native-svg"
 import { Station } from "../models/station"
 import SvetloeLogo from "../images/svetloe.svg"
 import SvitleLogo from "../images/svitle.svg"
+import KidsLogo from "../images/kids.svg"
 
 export interface LogoProps {
   station: Station,
@@ -19,6 +20,7 @@ export const Logo: React.FunctionComponent<LogoProps> = props => {
   const logos = {
     svitle: SvitleLogo,
     svetloe: SvetloeLogo,
+    kids: KidsLogo,
   }
   const LogoComponent = logos[logoid] || logos[defaultid]
   
