@@ -10,8 +10,8 @@ Create `ios/sentry.properties` to allow Sentry to upload debug symbols:
 
 ```
 defaults.url=https://sentry.io/
-defaults.org=your-org-name
-defaults.project=your-project-name
+defaults.org=ikkit
+defaults.project=svetloe
 auth.token=your-user's-auth-token
 ```
 
