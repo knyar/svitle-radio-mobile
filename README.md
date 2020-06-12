@@ -17,5 +17,4 @@ auth.token=your-user's-auth-token
 
 ## TODO
 
-* Use current station logo while configuring media track
 * Cherry-pick metadata update event for iOS

@@ -4,6 +4,7 @@ import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, Platform } f
 import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
+import { Station } from "../models/station"
 import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
@@ -72,6 +73,7 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
 
 export interface PlayerProps {
   url?: string,
+  current_track: string,
 }
 export const Player: React.FunctionComponent<PlayerProps> = props => {
   const { mainStore } = useStores()
@@ -107,6 +109,27 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     setupPlayer()
   }, [])
 
+  const trackMetadata = (): any => {
+    return {
+      id: props.url,
+      artwork: artwork(mainStore.current_station.logo),
+      artist: mainStore.current_station.name,
+      title: mainStore.current_track || "",
+    }
+  }
+
+  async function updateMetadata() {
+    const currentTrack = await TrackPlayer.getCurrentTrack()
+    if (currentTrack == props.url) {
+      const metadata = trackMetadata()
+      await TrackPlayer.updateMetadataForTrack(props.url, metadata)
+    }
+  }
+
+  useEffect(() => {
+    updateMetadata()
+  }, [props.current_track])
+
   async function updateTrack() {
     try {
       const running = await TrackPlayer.isServiceRunning()
@@ -116,15 +139,11 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         const prevState = playbackState
         console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
         await safely(TrackPlayer.reset)
-        await safely(TrackPlayer.add, {
-          id: props.url,
-          url: props.url,
-          userAgent: UserAgent(),
-          title: mainStore.current_station.name,
-          artist: "",
-          type: props.url.endsWith(".m3u8") ? "hls" : "default",
-          artwork: artwork(mainStore.current_station.logo),
-        })
+        let track = trackMetadata()
+        track.url = props.url
+        track.userAgent = UserAgent()
+        track.type = props.url.endsWith(".m3u8") ? "hls" : "default"
+        await safely(TrackPlayer.add, track)
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await safely(TrackPlayer.play)
         }
