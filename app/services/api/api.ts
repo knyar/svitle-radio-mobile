@@ -42,8 +42,7 @@ export class Api {
       headers: {
         'Accept': "application/json",
         'Cache-Control': 'no-cache',
-        'User-Agent': "Svitle/" + getReadableVersion() + " " +
-          getSystemName() + "/" + getSystemVersion(),
+        'User-Agent': UserAgent(),
       },
     })
   }
@@ -78,6 +77,11 @@ export class Api {
       return { kind: "bad-data" }
     }
   }
+}
+
+export const UserAgent = (): string => {
+  return "Svitle/" + getReadableVersion() + " " + 
+    getSystemName() + "/" + getSystemVersion()
 }
 
 const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {

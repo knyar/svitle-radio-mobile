@@ -7,6 +7,8 @@ import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
+import { UserAgent } from "../services/api"
+
 
 const PLAYER_BUFFER = 0.2
 const PLAYER_OPTIONS = {
@@ -14,6 +16,15 @@ const PLAYER_OPTIONS = {
   minBuffer: PLAYER_BUFFER * 2,
   maxBuffer: PLAYER_BUFFER * 2,
   waitForBuffer: true,
+}
+
+const artwork = (logo: string): any => {
+  const artworks = {
+    svitle: require("../images/artwork.svitle.png"),
+    svetloe: require("../images/artwork.svetloe.png"),
+    kids: require("../images/artwork.kids.png"),
+  }
+  return artworks[logo]
 }
 
 interface NowPlayingProps {
@@ -108,9 +119,11 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         await safely(TrackPlayer.add, {
           id: props.url,
           url: props.url,
+          userAgent: UserAgent(),
           title: mainStore.current_station.name,
           artist: "",
           type: props.url.endsWith(".m3u8") ? "hls" : "default",
+          artwork: artwork(mainStore.current_station.logo),
         })
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await safely(TrackPlayer.play)
