@@ -43,7 +43,7 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
 
 interface ButtonProps {
   url?: string,
-  playbackState: string,
+  playbackState: TrackPlayer.State,
   toggle: () => void,
 }
 export const Button: React.FunctionComponent<ButtonProps> = props => {
