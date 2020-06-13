@@ -14,7 +14,3 @@ defaults.org=ikkit
 defaults.project=svetloe
 auth.token=your-user's-auth-token
 ```
-
-## TODO
-
-* Cherry-pick metadata update event for iOS

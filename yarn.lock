@@ -10884,7 +10884,7 @@ react-native-swipe-gestures@^1.0.4:
 
 "react-native-track-player@https://github.com/knyar/react-native-track-player.git#svitle":
   version "1.2.3"
-  resolved "https://github.com/knyar/react-native-track-player.git#c7d9effb91895dac125ba3da0315048637d8e5dc"
+  resolved "https://github.com/knyar/react-native-track-player.git#8956a8b4086e807dabdf374bb6d68b911b64f641"
 
 react-native@0.61.5:
   version "0.61.5"
