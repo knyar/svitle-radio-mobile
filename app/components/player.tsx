@@ -4,18 +4,16 @@ import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, Platform } f
 import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
-import { Station } from "../models/station"
 import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
 
 
-const PLAYER_BUFFER = 0.2
 const PLAYER_OPTIONS = {
-  playBuffer: PLAYER_BUFFER,
-  minBuffer: PLAYER_BUFFER * 2,
-  maxBuffer: PLAYER_BUFFER * 2,
+  playBuffer: 0.5,
+  minBuffer: 5,
+  maxBuffer: 20,
   waitForBuffer: true,
 }
 
@@ -122,7 +120,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     const currentTrack = await TrackPlayer.getCurrentTrack()
     if (currentTrack == props.url) {
       const metadata = trackMetadata()
-      await TrackPlayer.updateMetadataForTrack(props.url, metadata)
+      await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
     }
   }
 
@@ -146,6 +144,8 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         await safely(TrackPlayer.add, track)
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await safely(TrackPlayer.play)
+        } else {
+          await safely(TrackPlayer.stop)
         }
       }
     } catch (error) {
