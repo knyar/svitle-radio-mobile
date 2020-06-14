@@ -1,16 +1,22 @@
 import * as React from "react"
 import { Text, View, StyleSheet} from "react-native"
-import IconSvetloe from '../images/svetloe.icon.svg'
+import IconSvetloe from '../images/header.svetloe.svg'
+import IconSvitle from '../images/header.svitle.svg'
 import { colors } from "../theme"
+const { NAME } = require("../config/flavor")
 
 interface Props {
   title: string,
 }
 
 export const Header: React.FunctionComponent<Props> = props => {
+  const IconComponent = {
+    svetloe: IconSvetloe,
+    svitle: IconSvitle,
+  }[NAME]
   return (
     <View style={styles.header}>
-      <IconSvetloe style={styles.icon} height={40} width={40} fill={colors.primary}/>
+      <IconComponent style={styles.icon} height={40} width={40} fill={colors.primary}/>
       <Text style={styles.text}>{props.title}</Text>
     </View>
   )

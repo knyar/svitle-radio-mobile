@@ -11,6 +11,7 @@ import IconViber from '../images/icon.viber.svg'
 import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
+const { WEBSITE } = require("../config/flavor")
 
 export interface ContactsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
@@ -63,12 +64,12 @@ const blockComponent = (block: ContactBlock) => {
 
 export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {
   const { mainStore } = useStores()
-  const openWebsite = () => Linking.openURL("https://svetloe.org/")
+  const openWebsite = () => Linking.openURL("https://" + WEBSITE)
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")}>
       <View style={styles.container}>
         <TouchableOpacity onPress={openWebsite}>
-          <Text style={styles.website}>svetloe.org</Text>
+          <Text style={styles.website}>{WEBSITE}</Text>
         </TouchableOpacity>
       </View>
       {mainStore.preferences.contacts.map(blockComponent)}

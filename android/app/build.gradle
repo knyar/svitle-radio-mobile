@@ -123,13 +123,15 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    flavorDimensions "default"
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId "com.svitleradio"
+        // applicationId "com.svitleradio"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -162,6 +164,19 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    productFlavors {
+        svitle {
+            applicationId 'com.svitleradio'
+            // minSdkVersion rootProject.ext.minSdkVersion
+            // targetSdkVersion rootProject.ext.targetSdkVersion
+            // buildConfigField "String", "FLAVOR", '"svitle"'
+        }
+        svetloe {
+            applicationId 'org.svetloe'
+            // minSdkVersion rootProject.ext.minSdkVersion
+            // targetSdkVersion rootProject.ext.targetSdkVersion
         }
     }
     // applicationVariants are e.g. debug, release

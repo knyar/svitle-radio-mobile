@@ -8,6 +8,7 @@ import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
+const { NAME } = require("../config/flavor")
 
 
 const PLAYER_OPTIONS = {
@@ -15,6 +16,13 @@ const PLAYER_OPTIONS = {
   minBuffer: 5,
   maxBuffer: 20,
   waitForBuffer: true,
+}
+
+const background = (): any => {
+  return {
+    svitle: require("../images/bg.svitle.png"),
+    svetloe: require("../images/bg.svetloe.png"),
+  }[NAME]
 }
 
 const artwork = (logo: string): any => {
@@ -176,7 +184,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   return useObserver(() => (
     <View style={styles.container}>
-      <ImageBackground style={styles.lines} source={require('../images/lines.png')}>
+      <ImageBackground style={styles.lines} source={background()}>
         <Button url={props.url} playbackState={playbackState} toggle={togglePlayback}/>
       </ImageBackground>
       <View style={styles.npContainer}>

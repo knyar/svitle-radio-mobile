@@ -1,1 +1,18 @@
-{}
+{ 
+    "live_screen": {
+        "title": "Слухати",
+        "player_now": "Зараз:",
+        "player_next": "Наступне:",
+        "support_radio": "Підтримати радио",
+        "save_traffic": "Економити трафік"
+    },
+    "streams_screen": {
+        "title": "Канали",
+        "archive": "Архів передач",
+        "youtube": "Відеоверсії на Youtube"
+    },
+    "contacts_screen": {
+        "menu_title": "Контакти",
+        "title": "ТРК «Еммануїл»"
+    }
+}
