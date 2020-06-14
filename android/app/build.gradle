@@ -131,11 +131,10 @@ android {
     }
 
     defaultConfig {
-        // applicationId "com.svitleradio"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 20006
+        versionName "2.0.6"
         multiDexEnabled true
     }
     splits {
@@ -169,14 +168,9 @@ android {
     productFlavors {
         svitle {
             applicationId 'com.svitleradio'
-            // minSdkVersion rootProject.ext.minSdkVersion
-            // targetSdkVersion rootProject.ext.targetSdkVersion
-            // buildConfigField "String", "FLAVOR", '"svitle"'
         }
         svetloe {
             applicationId 'org.svetloe'
-            // minSdkVersion rootProject.ext.minSdkVersion
-            // targetSdkVersion rootProject.ext.targetSdkVersion
         }
     }
     // applicationVariants are e.g. debug, release
