@@ -125,8 +125,13 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   async function updateMetadata() {
+    if (playbackState != TrackPlayer.STATE_PLAYING &&
+      playbackState != TrackPlayer.STATE_BUFFERING &&
+      playbackState != TrackPlayer.STATE_PAUSED) {
+        return
+    }
     const currentTrack = await TrackPlayer.getCurrentTrack()
-    if (currentTrack == props.url) {
+    if (currentTrack && (currentTrack == props.url)) {
       const metadata = trackMetadata()
       await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
     }
@@ -152,8 +157,6 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         await safely(TrackPlayer.add, track)
         if (prevState == TrackPlayer.STATE_PLAYING) {
           await safely(TrackPlayer.play)
-        } else {
-          await safely(TrackPlayer.stop)
         }
       }
     } catch (error) {
