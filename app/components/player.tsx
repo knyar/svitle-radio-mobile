@@ -8,7 +8,7 @@ import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
-const { NAME } = require("../config/flavor")
+const { FLAVOR } = require("../config/flavor")
 
 
 const PLAYER_OPTIONS = {
@@ -22,7 +22,7 @@ const background = (): any => {
   return {
     svitle: require("../images/bg.svitle.png"),
     svetloe: require("../images/bg.svetloe.png"),
-  }[NAME]
+  }[FLAVOR]
 }
 
 const artwork = (logo: string): any => {

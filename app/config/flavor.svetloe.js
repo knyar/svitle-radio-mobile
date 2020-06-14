@@ -1,5 +1,5 @@
 module.exports = {
-  NAME: "svetloe",
+  FLAVOR: "svetloe",
   WEBSITE: "svetloe.org",
-  LANG: "ru",
+  I18N_LANGUAGE: "ru",
 }

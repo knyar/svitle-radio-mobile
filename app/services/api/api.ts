@@ -4,7 +4,7 @@ import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { StreamInfo } from "../../models/stream-info"
 import * as Types from "./api.types"
-const { NAME } = require("../../config/flavor")
+const { FLAVOR } = require("../../config/flavor")
 
 /**
  * Manages all requests to the API.
@@ -49,7 +49,7 @@ export class Api {
   }
 
   async getPreferences(): Promise<Types.GetPreferencesResult> {
-    const response: ApiResponse<any> = await this.apisauce.get('/preferences.' + NAME)
+    const response: ApiResponse<any> = await this.apisauce.get('/preferences.' + FLAVOR)
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

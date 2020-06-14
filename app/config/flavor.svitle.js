@@ -1,5 +1,5 @@
 module.exports = {
-  NAME: "svitle",
+  FLAVOR: "svitle",
   WEBSITE: "svitle.org",
-  LANG: "ua",
+  I18N_LANGUAGE: "ua",
 }

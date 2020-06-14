@@ -1,4 +1,4 @@
-const { NAME } = require("./config/flavor")
+const { FLAVOR } = require("./config/flavor")
 
 const svetloe = {
   primary: "#2183CC",
@@ -19,4 +19,4 @@ const svitle = {
 export const colors = {
   "svitle": svitle,
   "svetloe": svetloe,
-}[NAME]
+}[FLAVOR]
