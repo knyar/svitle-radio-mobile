@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android-svetloe": "react-native run-android --variant svetloeDebug",
-    "android-svitle": "react-native run-android --variant svitleDebug",
+    "android-svetloe": "react-native run-android --variant svetloeDebug --appId org.svetloe",
+    "android-svitle": "react-native run-android --variant svitleDebug --appId com.svitleradio",
+    "android-release-svetloe": "cd android && ./gradlew bundleSvetloeRelease",
+    "android-release-svitle": "cd android && ./gradlew bundleSvitleRelease",
     "ios-svetloe": "react-native run-ios --scheme SvetloeRadio --configuration Svetloe.Debug",
     "ios-svitle": "react-native run-ios --scheme SvitleRadio --configuration Svitle.Debug",
     "start": "react-native start",

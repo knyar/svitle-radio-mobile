@@ -133,8 +133,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20006
-        versionName "2.0.6"
+        versionCode 20008
+        versionName "2.0.8"
         multiDexEnabled true
     }
     splits {
@@ -152,15 +152,21 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+             if (project.hasProperty('SVITLE_UPLOAD_STORE_FILE')) {
+                storeFile file(SVITLE_UPLOAD_STORE_FILE)
+                storePassword SVITLE_UPLOAD_STORE_PASSWORD
+                keyAlias SVITLE_UPLOAD_KEY_ALIAS
+                keyPassword SVITLE_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
