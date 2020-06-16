@@ -12,10 +12,10 @@ const { FLAVOR } = require("../config/flavor")
 
 
 const PLAYER_OPTIONS = {
-  playBuffer: 0.5,
-  minBuffer: 5,
-  maxBuffer: 20,
-  waitForBuffer: true,
+  playBuffer: 5,  // Android only
+  minBuffer: 10,  // iOS & Android
+  maxBuffer: 20, // Android only
+  waitForBuffer: true,  // iOS only
 }
 
 const background = (): any => {
