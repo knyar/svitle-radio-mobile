@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState, useEffect } from "react"
 import { useObserver } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet, Linking } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
@@ -17,25 +17,52 @@ export interface ContactsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
+const allLinksEnabled = __DEV__
+
 const iconLinkComponent = (item: ContactItem) => {
-  if (!item.url) { return null }
-  const onPress = () => Linking.openURL(item.url)
+  const [supported, setSupported] = useState(allLinksEnabled)
+
+  useEffect(() => {
+    ;(async () => {
+      setSupported(await Linking.canOpenURL(item.url) || allLinksEnabled)
+    })()
+  }, [])
+
   const icons = {
+    // If you add more icon types here, also adjust LSApplicationQueriesSchemes
+    // in info.plist
     skype: IconSkype,
     viber: IconViber,
   }
-  if (!(item.text in icons)) { return null }
+  if (!(item.text in icons) || !item.url) { return <View key={item.url}/> }
   const IconComponent = icons[item.text]
 
+  if (!supported) {
+    console.log("Link '" + item.url + "' is not supported")
+    return useObserver(() => (<View key={item.url}/>))
+  }
+  const onPress = () => Linking.openURL(item.url)
   return useObserver(() => (
     <TouchableOpacity key={item.url} style={styles.icon} onPress={onPress}>
-      <IconComponent height={40} fill={colors.primary}/>
+      <IconComponent height={40} fill={colors.primary} />
     </TouchableOpacity>
   ))
 }
 
 const textLinkComponent = (item: ContactItem) => {
-  if (!item.url) { return null }
+  const [supported, setSupported] = useState(allLinksEnabled)
+
+  useEffect(() => {
+    ;(async () => {
+      setSupported(await Linking.canOpenURL(item.url) || allLinksEnabled)
+    })()
+  }, [])
+
+  if (!item.url) { return <View key={item.url}/> }
+  if (!supported) {
+    console.log("Link '" + item.url + "' is not supported")
+    return useObserver(() => (<Text key={item.url} style={styles.text}>{item.text}</Text>))
+  }
   const onPress = () => Linking.openURL(item.url)
   return useObserver(() => (
     <TouchableOpacity onPress={onPress} key={item.url}>
@@ -98,9 +125,10 @@ const styles = StyleSheet.create({
   },
   icons: {
     flexDirection: "row",
-    margin: spacing,
   },
-  icon: {},
+  icon: {
+    marginBottom: 5,
+  },
   text: {
     margin: spacing,
     color: colors.text,
