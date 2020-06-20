@@ -12,6 +12,7 @@ const Tab = createBottomTabNavigator()
 export function PrimaryNavigator() {
   return (
     <Tab.Navigator
+    initialRouteName="streams"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         const c = focused ? colors.active : colors.primary;
