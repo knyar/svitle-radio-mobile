@@ -26,9 +26,3 @@ yarn ios-svetloe  # run ios simulator
 ```
 
 To start Xcode: `open ios/SvitleRadio.xcworkspace`
-
-## TODO
-
-* Changing the stream should start playback and switch to the 'live' screen.
-* First launch of the app should default to the 'streams' screen.
-* Review navigation code and "exit allowed" routes.

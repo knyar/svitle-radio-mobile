@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useObserver } from "mobx-react-lite"
-import { TouchableOpacity, Text, View, StyleSheet, ViewStyle } from "react-native"
+import { TouchableOpacity, Text, View, StyleSheet } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
 import { NativeStackNavigationProp } from "react-native-screens/native-stack"
 import { Screen, FooterLink, Logo } from "../components"
@@ -17,20 +17,31 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
   const { mainStore } = useStores()
 
   const stationComponent = (station: Station) => {
-    const onPress = () => mainStore.local.setStation(station.id)
-    let style: ViewStyle[] = [styles.stream]
-    if (mainStore.local.station == station.id) {
-      style.push(styles.streamSelected)
+    const onPress = () => {
+      mainStore.local.setStation(station.id)
+      props.navigation.navigate("live")
     }
 
-    return useObserver(() => (
-      <TouchableOpacity style={style} onPress={onPress} key={station.id}>
-        <View style={styles.streamContainer}>
-          <Logo station={station} style={styles.streamLogo} height={80}/>
-          <Text style={styles.streamText}>{station.name}</Text>
+    const view = (
+      <View style={styles.stream}>
+        <Logo station={station} style={styles.streamLogo} height={80} />
+        <Text style={styles.streamText}>{station.name}</Text>
+      </View>
+    )
+
+    if (mainStore.local.station == station.id) {
+      return useObserver(() => (
+        <View style={[styles.stream, styles.streamSelected]} key={station.id}>
+          {view}
         </View>
-      </TouchableOpacity>
-    ))
+      ))
+    } else {
+      return useObserver(() => (
+        <TouchableOpacity style={styles.stream} onPress={onPress} key={station.id}>
+          {view}
+        </TouchableOpacity>
+      ))
+    }
   }
 
   return useObserver(() => (
@@ -55,12 +66,6 @@ const styles = StyleSheet.create({
     flex: 5,
   },
   stream: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  streamContainer: {
     flex: 1,
     flexDirection: "column",
     alignItems: "center",

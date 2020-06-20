@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, Platform } from "react-native"
 import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
@@ -84,6 +84,8 @@ export interface PlayerProps {
 export const Player: React.FunctionComponent<PlayerProps> = props => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState();
+  const [currentStation, setCurrentStation] = useState(mainStore.local.station)
+
   if (Platform.OS === 'android') {
     // TODO: also use this for iOS when it's supported
     // https://github.com/react-native-kit/react-native-track-player/issues/933
@@ -124,21 +126,19 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     }
   }
 
-  async function updateMetadata() {
-    if (playbackState != TrackPlayer.STATE_PLAYING &&
-      playbackState != TrackPlayer.STATE_BUFFERING &&
-      playbackState != TrackPlayer.STATE_PAUSED) {
-        return
-    }
-    const currentTrack = await TrackPlayer.getCurrentTrack()
-    if (currentTrack && (currentTrack == props.url)) {
-      const metadata = trackMetadata()
-      await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
-    }
-  }
-
   useEffect(() => {
-    updateMetadata()
+    ;(async () => {
+      if (playbackState != TrackPlayer.STATE_PLAYING &&
+        playbackState != TrackPlayer.STATE_BUFFERING &&
+        playbackState != TrackPlayer.STATE_PAUSED) {
+          return
+      }
+      const currentTrack = await TrackPlayer.getCurrentTrack()
+      if (currentTrack && (currentTrack == props.url)) {
+        const metadata = trackMetadata()
+        await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
+      }
+    })()
   }, [props.current_track])
 
   async function updateTrack() {
@@ -169,7 +169,15 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }, [playbackState])
 
   useEffect(() => {
-    updateTrack()
+    ;(async () => {
+      await updateTrack()
+      // Start playback when station is changed.
+      if (mainStore.local.station && (mainStore.local.station != currentStation)) {
+        console.log("Starting playback. Prev station " + currentStation + ". New station " + mainStore.local.station)
+        await safely(TrackPlayer.play)
+      }
+      setCurrentStation(mainStore.local.station)
+    })()
   }, [props.url])
 
   async function togglePlayback() {
