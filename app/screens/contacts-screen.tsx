@@ -11,7 +11,6 @@ import IconViber from '../images/icon.viber.svg'
 import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
-const { WEBSITE } = require("../config/flavor")
 
 export interface ContactsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
@@ -82,7 +81,7 @@ const blockComponent = (block: ContactBlock) => {
   }
   return useObserver(() => (
     <View style={styles.container} key={block.title}>
-      <Text style={styles.header}>{block.title}</Text>
+      <Text style={styles.header}>{i18n.t(block.title)}</Text>
       {icons}
       {block.text_links.map(textLinkComponent)}
     </View>
@@ -91,20 +90,14 @@ const blockComponent = (block: ContactBlock) => {
 
 export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {
   const { mainStore } = useStores()
-  const openWebsite = () => Linking.openURL("https://" + WEBSITE)
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={openWebsite}>
-          <Text style={styles.website}>{WEBSITE}</Text>
-        </TouchableOpacity>
-      </View>
       {mainStore.preferences.contacts.map(blockComponent)}
     </Screen>
   ))
 }
 
-const spacing = 7
+const spacing = 3
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
@@ -118,7 +111,8 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   header: {
-    margin: 8,
+    marginTop: 8,
+    marginBottom: spacing,
     fontSize: 16,
     fontWeight: "bold",
     color: colors.text,
@@ -127,10 +121,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   icon: {
-    marginBottom: 5,
+    marginBottom: spacing,
   },
   text: {
-    margin: spacing,
+    marginBottom: spacing,
     color: colors.text,
+    fontSize: 15,
   },
 })
