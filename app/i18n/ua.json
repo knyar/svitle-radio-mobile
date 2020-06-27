@@ -9,7 +9,11 @@
     "streams_screen": {
         "title": "Канали",
         "archive": "Архів передач",
-        "youtube": "Відеоверсії на Youtube"
+        "youtube": "Відеоверсії на Youtube",
+        "lang": {
+            "ru": "російською",
+            "ua": "українською"
+        }
     },
     "contacts_screen": {
         "menu_title": "Контакти",

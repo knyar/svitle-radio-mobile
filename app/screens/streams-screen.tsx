@@ -26,6 +26,7 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
       <View style={styles.stream}>
         <Logo station={station} style={styles.streamLogo} height={80} />
         <Text style={styles.streamText}>{station.name}</Text>
+        <Text style={styles.streamLang}>({i18n.t("streams_screen.lang." + station.lang)})</Text>
       </View>
     )
 
@@ -77,6 +78,10 @@ const styles = StyleSheet.create({
   },
   streamText: {
     fontSize: 16,
+    color: colors.text,
+  },
+  streamLang: {
+    fontSize: 13,
     color: colors.text,
   },
   streamSelected: {backgroundColor: colors.menuBackgroundActive},

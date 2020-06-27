@@ -9,6 +9,7 @@ export const StationModel = types
     id: types.string,
     name: types.string,
     logo: types.string,
+    lang: types.string,
   })
   .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
