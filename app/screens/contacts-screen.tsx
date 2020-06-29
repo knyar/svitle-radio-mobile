@@ -38,14 +38,14 @@ const iconLinkComponent = (item: ContactItem) => {
 
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return useObserver(() => (<View key={item.url}/>))
+    return <View key={item.url}/>
   }
   const onPress = () => Linking.openURL(item.url)
-  return useObserver(() => (
+  return (
     <TouchableOpacity key={item.url} style={styles.icon} onPress={onPress}>
       <IconComponent height={40} fill={colors.primary} />
     </TouchableOpacity>
-  ))
+  )
 }
 
 const textLinkComponent = (item: ContactItem) => {
@@ -60,14 +60,14 @@ const textLinkComponent = (item: ContactItem) => {
   if (!item.url) { return <View key={item.url}/> }
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return useObserver(() => (<Text key={item.url} style={styles.text}>{item.text}</Text>))
+    return <Text key={item.url} style={styles.text}>{item.text}</Text>
   }
   const onPress = () => Linking.openURL(item.url)
-  return useObserver(() => (
+  return (
     <TouchableOpacity onPress={onPress} key={item.url}>
       <Text style={styles.text}>{item.text}</Text>
     </TouchableOpacity>
-  ))
+  )
 }
 
 const blockComponent = (block: ContactBlock) => {
@@ -79,13 +79,13 @@ const blockComponent = (block: ContactBlock) => {
       </View>
     )
   }
-  return useObserver(() => (
+  return (
     <View style={styles.container} key={block.title}>
       <Text style={styles.header}>{i18n.t(block.title)}</Text>
       {icons}
       {block.text_links.map(textLinkComponent)}
     </View>
-  ))
+  )
 }
 
 export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {

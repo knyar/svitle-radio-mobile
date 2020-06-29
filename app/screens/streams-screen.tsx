@@ -31,17 +31,17 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
     )
 
     if (mainStore.local.station == station.id) {
-      return useObserver(() => (
+      return (
         <View style={[styles.stream, styles.streamSelected]} key={station.id}>
           {view}
         </View>
-      ))
+      )
     } else {
-      return useObserver(() => (
+      return (
         <TouchableOpacity style={styles.stream} onPress={onPress} key={station.id}>
           {view}
         </TouchableOpacity>
-      ))
+      )
     }
   }
 
