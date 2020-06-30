@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
-import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, Platform } from "react-native"
+import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState } from "react-native"
 import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
@@ -83,16 +83,22 @@ export interface PlayerProps {
 }
 export const Player: React.FunctionComponent<PlayerProps> = props => {
   const { mainStore } = useStores()
-  const playbackState = usePlaybackState();
+  const playbackState = usePlaybackState()
   const [currentStation, setCurrentStation] = useState(mainStore.local.station)
 
-  if (Platform.OS === 'android') {
-    // TODO: also use this for iOS when it's supported
-    // https://github.com/react-native-kit/react-native-track-player/issues/933
-    useTrackPlayerEvents(["playback-metadata-received"], async () => {
+  const _handleAppStateChange = appState => {
+    if (appState === "active") {
       mainStore.updateStreamInfo()
-    })
+    }
   }
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange)
+    return () => { AppState.removeEventListener("change", _handleAppStateChange) }
+  }, [])
+
+  useTrackPlayerEvents(["playback-metadata-received"], async () => {
+    mainStore.updateStreamInfo()
+  })
 
   async function setupPlayer() {
     try {

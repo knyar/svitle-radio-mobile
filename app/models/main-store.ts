@@ -1,6 +1,6 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { PreferencesModel, PreferencesSnapshot } from "./preferences"
-import { StreamInfo, StreamInfoModel, StreamInfoSnapshot } from "./stream-info"
+import { StreamInfo, StreamInfoModel } from "./stream-info"
 import { Station } from "./station"
 import { LocalSettingsModel } from "./local-settings"
 import { withEnvironment} from "./with-environment"
