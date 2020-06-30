@@ -133,8 +133,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20008
-        versionName "2.0.8"
+        versionCode 20010
+        versionName "2.0.10"
         multiDexEnabled true
     }
     splits {
@@ -153,11 +153,11 @@ android {
             keyPassword 'android'
         }
         release {
-             if (project.hasProperty('SVITLE_UPLOAD_STORE_FILE')) {
-                storeFile file(SVITLE_UPLOAD_STORE_FILE)
-                storePassword SVITLE_UPLOAD_STORE_PASSWORD
-                keyAlias SVITLE_UPLOAD_KEY_ALIAS
-                keyPassword SVITLE_UPLOAD_KEY_PASSWORD
+             if (project.hasProperty('SVITLE_RELEASE_STORE_FILE')) {
+                storeFile file(SVITLE_RELEASE_STORE_FILE)
+                storePassword SVITLE_RELEASE_STORE_PASSWORD
+                keyAlias SVITLE_RELEASE_KEY_ALIAS
+                keyPassword SVITLE_RELEASE_KEY_PASSWORD
             }
         }
     }
