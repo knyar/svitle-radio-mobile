@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.1",
-    "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/bottom-tabs": "^5.2.7",
     "@react-navigation/native": "^5.0.0",
     "@sentry/react-native": "^1.4.5",
