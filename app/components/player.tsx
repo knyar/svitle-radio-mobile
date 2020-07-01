@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
-import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState } from "react-native"
-import TrackPlayer, { useTrackPlayerEvents, usePlaybackState } from "react-native-track-player";
+import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState, Platform } from "react-native"
+import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
@@ -87,13 +87,26 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   const [currentStation, setCurrentStation] = useState(mainStore.local.station)
 
   const _handleAppStateChange = appState => {
+    console.log("App state: " + appState)
     if (appState === "active") {
       mainStore.updateStreamInfo()
+    }
+    // Clear track information while going to background on Android.
+    // This is necessary because Android app will be stopped and no streaminfo
+    // updates will be happening until it's back in foreground.
+    if ((Platform.OS === 'android') && (appState != "active")) {
+      const metadata = trackMetadata()
+      metadata.title = ""
+      safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
     }
   }
   useEffect(() => {
     AppState.addEventListener("change", _handleAppStateChange)
-    return () => { AppState.removeEventListener("change", _handleAppStateChange) }
+    console.log("Player mounted")
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange)
+      console.log("Player unmounted")
+     }
   }, [])
 
   async function setupPlayer() {
