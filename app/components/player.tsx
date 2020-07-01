@@ -111,7 +111,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function setupPlayer() {
     try {
-      if (await TrackPlayer.isServiceRunning()) {
+      if ((Platform.OS === 'android') && (await TrackPlayer.isServiceRunning())) {
         console.log("Player already running on setupPlayer; skipping")
         return
       }
@@ -119,11 +119,12 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
       await TrackPlayer.updateOptions({
         capabilities: [
           TrackPlayer.CAPABILITY_PLAY,
+          TrackPlayer.CAPABILITY_PAUSE,
           TrackPlayer.CAPABILITY_STOP
         ],
         compactCapabilities: [
           TrackPlayer.CAPABILITY_PLAY,
-          TrackPlayer.CAPABILITY_STOP
+          TrackPlayer.CAPABILITY_PAUSE
         ]
       });
     } catch (error) {
