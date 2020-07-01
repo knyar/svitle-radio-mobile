@@ -96,22 +96,17 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     return () => { AppState.removeEventListener("change", _handleAppStateChange) }
   }, [])
 
-  useTrackPlayerEvents(["playback-metadata-received"], async () => {
-    mainStore.updateStreamInfo()
-  })
-
   async function setupPlayer() {
     try {
       await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
       await TrackPlayer.updateOptions({
         capabilities: [
           TrackPlayer.CAPABILITY_PLAY,
-          TrackPlayer.CAPABILITY_PAUSE,
           TrackPlayer.CAPABILITY_STOP
         ],
         compactCapabilities: [
           TrackPlayer.CAPABILITY_PLAY,
-          TrackPlayer.CAPABILITY_PAUSE
+          TrackPlayer.CAPABILITY_STOP
         ]
       });
     } catch (error) {
