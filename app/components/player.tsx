@@ -111,6 +111,10 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function setupPlayer() {
     try {
+      if (await TrackPlayer.isServiceRunning()) {
+        console.log("Player already running on setupPlayer; skipping")
+        return
+      }
       await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
       await TrackPlayer.updateOptions({
         capabilities: [
