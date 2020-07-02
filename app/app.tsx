@@ -2,12 +2,10 @@ import "./i18n"
 import React, { useState, useEffect, useRef } from "react"
 import { YellowBox } from "react-native"
 import { NavigationContainerRef } from "@react-navigation/native"
-import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
 import { SafeAreaProvider, initialWindowSafeAreaInsets } from "react-native-safe-area-context"
 
-import { RootNavigator, exitRoutes, setRootNavigation } from "./navigation"
-import { useBackButtonHandler } from "./navigation/use-back-button-handler"
+import { RootNavigator, setRootNavigation } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
@@ -37,14 +35,6 @@ YellowBox.ignoreWarnings([
   "not a valid TrackPlayer event: playback-metadata-received",
 ])
 
-/**
- * Are we allowed to exit the app?  This is called when the back button
- * is pressed on android.
- *
- * @param routeName The currently active route name.
- */
-const canExit = (routeName: string) => contains(routeName, exitRoutes)
-
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 /**
@@ -57,7 +47,6 @@ const App: React.FunctionComponent<{}> = () => {
   const [isRestoringNavigationState, setIsRestoringNavigationState] = useState(true)
 
   setRootNavigation(navigationRef)
-  useBackButtonHandler(navigationRef, canExit)
 
   /**
    * Keep track of state changes
