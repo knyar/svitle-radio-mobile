@@ -119,13 +119,10 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
       await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
       await TrackPlayer.updateOptions({
         capabilities: [
-          TrackPlayer.CAPABILITY_PLAY,
           TrackPlayer.CAPABILITY_PAUSE,
-          TrackPlayer.CAPABILITY_STOP
         ],
         compactCapabilities: [
-          TrackPlayer.CAPABILITY_PLAY,
-          TrackPlayer.CAPABILITY_PAUSE
+          TrackPlayer.CAPABILITY_PAUSE,
         ]
       });
     } catch (error) {
@@ -206,7 +203,8 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   async function togglePlayback() {
     try {
       if (playbackState == TrackPlayer.STATE_PLAYING) {
-        await safely(TrackPlayer.pause)
+        await safely(TrackPlayer.stop)
+        await safely(TrackPlayer.reset)
       } else {
         await updateTrack()
         await safely(TrackPlayer.play)
