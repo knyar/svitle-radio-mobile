@@ -85,9 +85,18 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
   const [currentStation, setCurrentStation] = useState(mainStore.local.station)
+  const [appState, setAppState] = useState(AppState.currentState)
 
-  const _handleAppStateChange = appState => {
-    console.log("App state: " + appState)
+  useEffect(() => {
+    AppState.addEventListener("change", setAppState)
+    console.log("Player mounted")
+    return () => {
+      AppState.removeEventListener("change", setAppState)
+      console.log("Player unmounted")
+     }
+  }, [])
+
+  useEffect(() => {
     if (appState === "active") {
       mainStore.updateStreamInfo()
     }
@@ -99,15 +108,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
       metadata.title = ""
       safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
     }
-  }
-  useEffect(() => {
-    AppState.addEventListener("change", _handleAppStateChange)
-    console.log("Player mounted")
-    return () => {
-      AppState.removeEventListener("change", _handleAppStateChange)
-      console.log("Player unmounted")
-     }
-  }, [])
+  }, [appState])
 
   async function setupPlayer() {
     try {
