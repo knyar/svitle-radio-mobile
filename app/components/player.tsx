@@ -185,7 +185,10 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   useEffect(() => {
-    console.log("Playback state: " + playbackState)
+    const state = {
+      0: "none", 6: "buffering", 8: "connecting", 7: "error", 2: "paused", 3: "playing", 5: "rewinding", 1: "stopped",
+    }[playbackState] || playbackState
+    console.log("Playback state: " + state)
   }, [playbackState])
 
   useEffect(() => {
