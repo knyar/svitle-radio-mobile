@@ -55,10 +55,12 @@ interface ButtonProps {
 }
 export const Button: React.FunctionComponent<ButtonProps> = props => {
   let ButtonComponent = PlayButton
+  let label = "button_label_play"
   let enabled = !!props.url
   switch (props.playbackState) {
     case TrackPlayer.STATE_PLAYING:
       ButtonComponent = PauseButton
+      let label = "button_label_stop"
       break
     case TrackPlayer.STATE_BUFFERING:
     case TrackPlayer.STATE_CONNECTING:
@@ -71,7 +73,7 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
   }
 
   return useObserver(() => (
-    <TouchableOpacity onPress={props.toggle}>
+    <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(label)}>
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
     </TouchableOpacity>
   ))

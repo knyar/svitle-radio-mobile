@@ -4,7 +4,9 @@
         "player_now": "Прямо сейчас:",
         "player_next": "Далее:",
         "support_radio": "Поддержать радио",
-        "save_traffic": "Экономить трафик"
+        "save_traffic": "Экономить трафик",
+        "button_label_play": "Слушать",
+        "button_label_stop": "Остановить"
     },
     "streams_screen": {
         "title": "Каналы",

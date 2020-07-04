@@ -4,7 +4,9 @@
         "player_now": "Зараз:",
         "player_next": "Наступне:",
         "support_radio": "Підтримати радио",
-        "save_traffic": "Економити трафік"
+        "save_traffic": "Економити трафік",
+        "button_label_play": "Слухати",
+        "button_label_stop": "Зупинити"
     },
     "streams_screen": {
         "title": "Канали",
