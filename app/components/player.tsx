@@ -218,7 +218,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   return useObserver(() => (
     <View style={styles.container}>
-      <ImageBackground style={styles.lines} source={background()}>
+      <ImageBackground style={styles.lines} source={background()} resizeMode="stretch">
         <Button url={props.url} playbackState={playbackState} toggle={togglePlayback}/>
       </ImageBackground>
       <View style={styles.npContainer}>
