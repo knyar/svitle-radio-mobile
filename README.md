@@ -1,4 +1,12 @@
-# SvitleRadio
+## Svitle Radio
+
+This is a mobile app for [Svitle Radio](https://svitle.org/), a Christian radio
+station in Kyiv, Ukraine.
+
+Written in React Native, it supports both iOS and Android and uses a simple JSON
+API to discover station metadata.
+
+JSON API is also open source, available [here](https://github.com/knyar/svitle-api)
 
 ## Building instructions
 
