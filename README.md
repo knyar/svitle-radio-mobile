@@ -8,7 +8,7 @@ API to discover station metadata.
 
 JSON API is also open source, available [here](https://github.com/knyar/svitle-api)
 
-## Building instructions
+## Development instructions
 
 ```
 $ yarn install
@@ -27,10 +27,14 @@ auth.token=your-user's-auth-token
 
 ```
 yarn start  # in one terminal
-yarn android-svitle  # run android simulator
-yarn android-svetloe  # run android simulator
-yarn ios-svitle  # run ios simulator
-yarn ios-svetloe  # run ios simulator
+yarn run-svitle-ios # run android simulator
+yarn run-svitle-android # run ios simulator
 ```
 
 To start Xcode: `open ios/SvitleRadio.xcworkspace`
+
+## Building Android release
+
+```
+yarn release-svitle-android
+```
