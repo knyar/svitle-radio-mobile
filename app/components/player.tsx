@@ -105,7 +105,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
-    if ((Platform.OS === 'android') && (appState != "active")) {
+    if ((Platform.OS === 'android') && (appState != "active") && props.url) {
       const metadata = trackMetadata()
       metadata.title = ""
       safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
