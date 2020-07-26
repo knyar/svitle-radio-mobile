@@ -4,8 +4,10 @@ async function stop() {
     // This forces the player to be fully stopped and removed
     // from notification bar and lock screen, both on iOS and
     // Android.
-    await TrackPlayer.reset()
-    await TrackPlayer.destroy()
+    try {
+      await TrackPlayer.reset()
+    } catch (ignore) {}
+    TrackPlayer.destroy()
 }
 
 module.exports = async function() {
