@@ -27,8 +27,8 @@ auth.token=your-user's-auth-token
 
 ```
 yarn start  # in one terminal
-yarn run-svitle-ios # run android simulator
-yarn run-svitle-android # run ios simulator
+yarn run-svitle-ios # run ios simulator
+yarn run-svitle-android # run android simulator
 ```
 
 To start Xcode: `open ios/SvitleRadio.xcworkspace`

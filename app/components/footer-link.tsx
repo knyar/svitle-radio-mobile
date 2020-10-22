@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState, useEffect } from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, Linking, StyleSheet, ViewStyle, TouchableOpacity } from "react-native"
 import i18n from "i18n-js"
@@ -14,8 +14,22 @@ export interface FooterLinkProps {
   style?: ViewStyle | ViewStyle[]
 }
 
+const allLinksEnabled = __DEV__
+
 export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
-  if (!props.url) {
+  const [supported, setSupported] = useState(allLinksEnabled)
+  useEffect(() => {
+    ;(async () => {
+      if (props.url) {
+        setSupported(await Linking.canOpenURL(props.url) || allLinksEnabled)
+      } else {
+        setSupported(false)
+      }
+    })()
+  }, [])
+
+  if (!supported) {
+    console.log("Link '" + props.url + "' is not supported")
     return useObserver(() => (null))
   }
 
