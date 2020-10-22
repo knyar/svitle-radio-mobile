@@ -22,7 +22,7 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
         <Player url={mainStore.current_url} current_track={mainStore.current_track}/>
       </View>
       <View style={styles.footer}>
-        <FooterLink url={mainStore.preferences.url_support}
+        <FooterLink url={mainStore.preferences.localizedUrl("support")}
           icon="support" text="live_screen.support_radio"/>
         <FooterCheckbox
           visible={!!mainStore.current_stream.stream_url_low}

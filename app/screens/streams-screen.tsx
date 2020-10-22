@@ -51,9 +51,9 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
         {mainStore.preferences.stations.map(stationComponent)}
       </View>
       <View style={styles.footer}>
-        <FooterLink url={mainStore.preferences.url_archive}
+        <FooterLink url={mainStore.preferences.localizedUrl("archive")}
           icon="archive" text="streams_screen.archive"/>
-        <FooterLink url={mainStore.preferences.url_youtube}
+        <FooterLink url={mainStore.preferences.localizedUrl("youtube")}
           icon="video" text="streams_screen.youtube"/>
       </View>
     </Screen>
