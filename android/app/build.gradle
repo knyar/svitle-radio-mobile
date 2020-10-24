@@ -133,8 +133,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20121
-        versionName "2.1.21"
+        versionCode 20201
+        versionName "2.2.1"
         multiDexEnabled true
     }
     splits {
