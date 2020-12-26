@@ -18,8 +18,8 @@
 		2DCD954D1E0B4F2C00145EB5 /* SvitleRadioTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SvitleRadioTests.m */; };
 		58137D99BBDF0120C45610AB /* libPods-SvitleRadio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 480EA033A0057A2C1FDAC7FD /* libPods-SvitleRadio.a */; };
 		78F1FFF3D0617503FC1CA08C /* libPods-SvitleRadio-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3232C1B4B2D2C5D099CA73 /* libPods-SvitleRadio-tvOSTests.a */; };
-		A8D39280B41EDC125CDB82B2 /* libPods-SvitleRadioTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */; };
 		B503F5CD94E649071E294F45 /* libPods-SvitleRadio-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDE4A2D9C8F335285041F87 /* libPods-SvitleRadio-tvOS.a */; };
+		B557185DFF5DEFEF9D4580D4 /* libPods-SvitleRadio-SvitleRadioTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCC577E2AAE930885D265CAE /* libPods-SvitleRadio-SvitleRadioTests.a */; };
 		F5B46AB3248C047C000533A4 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B46AB2248C047C000533A4 /* dummy.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +53,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SvitleRadio/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SvitleRadio/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SvitleRadio/main.m; sourceTree = "<group>"; };
+		1557AA619DF79E3122C3B17B /* Pods-SvitleRadio-SvitleRadioTests.svitle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-SvitleRadioTests.svitle.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-SvitleRadioTests/Pods-SvitleRadio-SvitleRadioTests.svitle.release.xcconfig"; sourceTree = "<group>"; };
 		158B50EEE2642990A2B33EF8 /* Pods-SvitleRadio.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio.release.xcconfig"; sourceTree = "<group>"; };
 		1D378B2D7983FCF0ABA075A0 /* Pods-SvitleRadio-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOSTests/Pods-SvitleRadio-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1D53385F20641C81E91FD983 /* Pods-SvitleRadio.svitle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio.svitle.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio.svitle.debug.xcconfig"; sourceTree = "<group>"; };
@@ -61,7 +62,6 @@
 		2D02E47B1E0B4A5D006451C7 /* SvitleRadio-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SvitleRadio-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SvitleRadio-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SvitleRadio-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E0BA79B40DC944CB50C0DA4 /* Pods-SvitleRadioTests.svitle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadioTests.svitle.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadioTests/Pods-SvitleRadioTests.svitle.release.xcconfig"; sourceTree = "<group>"; };
-		43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadioTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44FAE2ED0299B1957B3A1A2D /* Pods-SvitleRadioTests.svetloe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadioTests.svetloe.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadioTests/Pods-SvitleRadioTests.svetloe.debug.xcconfig"; sourceTree = "<group>"; };
 		4715AA5E6D4940A8BB9665A3 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../app/theme/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
 		480EA033A0057A2C1FDAC7FD /* libPods-SvitleRadio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadio.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +73,7 @@
 		6D237B903C174607BA3FFBB1 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BoldItalic.ttf"; path = "../app/theme/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
 		6F2BCA4EB2E26620E7786088 /* Pods-SvitleRadioTests.svetloe.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadioTests.svetloe.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadioTests/Pods-SvitleRadioTests.svetloe.release.xcconfig"; sourceTree = "<group>"; };
 		7DEA6BAF80FE78DD1F844757 /* Pods-SvitleRadio-tvOSTests.svitle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOSTests.svitle.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOSTests/Pods-SvitleRadio-tvOSTests.svitle.debug.xcconfig"; sourceTree = "<group>"; };
+		7FABCCCA8D94101E9FD28A43 /* Pods-SvitleRadio-SvitleRadioTests.svitle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-SvitleRadioTests.svitle.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-SvitleRadioTests/Pods-SvitleRadio-SvitleRadioTests.svitle.debug.xcconfig"; sourceTree = "<group>"; };
 		7FFF4FD7BB0546459CC5E8A1 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLight.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
 		84D5F1C86CD143BF8E76554A /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../app/theme/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		87FA3A6877B0D8C5A6ED61BC /* Pods-SvitleRadio.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio.debug.xcconfig"; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		C587A88001A5101B530D696C /* Pods-SvitleRadio-tvOSTests.svitle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOSTests.svitle.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOSTests/Pods-SvitleRadio-tvOSTests.svitle.release.xcconfig"; sourceTree = "<group>"; };
 		C94681EEA916E43281200720 /* Pods-SvitleRadio-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOS/Pods-SvitleRadio-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CA1D6D08B10C4852B6440E4A /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../app/theme/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		CCC577E2AAE930885D265CAE /* libPods-SvitleRadio-SvitleRadioTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SvitleRadio-SvitleRadioTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D75A80B1A6944D9887058BB8 /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic.ttf"; path = "../app/theme/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; };
 		DC6D1DFB6C57409DA2F25E54 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../app/theme/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		DD5A068A35C0DA332E067548 /* Pods-SvitleRadio-tvOS.svitle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SvitleRadio-tvOS.svitle.release.xcconfig"; path = "Target Support Files/Pods-SvitleRadio-tvOS/Pods-SvitleRadio-tvOS.svitle.release.xcconfig"; sourceTree = "<group>"; };
@@ -114,7 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8D39280B41EDC125CDB82B2 /* libPods-SvitleRadioTests.a in Frameworks */,
+				B557185DFF5DEFEF9D4580D4 /* libPods-SvitleRadio-SvitleRadioTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +189,7 @@
 				480EA033A0057A2C1FDAC7FD /* libPods-SvitleRadio.a */,
 				BDDE4A2D9C8F335285041F87 /* libPods-SvitleRadio-tvOS.a */,
 				1E3232C1B4B2D2C5D099CA73 /* libPods-SvitleRadio-tvOSTests.a */,
-				43BF63C0E72DBB38A0645FE2 /* libPods-SvitleRadioTests.a */,
+				CCC577E2AAE930885D265CAE /* libPods-SvitleRadio-SvitleRadioTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -278,6 +280,8 @@
 				AB30096F36B5489692676AD8 /* Pods-SvitleRadioTests.svitle.debug.xcconfig */,
 				6F2BCA4EB2E26620E7786088 /* Pods-SvitleRadioTests.svetloe.release.xcconfig */,
 				3E0BA79B40DC944CB50C0DA4 /* Pods-SvitleRadioTests.svitle.release.xcconfig */,
+				7FABCCCA8D94101E9FD28A43 /* Pods-SvitleRadio-SvitleRadioTests.svitle.debug.xcconfig */,
+				1557AA619DF79E3122C3B17B /* Pods-SvitleRadio-SvitleRadioTests.svitle.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -293,6 +297,7 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				441170A4DAEF877A820C1CEA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -315,6 +320,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				3AFA9DF37E1641F9AEEE2A07 /* Upload Debug Symbols to Sentry */,
+				C1D60D28B925C94BD88E79D7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -370,7 +376,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -380,7 +386,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = F3G23KKU22;
-						LastSwiftMigration = 1150;
+						LastSwiftMigration = 1120;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -515,6 +521,24 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=$HOME/.brew/bin/node\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
+		441170A4DAEF877A820C1CEA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SvitleRadio-SvitleRadioTests/Pods-SvitleRadio-SvitleRadioTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SvitleRadio-SvitleRadioTests/Pods-SvitleRadio-SvitleRadioTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B426D52304AD5C668E8D8711 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -552,11 +576,29 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SvitleRadioTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-SvitleRadio-SvitleRadioTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C1D60D28B925C94BD88E79D7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SvitleRadio/Pods-SvitleRadio-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D1ECC967E9993C8680C08231 /* [CP] Check Pods Manifest.lock */ = {
@@ -718,6 +760,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -742,7 +785,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -758,7 +807,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2400;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F3G23KKU22;
 				FLAVOR = svitle;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
@@ -782,7 +831,7 @@
 		};
 		F5F2FC8F2496277C00F08F00 /* Svitle.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB30096F36B5489692676AD8 /* Pods-SvitleRadioTests.svitle.debug.xcconfig */;
+			baseConfigurationReference = 7FABCCCA8D94101E9FD28A43 /* Pods-SvitleRadio-SvitleRadioTests.svitle.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -793,7 +842,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = SvitleRadioTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -830,7 +879,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Svitle.Debug;
 		};
@@ -857,7 +906,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SvitleRadio-tvOS.app/SvitleRadio-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Svitle.Debug;
 		};
@@ -884,6 +933,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -901,7 +951,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -919,6 +975,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2400;
 				DEVELOPMENT_TEAM = F3G23KKU22;
+				ENABLE_BITCODE = NO;
 				FLAVOR = svitle;
 				INFOPLIST_FILE = SvitleRadio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -940,7 +997,7 @@
 		};
 		F5F2FC942496278300F08F00 /* Svitle.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E0BA79B40DC944CB50C0DA4 /* Pods-SvitleRadioTests.svitle.release.xcconfig */;
+			baseConfigurationReference = 1557AA619DF79E3122C3B17B /* Pods-SvitleRadio-SvitleRadioTests.svitle.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -948,7 +1005,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = HF73R2CBE6;
 				INFOPLIST_FILE = SvitleRadioTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -985,7 +1042,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Svitle.Release;
 		};
@@ -1008,11 +1065,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.SvitleRadio-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.SvitleRadio-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SvitleRadio-tvOS.app/SvitleRadio-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Svitle.Release;
 		};
