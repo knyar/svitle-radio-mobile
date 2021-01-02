@@ -29,7 +29,9 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   }, [])
 
   if (!supported) {
-    console.log("Link '" + props.url + "' is not supported")
+    if (props.url) {
+      console.log("Link '" + props.url + "' is not supported")
+    }
     return useObserver(() => (null))
   }
 
