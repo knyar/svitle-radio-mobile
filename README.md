@@ -10,6 +10,14 @@ JSON API is also open source, available [here](https://github.com/knyar/svitle-a
 
 ## Development instructions
 
+Install system dependencies:
+
+```
+brew install node
+brew install watchman
+gem install cocoapods --user-install
+```
+
 ```
 $ yarn install
 ```
