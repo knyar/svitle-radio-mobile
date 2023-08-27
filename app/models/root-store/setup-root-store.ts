@@ -40,12 +40,7 @@ export async function setupRootStore() {
     rootStore = RootStoreModel.create({}, env)
 
     // but please inform us what happened
-    __DEV__ && console.tron.error(e.message, null)
-  }
-
-  // reactotron logging
-  if (__DEV__) {
-    env.reactotron.setRootStore(rootStore, data)
+    __DEV__ && console.log(e.message)
   }
 
   // track changes & save to storage
