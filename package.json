@@ -29,8 +29,9 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.1",
     "@react-native/metro-config": "^0.72.11",
-    "@react-navigation/bottom-tabs": "^5.2.7",
+    "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.9.13",
     "@sentry/react-native": "^5.9.1",
     "apisauce": "1.1.1",
     "i18n-js": "^3.0.11",

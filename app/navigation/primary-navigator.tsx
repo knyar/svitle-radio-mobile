@@ -25,14 +25,14 @@ export function PrimaryNavigator() {
             return <IconLive width={size} height={size} fill={c}/>
         }
       },
-    })}
-    tabBarOptions={{
-      inactiveBackgroundColor: colors.menuBackground,
-      activeBackgroundColor: colors.menuBackgroundActive,
-      inactiveTintColor: colors.primary,
-      activeTintColor: colors.active,
-      labelPosition: "below-icon",
-    }}>
+      headerShown: false,
+      tabBarActiveTintColor: colors.active,
+      tabBarInactiveTintColor: colors.primary,
+      tabBarActiveBackgroundColor: colors.menuBackgroundActive,
+      tabBarInactiveBackgroundColor: colors.menuBackground,
+      tabBarLabelPosition: "below-icon",
+      tabBarStyle: [{ "display": "flex" }, null],
+    })}>
       <Tab.Screen name="live" component={LiveScreen} options={{
         tabBarLabel: i18n.t("live_screen.title")
       }}/>

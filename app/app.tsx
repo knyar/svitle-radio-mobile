@@ -1,6 +1,6 @@
 import "./i18n"
 import React, { useState, useEffect, useRef } from "react"
-import { YellowBox } from "react-native"
+import { LogBox } from "react-native"
 import { NavigationContainerRef } from "@react-navigation/native"
 import { enableScreens } from "react-native-screens"
 import { SafeAreaProvider, initialWindowSafeAreaInsets } from "react-native-safe-area-context"
@@ -25,14 +25,14 @@ import 'mobx-react-lite/batchingForReactNative'
 enableScreens()
 
 /**
- * Ignore some yellowbox warnings. Some of these are for deprecated functions
+ * Ignore some warnings. Some of these are for deprecated functions
  * that we haven't gotten around to replacing yet.
  */
-YellowBox.ignoreWarnings([
-  "componentWillMount is deprecated",
-  "componentWillReceiveProps is deprecated",
-  "Require cycle:",
-  "not a valid TrackPlayer event: playback-metadata-received",
+LogBox.ignoreLogs([
+  // "componentWillMount is deprecated",
+  // "componentWillReceiveProps is deprecated",
+  // "Require cycle:",
+  // "not a valid TrackPlayer event: playback-metadata-received",
 ])
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
