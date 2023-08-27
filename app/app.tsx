@@ -13,7 +13,7 @@ import { Timer } from "./components"
 import * as Sentry from '@sentry/react-native';
 
 Sentry.init({ 
-  dsn: 'https://75271eed80a14b14943fd330406f1b3e@o405793.ingest.sentry.io/5272159', 
+  dsn: 'https://aaea4257689efa06f26ca319e6404cf1@o405793.ingest.sentry.io/4505776273686528', 
 });
 
 // https://github.com/mobxjs/mobx-react-lite#observer-batching
