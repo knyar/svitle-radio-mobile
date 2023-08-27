@@ -500,14 +500,14 @@ PODS:
   - RNScreens (3.24.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (1.4.5):
-    - React
-    - Sentry (~> 5.1.4)
+  - RNSentry (5.9.1):
+    - React-Core
+    - Sentry/HybridSDK (= 8.10.0)
   - RNSVG (13.13.0):
     - React-Core
-  - Sentry (5.1.4):
-    - Sentry/Core (= 5.1.4)
-  - Sentry/Core (5.1.4)
+  - Sentry/HybridSDK (8.10.0):
+    - SentryPrivate (= 8.10.0)
+  - SentryPrivate (8.10.0)
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -549,6 +549,7 @@ DEPENDENCIES:
   - React-callinvoker (from `../node_modules/react-native/ReactCommon/callinvoker`)
   - React-Codegen (from `build/generated/ios`)
   - React-Core (from `../node_modules/react-native/`)
+  - React-Core/DevSupport (from `../node_modules/react-native/`)
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
@@ -601,6 +602,7 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - Sentry
+    - SentryPrivate
     - SocketRocket
     - YogaKit
 
@@ -761,13 +763,14 @@ SPEC CHECKSUMS:
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
   RNLocalize: b6df30cc25ae736d37874f9bce13351db2f56796
   RNScreens: b21dc57dfa2b710c30ec600786a3fc223b1b92e7
-  RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
+  RNSentry: 0a1daa8ee81e2776f977ae8c66e67c8d85587828
   RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82
-  Sentry: 74f2ad93a20a5567a1badaedf5b3f60b142ad082
+  Sentry: 71cd4427146ac56eab6e70401ac7a24384c3d3b5
+  SentryPrivate: 9334613897c85a9e30f2c9d7a331af8aaa4fe71f
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 7908fed8ea0435054d53f1fbb04e2da26536eae2
+PODFILE CHECKSUM: 079266ca8e83eb094684f22cf7ec322d60afdfa4
 
 COCOAPODS: 1.12.1

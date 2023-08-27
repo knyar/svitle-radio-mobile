@@ -83,7 +83,7 @@ export const MainStoreModel = types
           self.savePreferences(result.preferences)
           return
         } else {
-          __DEV__ && console.tron.log(result.kind)
+          __DEV__ && console.log(result.kind)
           throw "getPreferences error: " + result.kind
         }
       })
@@ -93,7 +93,7 @@ export const MainStoreModel = types
       if (result.kind === "ok") {
         self.saveStreamInfo(result.streams)
       } else {
-        __DEV__ && console.tron.log(result.kind)
+        __DEV__ && console.log(result.kind)
       }
     }),
   }))

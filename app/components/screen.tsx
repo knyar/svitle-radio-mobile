@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleSheet, ViewStyle, StatusBar, View } from "react-native"
+import { StyleSheet, ViewStyle, View } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Header } from "../components"
 
@@ -21,7 +21,6 @@ export const Screen: React.FunctionComponent<Props> = props => {
 
   return (
     <View style={[styles.outer, insetStyle]}>
-      <StatusBar barStyle="light-content"/>
       {header}
       <View style={[styles.inner, style]}>{props.children}</View>
     </View>

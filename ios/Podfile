@@ -23,7 +23,9 @@ project 'SvitleRadio',
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
 # ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled(
+  ['svitle.debug', 'svitle.release', 'svetloe.debug', 'svetloe.release']
+)
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil

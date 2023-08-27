@@ -60,7 +60,7 @@ const App: React.FunctionComponent<{}> = () => {
 
     if (previousRouteName !== currentRouteName) {
       // track screens.
-      __DEV__ && console.tron.log(currentRouteName)
+      __DEV__ && console.log(currentRouteName)
     }
 
     // Save the current route name for later comparision
