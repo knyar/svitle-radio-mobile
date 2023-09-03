@@ -377,7 +377,7 @@ PODS:
     - glog
   - react-native-build-config (0.3.2):
     - React
-  - react-native-safe-area-context (4.7.1):
+  - react-native-safe-area-context (4.7.2):
     - React-Core
   - react-native-track-player (1.2.3):
     - React
@@ -495,8 +495,8 @@ PODS:
     - React-Core
   - RNDeviceInfo (10.9.0):
     - React-Core
-  - RNLocalize (1.4.0):
-    - React
+  - RNLocalize (3.0.2):
+    - React-Core
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
@@ -740,7 +740,7 @@ SPEC CHECKSUMS:
   React-jsinspector: aaed4cf551c4a1c98092436518c2d267b13a673f
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
   react-native-build-config: 1130ad8668ca251b65e95e002b5b8f308a96726f
-  react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
+  react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
   react-native-track-player: 6ff21d21eb70ecbd2a6bad29822ecf6c8609a3aa
   React-NativeModulesApple: edb5ace14f73f4969df6e7b1f3e41bef0012740f
   React-perflogger: 496a1a3dc6737f964107cb3ddae7f9e265ddda58
@@ -761,7 +761,7 @@ SPEC CHECKSUMS:
   ReactCommon: 4b2bdcb50a3543e1c2b2849ad44533686610826d
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNDeviceInfo: 02ea8b23e2280fa18e00a06d7e62804d74028579
-  RNLocalize: b6df30cc25ae736d37874f9bce13351db2f56796
+  RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSentry: 0a1daa8ee81e2776f977ae8c66e67c8d85587828
   RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82
