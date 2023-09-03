@@ -110,11 +110,14 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    flavorDimensions "variant"
     productFlavors {
         svitle {
+            dimension "variant"
             applicationId 'com.svitleradio'
         }
         svetloe {
+            dimension "variant"
             applicationId 'org.svetloe'
         }
     }
