@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState, Platform } from "react-native"
-import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import TrackPlayer, { usePlaybackState, State, Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
@@ -50,7 +50,7 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
 
 interface ButtonProps {
   url?: string,
-  playbackState: TrackPlayer.State,
+  playbackState: State,
   toggle: () => void,
 }
 export const Button: React.FunctionComponent<ButtonProps> = props => {
@@ -58,12 +58,12 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
   let label = "button_label_play"
   let enabled = !!props.url
   switch (props.playbackState) {
-    case TrackPlayer.STATE_PLAYING:
+    case State.Playing:
       ButtonComponent = PauseButton
-      let label = "button_label_stop"
+      label = "button_label_stop"
       break
-    case TrackPlayer.STATE_BUFFERING:
-    case TrackPlayer.STATE_CONNECTING:
+    case State.Buffering:
+    case State.Connecting:
       enabled = false
       break
   }
@@ -90,10 +90,10 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   const [appState, setAppState] = useState(AppState.currentState)
 
   useEffect(() => {
-    AppState.addEventListener("change", setAppState)
+    let sub = AppState.addEventListener("change", setAppState)
     console.log("Player mounted")
     return () => {
-      AppState.removeEventListener("change", setAppState)
+      sub.remove()
       console.log("Player unmounted")
      }
   }, [])
@@ -105,27 +105,26 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
-    if ((Platform.OS === 'android') && (appState != "active") && props.url) {
-      const metadata = trackMetadata()
-      metadata.title = ""
-      safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
-    }
+    // if ((Platform.OS === 'android') && (appState != "active") && props.url) {
+    //   const metadata = trackMetadata()
+    //   metadata.title = ""
+    //   safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
+    // }
   }, [appState])
 
   async function setupPlayer() {
     try {
-      if ((Platform.OS === 'android') && (await TrackPlayer.isServiceRunning())) {
-        console.log("Player already running on setupPlayer; skipping")
-        return
-      }
+      // if ((Platform.OS === 'android') && (await TrackPlayer.isServiceRunning())) {
+      //   console.log("Player already running on setupPlayer; skipping")
+      //   return
+      // }
       await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
       await TrackPlayer.updateOptions({
-        capabilities: [
-          TrackPlayer.CAPABILITY_PAUSE,
-        ],
-        compactCapabilities: [
-          TrackPlayer.CAPABILITY_PAUSE,
-        ]
+        capabilities: [Capability.Pause],
+        compactCapabilities: [Capability.Pause],
+        android: {
+          appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+        },
       });
     } catch (error) {
       console.log(error)
@@ -145,14 +144,26 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     }
   }
 
+  async function currentTrackURL() {
+    const currentTrackIdx = await TrackPlayer.getCurrentTrack();
+    if (currentTrackIdx == null) {
+      return null
+    }
+    const currentTrack = await TrackPlayer.getTrack(currentTrackIdx);
+    if (currentTrack == null) {
+      return null
+    }
+    return currentTrack.url
+  }
+
   useEffect(() => {
     ;(async () => {
-      if (playbackState != TrackPlayer.STATE_PLAYING &&
-        playbackState != TrackPlayer.STATE_BUFFERING &&
-        playbackState != TrackPlayer.STATE_PAUSED) {
+      if (playbackState != State.Playing &&
+        playbackState != State.Buffering &&
+        playbackState != State.Paused) {
           return
       }
-      const currentTrack = await TrackPlayer.getCurrentTrack()
+      const currentTrack = await currentTrackURL();
       if (currentTrack && (currentTrack == props.url)) {
         const metadata = trackMetadata()
         await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
@@ -164,7 +175,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     try {
       const running = await TrackPlayer.isServiceRunning()
       if (!running) { await setupPlayer() }
-      const currentTrack = await TrackPlayer.getCurrentTrack()
+      const currentTrack = await currentTrackURL();
       if (props.url && (currentTrack != props.url)) {
         const prevState = playbackState
         console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
@@ -174,7 +185,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         track.userAgent = UserAgent()
         track.type = props.url.endsWith(".m3u8") ? "hls" : "default"
         await safely(TrackPlayer.add, track)
-        if (prevState == TrackPlayer.STATE_PLAYING) {
+        if (prevState == State.Playing) {
           await safely(TrackPlayer.play)
         }
       }
@@ -204,8 +215,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function togglePlayback() {
     try {
-      if (playbackState == TrackPlayer.STATE_PLAYING) {
-        await safely(TrackPlayer.stop)
+      if (playbackState == State.Playing) {
         await safely(TrackPlayer.reset)
       } else {
         await updateTrack()
@@ -268,16 +278,16 @@ async function safely(action, ...args) {
   try {
     return await action(...args)
   } catch (e) {
-    if (e.message === 'The playback is not initialized') {
-      // reinitialize player and retry
-      try {
-        await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
-        return await action(...args)
-      } catch (e) {
-        console.error(e)
-        return null
-      }
-    }
+    // if (e.message === 'The playback is not initialized') {
+    //   // reinitialize player and retry
+    //   try {
+    //     await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
+    //     return await action(...args)
+    //   } catch (e) {
+    //     console.error(e)
+    //     return null
+    //   }
+    // }
     console.error(e)
     return null
   }
