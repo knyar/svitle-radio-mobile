@@ -33,7 +33,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.9.13",
     "@sentry/react-native": "^5.9.1",
-    "apisauce": "1.1.1",
+    "apisauce": "3.0.1",
     "i18n-js": "^3.0.11",
     "mobx": "^4.15.4",
     "mobx-react-lite": "^2.0",
