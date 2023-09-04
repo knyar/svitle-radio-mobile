@@ -46,3 +46,5 @@ To start Xcode: `open ios/SvitleRadio.xcworkspace`
 ```
 yarn release-svitle-android
 ```
+
+Private keys in ~/.private/android
