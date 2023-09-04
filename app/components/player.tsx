@@ -107,7 +107,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     if ((Platform.OS === 'android') && (appState != "active") && props.url) {
       const metadata = trackMetadata()
       metadata.title = ""
-      safely(TrackPlayer.updateNowPlayingMetadata, metadata)
+      setMetadata(metadata)
     }
   }, [appState])
 
@@ -156,6 +156,13 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     return currentTrack.url
   }
 
+  async function setMetadata(metadata :TrackMetadataBase) {
+    const currentTrackIdx = await(safely(TrackPlayer.getCurrentTrack));
+    if (currentTrackIdx != null) {
+      await(safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata))
+    }
+  }
+
   useEffect(() => {
     ;(async () => {
       if (playbackState != State.Playing &&
@@ -166,7 +173,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
       const currentTrack = await currentTrackURL();
       if (currentTrack && (currentTrack == props.url)) {
         const metadata = trackMetadata()
-        await safely(TrackPlayer.updateNowPlayingMetadata, metadata)
+        await setMetadata(metadata)
       }
     })()
   }, [props.current_track])
@@ -291,7 +298,7 @@ async function safely(action, ...args) {
         return null
       }
     }
-    // console.error("safely err", e)
+    console.error("safely err", e)
     return null
   }
 }
