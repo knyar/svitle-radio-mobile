@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState, Platform } from "react-native"
-import TrackPlayer, { usePlaybackState, State, Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
+import TrackPlayer, { usePlaybackState, State, Capability, AppKilledPlaybackBehavior, TrackMetadataBase, Track, TrackType, PlayerOptions } from "react-native-track-player";
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
@@ -10,8 +10,7 @@ import { colors } from "../theme"
 import { UserAgent } from "../services/api"
 const { FLAVOR } = require("../config/flavor")
 
-
-const PLAYER_OPTIONS = {
+const PLAYER_OPTIONS :PlayerOptions = {
   playBuffer: 5,  // Android only
   minBuffer: 10,  // iOS & Android
   maxBuffer: 20, // Android only
@@ -105,11 +104,11 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
-    // if ((Platform.OS === 'android') && (appState != "active") && props.url) {
-    //   const metadata = trackMetadata()
-    //   metadata.title = ""
-    //   safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
-    // }
+    if ((Platform.OS === 'android') && (appState != "active") && props.url) {
+      const metadata = trackMetadata()
+      metadata.title = ""
+      safely(TrackPlayer.updateNowPlayingMetadata, metadata)
+    }
   }, [appState])
 
   async function setupPlayer() {
@@ -127,7 +126,9 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         },
       });
     } catch (error) {
-      console.log(error)
+      if (!error.message.includes("The player has already been initialized via setupPlayer")) {
+        console.log("setupPlayer", error)
+      }
     }
   }
 
@@ -135,9 +136,8 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     setupPlayer()
   }, [])
 
-  const trackMetadata = (): any => {
+  const trackMetadata = (): TrackMetadataBase => {
     return {
-      id: props.url,
       artwork: artwork(mainStore.current_station.logo),
       artist: mainStore.current_station.name,
       title: mainStore.current_track || "",
@@ -166,7 +166,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
       const currentTrack = await currentTrackURL();
       if (currentTrack && (currentTrack == props.url)) {
         const metadata = trackMetadata()
-        await safely(TrackPlayer.updateMetadataForTrack, props.url, metadata)
+        await safely(TrackPlayer.updateNowPlayingMetadata, metadata)
       }
     })()
   }, [props.current_track])
@@ -180,17 +180,20 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         const prevState = playbackState
         console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
         await safely(TrackPlayer.reset)
-        let track = trackMetadata()
-        track.url = props.url
-        track.userAgent = UserAgent()
-        track.type = props.url.endsWith(".m3u8") ? "hls" : "default"
+        let metadata = trackMetadata()
+        let track :Track = {
+          url: props.url,
+          userAgent: UserAgent(),
+          type: props.url.endsWith(".m3u8") ? TrackType.HLS : TrackType.Default,
+          ...metadata
+        } 
         await safely(TrackPlayer.add, track)
         if (prevState == State.Playing) {
           await safely(TrackPlayer.play)
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log("updateTrack error ", error)
     }
   }
 
@@ -278,17 +281,17 @@ async function safely(action, ...args) {
   try {
     return await action(...args)
   } catch (e) {
-    // if (e.message === 'The playback is not initialized') {
-    //   // reinitialize player and retry
-    //   try {
-    //     await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
-    //     return await action(...args)
-    //   } catch (e) {
-    //     console.error(e)
-    //     return null
-    //   }
-    // }
-    console.error(e)
+    if (e.message.includes('The player is not initialized')) {
+      // reinitialize player and retry
+      try {
+        await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
+        return await action(...args)
+      } catch (e) {
+        console.error("safely err after init", e)
+        return null
+      }
+    }
+    // console.error("safely err", e)
     return null
   }
 }

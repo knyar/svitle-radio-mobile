@@ -6,8 +6,9 @@ async function stop() {
     // Android.
     try {
       await TrackPlayer.reset()
-    } catch (ignore) {}
-    TrackPlayer.destroy()
+    } catch (e) {
+      console.log("error while stopping ", e)
+    }
 }
 
 module.exports = async function() {
