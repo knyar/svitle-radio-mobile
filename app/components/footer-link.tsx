@@ -6,6 +6,7 @@ import IconSupport from '../images/icon.support.svg'
 import IconArchive from '../images/icon.archive.svg'
 import IconVideo from '../images/icon.video.svg'
 import { colors } from '../theme'
+import { link_supported } from "../utils/links"
 
 export interface FooterLinkProps {
   icon: string
@@ -14,14 +15,12 @@ export interface FooterLinkProps {
   style?: ViewStyle | ViewStyle[]
 }
 
-const allLinksEnabled = __DEV__
-
 export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
-  const [supported, setSupported] = useState(allLinksEnabled)
+  const [supported, setSupported] = useState(false)
   useEffect(() => {
     ;(async () => {
       if (props.url) {
-        setSupported(await Linking.canOpenURL(props.url) || allLinksEnabled)
+        setSupported(await link_supported(props.url))
       } else {
         setSupported(false)
       }

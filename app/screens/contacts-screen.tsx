@@ -11,19 +11,18 @@ import IconViber from '../images/icon.viber.svg'
 import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
+import { link_supported } from "../utils/links"
 
 export interface ContactsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-const allLinksEnabled = __DEV__
-
 const iconLinkComponent = (item: ContactItem) => {
-  const [supported, setSupported] = useState(allLinksEnabled)
+  const [supported, setSupported] = useState(false)
 
   useEffect(() => {
     ;(async () => {
-      setSupported(await Linking.canOpenURL(item.url) || allLinksEnabled)
+      setSupported(await link_supported(item.url))
     })()
   }, [])
 
@@ -49,11 +48,11 @@ const iconLinkComponent = (item: ContactItem) => {
 }
 
 const textLinkComponent = (item: ContactItem) => {
-  const [supported, setSupported] = useState(allLinksEnabled)
+  const [supported, setSupported] = useState(false)
 
   useEffect(() => {
     ;(async () => {
-      setSupported(await Linking.canOpenURL(item.url) || allLinksEnabled)
+      setSupported(await link_supported(item.url))
     })()
   }, [])
 
