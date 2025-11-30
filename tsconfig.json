@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
@@ -16,6 +16,6 @@
     "lib": ["es7"],
     "skipLibCheck": true
   },
-  "exclude": ["node_modules"],
-  "include": ["index.js", "app", "test", "storybook"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["**/node_modules", "**/Pods"]
 }
