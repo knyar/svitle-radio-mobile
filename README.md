@@ -48,3 +48,11 @@ yarn release-svitle-android
 ```
 
 Private keys in ~/.private/android
+
+## Upgrading react-native
+
+LOL good luck
+
+* follow upgrade-helper recommendations
+* before running `yarn install`, remove ios/Pods and ios/Podfile.lock
+* run `bundle install` and `bundle exec pod install`

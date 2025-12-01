@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "run-svitle-ios": "react-native run-ios --scheme SvitleRadio --configuration Svitle.Debug",
-    "run-svitle-android": "react-native run-android --variant svitleDebug --appId com.svitleradio",
-    "run-svetloe-android": "react-native run-android --variant svetloeDebug --appId org.svetloe",
+    "run-svitle-android": "react-native run-android --mode svitleDebug --appId com.svitleradio",
+    "run-svetloe-android": "react-native run-android --mode svetloeDebug --appId org.svetloe",
     "release-svitle-android": "cd android && ./gradlew bundleSvitleRelease",
     "release-svetloe-android": "cd android && ./gradlew bundleSvetloeRelease",
     "start": "react-native start",
@@ -47,7 +47,7 @@
     "react-native-localize": "^3.0.2",
     "react-native-safe-area-context": "^5.6.0",
     "react-native-screens": "^4.11.1",
-    "react-native-svg": "^15.12.1",
+    "react-native-svg": "^15.15.0",
     "react-native-track-player": "^3.2.0"
   },
   "devDependencies": {
@@ -84,7 +84,7 @@
     "postinstall-prepare": "1.0.1",
     "prettier": "2.8.8",
     "react-devtools-core": "4.5.0",
-    "react-native-svg-transformer": "^1.1.0",
+    "react-native-svg-transformer": "^1.5.2",
     "react-powerplug": "1.0.0",
     "react-test-renderer": "19.1.0",
     "rimraf": "3.0.2",
