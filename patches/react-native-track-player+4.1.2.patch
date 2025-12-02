@@ -1,0 +1,49 @@
+diff --git a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
+index b2409a0..ac29f5b 100644
+--- a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
++++ b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
+@@ -545,7 +545,8 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
+         if (verifyServiceBoundOrReject(callback)) return@launch
+ 
+         if (index >= 0 && index < musicService.tracks.size) {
+-            callback.resolve(Arguments.fromBundle(musicService.tracks[index].originalItem))
++            val originalItem = musicService.tracks[index].originalItem
++            callback.resolve(if (originalItem != null) Arguments.fromBundle(originalItem) else null)
+         } else {
+             callback.resolve(null)
+         }
+@@ -582,12 +583,28 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
+     @ReactMethod
+     fun getActiveTrack(callback: Promise) = scope.launch {
+         if (verifyServiceBoundOrReject(callback)) return@launch
+-        callback.resolve(
+-            if (musicService.tracks.isEmpty()) null
+-            else Arguments.fromBundle(
+-                musicService.tracks[musicService.getCurrentTrackIndex()].originalItem
+-            )
+-        )
++        val service = musicService
++        if (service == null) {
++                callback.resolve(null)
++                return@launch
++        }
++        if (service.tracks.isEmpty()) {
++                callback.resolve(null)
++                return@launch
++        }
++
++        val index = service.getCurrentTrackIndex()
++        if (index < 0 || index >= service.tracks.size) {
++                callback.resolve(null)
++                return@launch
++        }
++
++        val item = service.tracks[index].originalItem
++        if (item != null) {
++                callback.resolve(Arguments.fromBundle(item))
++        } else {
++                callback.resolve(null)
++        }
+     }
+ 
+     @ReactMethod

@@ -62,7 +62,7 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
       label = "button_label_stop"
       break
     case State.Buffering:
-    case State.Connecting:
+    case State.Loading:
       enabled = false
       break
   }
@@ -145,15 +145,8 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   async function currentTrackURL() {
-    const currentTrackIdx = await TrackPlayer.getCurrentTrack();
-    if (currentTrackIdx == null) {
-      return null
-    }
-    const currentTrack = await TrackPlayer.getTrack(currentTrackIdx);
-    if (currentTrack == null) {
-      return null
-    }
-    return currentTrack.url
+    const currentTrack = await TrackPlayer.getActiveTrack();
+    return currentTrack?.url
   }
 
   async function setMetadata(metadata :TrackMetadataBase) {
@@ -165,9 +158,9 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   useEffect(() => {
     ;(async () => {
-      if (playbackState != State.Playing &&
-        playbackState != State.Buffering &&
-        playbackState != State.Paused) {
+      if (playbackState.state != State.Playing &&
+        playbackState.state != State.Buffering &&
+        playbackState.state != State.Paused) {
           return
       }
       const currentTrack = await currentTrackURL();
@@ -195,7 +188,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
           ...metadata
         } 
         await safely(TrackPlayer.add, track)
-        if (prevState == State.Playing) {
+        if (prevState.state == State.Playing) {
           await safely(TrackPlayer.play)
         }
       }
@@ -207,7 +200,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   useEffect(() => {
     const state = {
       0: "none", 6: "buffering", 8: "connecting", 7: "error", 2: "paused", 3: "playing", 5: "rewinding", 1: "stopped",
-    }[playbackState] || playbackState
+    }[playbackState.state] || playbackState.state
     console.log("Playback state: " + state)
   }, [playbackState])
 
@@ -225,7 +218,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 
   async function togglePlayback() {
     try {
-      if (playbackState == State.Playing) {
+      if (playbackState.state == State.Playing) {
         await safely(TrackPlayer.reset)
       } else {
         await updateTrack()
@@ -239,7 +232,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={background()} resizeMode="stretch">
-        <Button url={props.url} playbackState={playbackState} toggle={togglePlayback}/>
+        <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback}/>
       </ImageBackground>
       <View style={styles.npContainer}>
         <NowPlaying header="live_screen.player_now" text={mainStore.current_track} />
