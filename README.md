@@ -43,15 +43,12 @@ To start Xcode: `open ios/SvitleRadio.xcworkspace`
 
 ## Building Android release
 
-```
-yarn release-svitle-android
-```
-
-Private keys in ~/.private/android
+* Make sure `~/.gradle/gradle.properties` exists and has keychain
+  defined (see ~/.private/android/)
+* `yarn release-svitle-android`
+* Upload AAB file from `android/app/build/outputs/bundle/svitleRelease`
 
 ## Upgrading react-native
-
-LOL good luck
 
 * follow upgrade-helper recommendations
 * before running `yarn install`, remove ios/Pods and ios/Podfile.lock
