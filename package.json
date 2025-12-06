@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "run-svitle-ios": "react-native run-ios --scheme SvitleRadio --configuration Svitle.Debug",
+    "run-svitle-ios": "react-native run-ios --scheme SvitleRadio --mode Svitle.Debug",
     "run-svitle-android": "react-native run-android --mode svitleDebug --appId com.svitleradio",
     "run-svetloe-android": "react-native run-android --mode svetloeDebug --appId org.svetloe",
     "release-svitle-android": "cd android && ./gradlew bundleSvitleRelease",
@@ -32,7 +32,7 @@
     "@react-navigation/bottom-tabs": "^7.8.8",
     "@react-navigation/native": "^7.1.14",
     "@react-navigation/native-stack": "^6.9.13",
-    "@sentry/react-native": "^5.9.1",
+    "@sentry/react-native": "^7.7.0",
     "apisauce": "3.0.1",
     "i18n-js": "^3.0.11",
     "mobx": "^4.15.4",
