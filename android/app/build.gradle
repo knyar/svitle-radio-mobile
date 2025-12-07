@@ -84,8 +84,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // versionName X.Y.Z == versionCode XYYZZ
-        versionCode 20700
-        versionName "2.7.0"
+        versionCode 20701
+        versionName "2.7.1"
         multiDexEnabled true
     }
     signingConfigs {
