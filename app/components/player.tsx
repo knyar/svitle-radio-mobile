@@ -278,7 +278,13 @@ const styles = StyleSheet.create({
 })
 
 async function safely(action, ...args) {
+  const methodName = action?.name || 'unknown'
   try {
+    console.log(`[TrackPlayer] Calling ${methodName} with args:`, args.map((arg, i) => ({
+      index: i,
+      type: Array.isArray(arg) ? 'array' : typeof arg,
+      value: Array.isArray(arg) ? `[${arg.length} items]` : (typeof arg === 'object' ? JSON.stringify(arg).substring(0, 100) : String(arg))
+    })))
     return await action(...args)
   } catch (e) {
     if (e.message.includes('The player is not initialized')) {
@@ -287,11 +293,11 @@ async function safely(action, ...args) {
         await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
         return await action(...args)
       } catch (e) {
-        console.error("safely err after init", e)
+        console.error(`[TrackPlayer] safely err after init for ${methodName}:`, e)
         return null
       }
     }
-    console.error("safely err", e)
+    console.error(`[TrackPlayer] safely err for ${methodName}:`, e)
     return null
   }
 }

@@ -8,6 +8,7 @@
     "run-svetloe-android": "react-native run-android --mode svetloeDebug --appId org.svetloe",
     "release-svitle-android": "cd android && ./gradlew bundleSvitleRelease",
     "release-svetloe-android": "cd android && ./gradlew bundleSvetloeRelease",
+    "build-svitle-android": "cd android && ./gradlew assembleSvitleRelease",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint index.js app storybook test --fix --ext .js,.ts,.tsx",
