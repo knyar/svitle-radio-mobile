@@ -1,5 +1,6 @@
 import React from "react"
 import { PartialState, NavigationState, NavigationContainerRef } from "@react-navigation/native"
+import { RootParamList } from "./types"
 
 export const RootNavigation = {
   navigate(name: string) {
@@ -12,7 +13,7 @@ export const RootNavigation = {
   },
 }
 
-export const setRootNavigation = (ref: React.RefObject<NavigationContainerRef>) => {
+export const setRootNavigation = (ref: React.RefObject<NavigationContainerRef<RootParamList> | null>) => {
   for (const method in RootNavigation) {
     RootNavigation[method] = (...args: any) => {
       if (ref.current) {

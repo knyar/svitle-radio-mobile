@@ -6,12 +6,14 @@ import IconLive from '../images/tab.live.svg'
 import IconContacts from '../images/tab.contacts.svg'
 import IconStreams from '../images/tab.streams.svg'
 import { colors } from '../theme';
+import { PrimaryParamList } from "./types"
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<PrimaryParamList, undefined>()
 
 export function PrimaryNavigator() {
   return (
     <Tab.Navigator
+    id={undefined}
     initialRouteName="streams"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {

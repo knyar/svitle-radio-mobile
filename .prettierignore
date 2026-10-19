@@ -2,5 +2,12 @@ node_modules
 ios
 android
 .vscode
-ignite/ignite.json
+ignite
+patches
+vendor
+yarn.lock
+Gemfile*
+.bundle
+coverage
+*.lock
 package.json

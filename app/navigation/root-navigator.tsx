@@ -28,11 +28,11 @@ const RootStack = () => {
 }
 
 export const RootNavigator = React.forwardRef<
-  NavigationContainerRef,
+  NavigationContainerRef<RootParamList>,
   Partial<React.ComponentProps<typeof NavigationContainer>>
 >((props, ref) => {
   return (
-    <NavigationContainer {...props} ref={ref}>
+    <NavigationContainer<RootParamList> {...props} ref={ref}>
       <RootStack />
     </NavigationContainer>
   )
