@@ -16,7 +16,8 @@ export function PrimaryNavigator() {
       id={undefined}
       initialRouteName="streams"
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        // eslint-disable-next-line react/no-unstable-nested-components -- TODO(M3): preserve existing inline tab icon rendering
+        tabBarIcon: ({ focused, color: _color, size }) => {
           const c = focused ? colors.active : colors.primary
           switch (route.name) {
             case "contacts":

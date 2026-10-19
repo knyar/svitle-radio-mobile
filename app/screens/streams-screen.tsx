@@ -30,7 +30,7 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
       </View>
     )
 
-    if (mainStore.local.station == station.id) {
+    if (mainStore.local.station === station.id) {
       return (
         <View style={[styles.stream, styles.streamSelected]} key={station.id}>
           {view}

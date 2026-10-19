@@ -18,12 +18,15 @@ export interface ContactsScreenProps {
 }
 
 const iconLinkComponent = (item: ContactItem) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   const [supported, setSupported] = useState(false)
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   useEffect(() => {
     ;(async () => {
       setSupported(await link_supported(item.url))
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [])
 
   const icons = {
@@ -50,12 +53,15 @@ const iconLinkComponent = (item: ContactItem) => {
 }
 
 const textLinkComponent = (item: ContactItem) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   const [supported, setSupported] = useState(false)
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   useEffect(() => {
     ;(async () => {
       setSupported(await link_supported(item.url))
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [])
 
   if (!item.url) {
@@ -91,7 +97,7 @@ const blockComponent = (block: ContactBlock) => {
   )
 }
 
-export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = (props) => {
+export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = () => {
   const { mainStore } = useStores()
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")}>

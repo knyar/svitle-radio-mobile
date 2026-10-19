@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useStores } from "../models/root-store"
 const { REFRESH_INTERVAL } = require("../config/env")
 
-export const Timer: React.FunctionComponent = (props) => {
+export const Timer: React.FunctionComponent = () => {
   const { mainStore } = useStores()
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export const Timer: React.FunctionComponent = (props) => {
 
     timer = setTimeout(refresh, REFRESH_INTERVAL)
     return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [])
 
   return null

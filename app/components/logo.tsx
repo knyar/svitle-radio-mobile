@@ -24,12 +24,14 @@ export const Logo: React.FunctionComponent<LogoProps> = (props) => {
   }
   const LogoComponent = logos[logoid] || logos[defaultid]
 
-  let pr = { style: props.style }
+  let pr: { style: ViewStyle | ViewStyle[]; width?: NumberProp; height?: NumberProp } = {
+    style: props.style,
+  }
   if (props.width) {
-    pr["width"] = props.width
+    pr.width = props.width
   }
   if (props.height) {
-    pr["height"] = props.height
+    pr.height = props.height
   }
 
   return useObserver(() => <LogoComponent {...pr} />)
