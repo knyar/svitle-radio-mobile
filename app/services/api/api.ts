@@ -88,16 +88,19 @@ const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
   for (const name in raw.stations) {
     const station = raw.stations[name]
     let s: StreamInfo = {
+      // eslint-disable-next-line eqeqeq -- raw API data (any), keep loose comparison
       current_track: station.current_track == "" ? undefined : station.current_track,
+      // eslint-disable-next-line eqeqeq -- raw API data (any), keep loose comparison
       next_track: station.next_track == "" ? undefined : station.next_track,
       stream_url: undefined,
       stream_url_low: undefined,
     }
     for (const stream of station.streams) {
-      if (stream["name"] == "low") {
-        s.stream_url_low = stream["url"]
+      // eslint-disable-next-line eqeqeq -- raw API data (any), keep loose comparison
+      if (stream.name == "low") {
+        s.stream_url_low = stream.url
       } else {
-        s.stream_url = stream["url"]
+        s.stream_url = stream.url
       }
     }
     result.set(name, s)

@@ -23,7 +23,7 @@ export const MainStoreModel = types
     get current_station(): Station {
       const current = self.local.station
       for (const station of self.preferences.stations) {
-        if (station.id == current) {
+        if (station.id === current) {
           return station
         }
       }
@@ -32,7 +32,7 @@ export const MainStoreModel = types
     get current_stream(): StreamInfo {
       const current = self.local.station
       for (const [id, stream] of self.streams) {
-        if (id == current) {
+        if (id === current) {
           return stream
         }
       }
@@ -60,7 +60,7 @@ export const MainStoreModel = types
 
       // If we have a current station selected, check that it's still valid.
       for (const station of self.preferences.stations) {
-        if (station.id == self.local.station) {
+        if (station.id === self.local.station) {
           return
         }
       }

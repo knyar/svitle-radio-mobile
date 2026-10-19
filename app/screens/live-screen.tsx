@@ -10,7 +10,7 @@ export interface LiveScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-export const LiveScreen: React.FunctionComponent<LiveScreenProps> = (props) => {
+export const LiveScreen: React.FunctionComponent<LiveScreenProps> = () => {
   const { mainStore } = useStores()
 
   return useObserver(() => (

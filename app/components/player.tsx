@@ -96,6 +96,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
     )
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
     <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(label)}>
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
@@ -129,11 +130,12 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
-    if (Platform.OS === "android" && appState != "active" && props.url) {
+    if (Platform.OS === "android" && appState !== "active" && props.url) {
       const metadata = trackMetadata()
       metadata.title = ""
       setMetadata(metadata)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [appState])
 
   async function setupPlayer() {
@@ -184,18 +186,19 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   useEffect(() => {
     ;(async () => {
       if (
-        playbackState.state != State.Playing &&
-        playbackState.state != State.Buffering &&
-        playbackState.state != State.Paused
+        playbackState.state !== State.Playing &&
+        playbackState.state !== State.Buffering &&
+        playbackState.state !== State.Paused
       ) {
         return
       }
       const currentTrack = await currentTrackURL()
-      if (currentTrack && currentTrack == props.url) {
+      if (currentTrack && currentTrack === props.url) {
         const metadata = trackMetadata()
         await setMetadata(metadata)
       }
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [props.current_track])
 
   async function updateTrack() {
@@ -205,7 +208,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
         await setupPlayer()
       }
       const currentTrack = await currentTrackURL()
-      if (props.url && currentTrack != props.url) {
+      if (props.url && currentTrack !== props.url) {
         const prevState = playbackState
         console.log(
           "Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState,
@@ -219,7 +222,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
           ...metadata,
         }
         await safely(TrackPlayer.add, track)
-        if (prevState.state == State.Playing) {
+        if (prevState.state === State.Playing) {
           await safely(TrackPlayer.play)
         }
       }
@@ -247,7 +250,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     ;(async () => {
       await updateTrack()
       // Start playback when station is changed.
-      if (mainStore.local.station && mainStore.local.station != currentStation) {
+      if (mainStore.local.station && mainStore.local.station !== currentStation) {
         console.log(
           "Starting playback. Prev station " +
             currentStation +
@@ -258,11 +261,12 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
       }
       setCurrentStation(mainStore.local.station)
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [props.url])
 
   async function togglePlayback() {
     try {
-      if (playbackState.state == State.Playing) {
+      if (playbackState.state === State.Playing) {
         await safely(TrackPlayer.reset)
       } else {
         await updateTrack()
@@ -343,8 +347,8 @@ async function safely(action, ...args) {
       try {
         await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
         return await action(...args)
-      } catch (e) {
-        console.error(`[TrackPlayer] safely err after init for ${methodName}:`, e)
+      } catch (retryError) {
+        console.error(`[TrackPlayer] safely err after init for ${methodName}:`, retryError)
         return null
       }
     }

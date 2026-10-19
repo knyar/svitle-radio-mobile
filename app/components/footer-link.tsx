@@ -25,12 +25,14 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
         setSupported(false)
       }
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [])
 
   if (!supported) {
     if (props.url) {
       console.log("Link '" + props.url + "' is not supported")
     }
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
     return useObserver(() => null)
   }
 
@@ -44,15 +46,16 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   const IconComponent = icons[props.icon]
 
   let iconHeight = 18
-  if (props.icon == "archive") {
+  if (props.icon === "archive") {
     iconHeight = 16
   }
 
   let textStyle: ViewStyle = { padding: 3 }
-  if (props.icon == "support") {
-    textStyle["padding"] = 5
+  if (props.icon === "support") {
+    textStyle.padding = 5
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={onPress}>
       <IconComponent height={iconHeight} style={styles.icon} fill={colors.primary} />

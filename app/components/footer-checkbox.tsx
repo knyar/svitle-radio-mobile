@@ -19,6 +19,7 @@ export const FooterCheckbox: React.FunctionComponent<FooterCheckboxProps> = (pro
   if (!props.visible) {
     return null
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={props.toggle}>
       <IconComponent height={18} style={styles.icon} fill={colors.primary} />

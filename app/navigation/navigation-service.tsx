@@ -4,10 +4,10 @@ import { RootParamList } from "./types"
 
 export const RootNavigation = {
   navigate(name: string) {
-    name // eslint-disable-line no-unused-expressions
+    name
   },
-  goBack() {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  resetRoot(state?: PartialState<NavigationState> | NavigationState) {}, // eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+  goBack() {},
+  resetRoot(_state?: PartialState<NavigationState> | NavigationState) {},
   getRootState(): NavigationState {
     return {} as any
   },
