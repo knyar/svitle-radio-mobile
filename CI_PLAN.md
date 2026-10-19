@@ -313,7 +313,7 @@ The plan's type-only bottom-tab generic does not by itself compile with `strict:
 
 Implemented the release-like, debug-signed Android e2e build and the independent Android and iOS native-build jobs. The jobs verify the installable artifacts and upload `app-svitle-e2e` and `SvitleRadio-simulator` with 14-day retention. The iOS build is secret-free for clean clones, uses the locked Ruby toolchain, and checks Podfile.lock drift. Native compilation and the artifact exit criteria are awaiting the first CI run.
 
-Measured durations: TBD (filled in after the first green run).
+Measured durations on the first green PR run (2026-10-19, run 39328212556): `quality` 44 s; `android` 8 min 27 s wall-clock, of which Gradle 7 min 30 s with a cold dependency cache and the pinned NDK install 22 s; `ios` 11 min 54 s wall-clock, of which `xcodebuild` 9 min 58 s with the Pods cache warm (`bundle exec pod install` 20 s). Artifacts: `app-svitle-e2e` 28.4 MB, `SvitleRadio-simulator` 7.8 MB. iOS is under the ~20 min target, so DerivedData caching stays deferred. The Podfile.lock drift hypothesis held: after `bundle exec pod install` with the locked CocoaPods 1.15.2 only the `COCOAPODS:` line differed.
 
 ## Deviations from M2
 
@@ -322,4 +322,4 @@ Measured durations: TBD (filled in after the first green run).
 3. iOS is pinned to `macos-15` and Xcode 16.4 rather than macOS 26 because React Native 0.81 requires Xcode 16.1 or newer and is being kept on the established 16.x toolchain; the image and Xcode version must move deliberately.
 4. The implementation also removed the implicit, unpinned macOS `pod install` from `bin/postInstall` and declared the already-locked `nkf` dependency in `Gemfile` so Bundler deployment mode is reproducible.
 5. Requiring the `android` and `ios` checks on `main` and `master` remains a user action because the available token receives HTTP 403 for branch-protection settings.
-6. Job durations have not yet been measured. They will be recorded after the first green CI run; DerivedData caching remains deferred until measurements show it is needed.
+6. Two facts surfaced only in CI and are now handled in the workflow and build file: the ubuntu image ships NDK 27.3, so the job installs the NDK version pinned in `android/build.gradle`; and the React Native Gradle plugin fills the `usesCleartextTraffic` manifest placeholder for `debug` and `release` only (in a `finalizeDsl` hook that runs after `initWith`), so the `e2e` build type sets it explicitly. DerivedData caching remains deferred; iOS is under the target.
