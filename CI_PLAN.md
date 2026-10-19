@@ -239,6 +239,7 @@ Make the agent fast locally and the CI robust enough to trust unattended.
 3. **Dependency guardrails.** Dependabot or Renovate limited to patch/minor
    with CI required; pin `react-native-track-player` and `react-native` to
    exact versions with a comment pointing at the upgrade decision below.
+   M2 finding: upgrading the `quality` job's action majors was deferred to M4.
 4. **Flake telemetry.** Upload JUnit reports from Jest and Maestro to a
    test-reporter action; review weekly; quarantine only with an owner,
    reason and expiry date recorded in the flow file.
@@ -295,3 +296,30 @@ ESLint remains on 8.x with legacy configuration because the React Native 0.81 pa
 The application has no playback-error retry UI and no sleep timer: `timer.tsx` schedules stream-information refreshes. Those two example tests were replaced with tests for the behavior that exists. Adding either feature would change runtime behavior and is outside M1.
 
 The plan's type-only bottom-tab generic does not by itself compile with `strict: false`, because `undefined extends string` evaluates as true in that mode. The behavior-neutral `id={undefined}` prop is therefore included. The lockfile was regenerated exactly once by the coordinator after the implementation environment could not reach the package registry.
+
+## M2 step 0 findings
+
+- Android uses React Native 0.81.5 with Android Gradle Plugin 8.11.0, Kotlin 2.1.20, Gradle 8.14.3, JDK 17, SDK 36, NDK 28.0.12433566, Hermes enabled, and the New Architecture disabled. Its `svitle` and `svetloe` flavours previously failed to match the React Native Gradle plugin's default debuggable variant names, so debug builds unnecessarily bundled JS.
+- Android release signing is conditional on `SVITLE_RELEASE_*` properties, while the committed debug keystore can safely sign the release-like e2e variant. No Sentry Gradle plugin is applied.
+- The iOS workspace has one native target and the shared `SvitleRadio` scheme, with only `Svitle.Debug` and `Svitle.Release` configurations. The Podfile's named Svetloe configurations do not exist. The `SvitleRadio-tvOS` scheme and the `SvitleRadioTests` scheme reference are stale.
+- React Native 0.81.5 requires Xcode 16.1 or newer. The project targets iOS 15.1, uses bundle identifier `org.svitle.app1`, and has two Sentry script phases that honour `SENTRY_DISABLE_AUTO_UPLOAD`.
+- A clean clone has no `ios/sentry.properties`. Because `.xcode.env` and then `.xcode.env.local` are sourced by the Sentry wrapper, the versioned environment file can disable uploads when neither a properties file nor token exists while still allowing an explicit local override.
+- `Gemfile.lock` resolves CocoaPods 1.15.2, Ruby 3.4.7, Bundler 2.7.2, and `nkf` 0.2.0, but `Gemfile` did not declare `nkf`; Bundler deployment mode therefore rejected the locked bundle. `Podfile.lock` records CocoaPods 1.16.2 because the old postinstall hook ran an unpinned system `pod install` on macOS.
+- The pinned CI environment is `macos-15` on Apple silicon with Xcode 16.4. The image includes xcbeautify, and an arm64-only simulator build avoids compiling an unused x86_64 slice.
+- Repository Actions settings and branch protection could not be changed with the available token (HTTP 403). The user must require `android` and `ios` on both `main` and `master`.
+- The local VM has no JDK, Android SDK, Ruby, or Xcode, so native build validation awaits CI.
+
+## Milestone 2 status
+
+Implemented the release-like, debug-signed Android e2e build and the independent Android and iOS native-build jobs. The jobs verify the installable artifacts and upload `app-svitle-e2e` and `SvitleRadio-simulator` with 14-day retention. The iOS build is secret-free for clean clones, uses the locked Ruby toolchain, and checks Podfile.lock drift. Native compilation and the artifact exit criteria are awaiting the first CI run.
+
+Measured durations: TBD (filled in after the first green run).
+
+## Deviations from M2
+
+1. The optional `Svetloe.Release` iOS compile was dropped because the Xcode project has no Svetloe build configurations; adding them is out of scope.
+2. Setting `debuggableVariants` changes local flavoured debug builds so they no longer bundle JS and instead use Metro, which is the React Native plugin's intended debug behaviour.
+3. iOS is pinned to `macos-15` and Xcode 16.4 rather than macOS 26 because React Native 0.81 requires Xcode 16.1 or newer and is being kept on the established 16.x toolchain; the image and Xcode version must move deliberately.
+4. The implementation also removed the implicit, unpinned macOS `pod install` from `bin/postInstall` and declared the already-locked `nkf` dependency in `Gemfile` so Bundler deployment mode is reproducible.
+5. Requiring the `android` and `ios` checks on `main` and `master` remains a user action because the available token receives HTTP 403 for branch-protection settings.
+6. Job durations have not yet been measured. They will be recorded after the first green CI run; DerivedData caching remains deferred until measurements show it is needed.
