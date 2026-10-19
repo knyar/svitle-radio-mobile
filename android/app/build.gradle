@@ -123,6 +123,10 @@ android {
             initWith release
             signingConfig signingConfigs.debug
             matchingFallbacks = ["release"]
+            // The React Native Gradle plugin fills this manifest placeholder for
+            // "debug" and "release" only, in a finalizeDsl hook that runs after
+            // initWith has copied the release build type, so set it here.
+            manifestPlaceholders = [usesCleartextTraffic: "false"]
         }
     }
     flavorDimensions "variant"
