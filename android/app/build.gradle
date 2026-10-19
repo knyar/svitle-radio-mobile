@@ -18,10 +18,11 @@ react {
     // cliFile = file("../../node_modules/react-native/cli.js")
 
     /* Variants */
-    //   The list of variants to that are debuggable. For those we're going to
-    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
-    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
+    // With product flavours the variant names are e.g. "svitleDebug", so the
+    // default ["debug"] never matches and the plugin bundles JS even for debug
+    // builds. List the debug variants explicitly; every other variant
+    // (release, e2e) gets a Hermes bundle baked in.
+    debuggableVariants = ["svitleDebug", "svetloeDebug"]
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -114,6 +115,14 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+        // Release-like build signed with the committed debug keystore and with the
+        // JS bundle baked in, so it runs on an emulator with no Metro and no
+        // secrets. CI uploads app-svitle-e2e.apk; milestone 3 runs Maestro on it.
+        e2e {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ["release"]
         }
     }
     flavorDimensions "variant"
