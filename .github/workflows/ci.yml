@@ -32,6 +32,12 @@ jobs:
           # branch is master, PRs merge into main); PR runs read them.
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' }}
       - run: yarn install --frozen-lockfile
+      - name: Install the NDK pinned in android/build.gradle (the image ships a different one)
+        run: |
+          NDK=$(sed -nE 's/.*ndkVersion = "([^"]+)".*/\1/p' android/build.gradle)
+          test -n "$NDK"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK" > /dev/null
       - run: ./gradlew :app:assembleSvitleDebug :app:assembleSvetloeDebug :app:assembleSvitleE2e --build-cache
         working-directory: android
       - name: Verify the e2e APK is signed and installable (exit criterion)
