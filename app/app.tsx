@@ -6,6 +6,7 @@ import { enableScreens } from "react-native-screens"
 import { SafeAreaProvider, initialWindowSafeAreaInsets } from "react-native-safe-area-context"
 
 import { RootNavigator, setRootNavigation } from "./navigation"
+import { RootParamList } from "./navigation/types"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
@@ -41,9 +42,9 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
  * This is the root component of our app.
  */
 const App: React.FunctionComponent<{}> = () => {
-  const navigationRef = useRef<NavigationContainerRef>()
+  const navigationRef = useRef<NavigationContainerRef<RootParamList>>(null)
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
-  const [initialNavigationState, setInitialNavigationState] = useState()
+  const [initialNavigationState, setInitialNavigationState] = useState<undefined>(undefined)
   const [isRestoringNavigationState, setIsRestoringNavigationState] = useState(true)
 
   setRootNavigation(navigationRef)
@@ -53,7 +54,7 @@ const App: React.FunctionComponent<{}> = () => {
    * Track Screens
    * Persist State
    */
-  const routeNameRef = useRef()
+  const routeNameRef = useRef<string | undefined>(undefined)
   const onNavigationStateChange = state => {
     const previousRouteName = routeNameRef.current
     const currentRouteName = getActiveRouteName(state)
