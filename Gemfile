@@ -10,6 +10,8 @@ gem 'xcodeproj', '< 1.26.0'
 gem 'concurrent-ruby', '< 1.3.4'
  
 # Ruby 3.4.0 has removed some libraries from the standard library.
+# Keep this explicit because Bundler deployment mode requires Gemfile and Gemfile.lock to agree.
+gem 'nkf'
 gem 'bigdecimal'
 gem 'logger'
 gem 'benchmark'
