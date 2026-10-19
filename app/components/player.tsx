@@ -25,6 +25,7 @@ import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
+import { buttonState } from "../utils/player-state"
 const { FLAVOR } = require("../config/flavor")
 
 const PLAYER_OPTIONS: PlayerOptions = {
@@ -72,19 +73,8 @@ interface ButtonProps {
   toggle: () => void
 }
 export const Button: React.FunctionComponent<ButtonProps> = (props) => {
-  let ButtonComponent = PlayButton
-  let label = "button_label_play"
-  let enabled = !!props.url
-  switch (props.playbackState) {
-    case State.Playing:
-      ButtonComponent = PauseButton
-      label = "button_label_stop"
-      break
-    case State.Buffering:
-    case State.Loading:
-      enabled = false
-      break
-  }
+  const { enabled, variant, labelKey } = buttonState(props.url, props.playbackState)
+  const ButtonComponent = variant === "pause" ? PauseButton : PlayButton
 
   if (!enabled) {
     return (
@@ -98,7 +88,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
-    <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(label)}>
+    <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(labelKey)}>
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
     </TouchableOpacity>
   ))
