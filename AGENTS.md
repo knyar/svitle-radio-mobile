@@ -2,7 +2,7 @@
 
 ## Install and verify
 
-This project uses Yarn Classic and Node 20 or newer. Enable Corepack, then install exactly from the lockfile:
+This project uses Yarn Classic (pinned via the `packageManager` field in package.json) and Node 22.13 or newer (Node 24 also works; see `engines`). Enable Corepack so the pinned Yarn is used, then install exactly from the lockfile:
 
 ```sh
 corepack enable
@@ -40,6 +40,7 @@ On-device Maestro flows are coming in milestone 3. Until then, do not invent or 
 - Do not change `newArchEnabled`, the react-native-track-player major version, or anything in `patches/` unless explicitly requested.
 - Keep ESLint below 9 until the planned flat-config migration. React Native 0.81 provides only a legacy ESLint config.
 - TypeScript strict mode is a follow-up; enabling it currently exposes 29 errors.
+- `test-renderer` must stay on the line that matches the installed React minor (1.1.x for React 19.1; see its docs/versioning.md). Bump it together with `react`, never alone.
 
 ## Known debt
 

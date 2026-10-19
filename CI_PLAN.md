@@ -273,7 +273,7 @@ attempt this before `e2e-android` is a required check.
 
 ## M1 step 0 findings
 
-- Resolved versions are React Native 0.81.5, React 19.1.0, Jest 29.7.x, Babel Jest 29.x, ESLint 8.57.1, TypeScript 5.8.x, Prettier 2.8.8, and react-native-track-player 4.1.2. Node 20 or newer is required; CI uses Node 22.
+- Resolved versions are React Native 0.81.5, React 19.1.0, Jest 29.7.x, Babel Jest 29.x, ESLint 8.57.1, TypeScript 5.8.x, Prettier 2.8.8, and react-native-track-player 4.1.2. Node 22.13 or newer is required (RNTL 14 engines); CI uses Node 22. Yarn Classic is pinned with `packageManager`.
 - `patches/` contains only `react-native-track-player+4.1.2.patch`, adding Android null-safety around `getTrack` and `getActiveTrack`.
 - Before M1 there was no `test/setup.ts`, `test/`, or `storybook/`, although the old scripts referenced them.
 - All 20 open PRs are stale Dependabot updates against `master` from the React Native 0.63 era (2021–2023). They should be closed or recreated after CI exists.
