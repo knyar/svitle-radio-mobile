@@ -11,3 +11,4 @@ Gemfile*
 coverage
 *.lock
 package.json
+CI_PLAN.md
