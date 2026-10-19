@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from "react"
 import { useObserver } from "mobx-react-lite"
-import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState, Platform } from "react-native"
-import TrackPlayer, { usePlaybackState, State, Capability, AppKilledPlaybackBehavior, TrackMetadataBase, Track, TrackType, PlayerOptions } from "react-native-track-player";
+import {
+  Text,
+  View,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  AppState,
+  Platform,
+} from "react-native"
+import TrackPlayer, {
+  usePlaybackState,
+  State,
+  Capability,
+  AppKilledPlaybackBehavior,
+  TrackMetadataBase,
+  Track,
+  TrackType,
+  PlayerOptions,
+} from "react-native-track-player"
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import PlayButton from "../images/button.play.svg"
@@ -10,11 +27,11 @@ import { colors } from "../theme"
 import { UserAgent } from "../services/api"
 const { FLAVOR } = require("../config/flavor")
 
-const PLAYER_OPTIONS :PlayerOptions = {
-  playBuffer: 5,  // Android only
-  minBuffer: 10,  // iOS & Android
+const PLAYER_OPTIONS: PlayerOptions = {
+  playBuffer: 5, // Android only
+  minBuffer: 10, // iOS & Android
   maxBuffer: 20, // Android only
-  waitForBuffer: true,  // iOS only
+  waitForBuffer: true, // iOS only
 }
 
 const background = (): any => {
@@ -34,11 +51,13 @@ const artwork = (logo: string): any => {
 }
 
 interface NowPlayingProps {
-  header: string,
+  header: string
   text?: string
 }
-const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
-  if (!props.text) { return null }
+const NowPlaying: React.FunctionComponent<NowPlayingProps> = (props) => {
+  if (!props.text) {
+    return null
+  }
   return (
     <View>
       <Text style={styles.npHeader}>{i18n.t(props.header)}</Text>
@@ -48,11 +67,11 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = props => {
 }
 
 interface ButtonProps {
-  url?: string,
-  playbackState: State,
-  toggle: () => void,
+  url?: string
+  playbackState: State
+  toggle: () => void
 }
-export const Button: React.FunctionComponent<ButtonProps> = props => {
+export const Button: React.FunctionComponent<ButtonProps> = (props) => {
   let ButtonComponent = PlayButton
   let label = "button_label_play"
   let enabled = !!props.url
@@ -68,7 +87,13 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
   }
 
   if (!enabled) {
-    return <ButtonComponent height="200" style={[styles.buttonImage, styles.buttonDisabled]} fill={colors.primary}/>
+    return (
+      <ButtonComponent
+        height="200"
+        style={[styles.buttonImage, styles.buttonDisabled]}
+        fill={colors.primary}
+      />
+    )
   }
 
   return useObserver(() => (
@@ -79,10 +104,10 @@ export const Button: React.FunctionComponent<ButtonProps> = props => {
 }
 
 export interface PlayerProps {
-  url?: string,
-  current_track: string,
+  url?: string
+  current_track: string
 }
-export const Player: React.FunctionComponent<PlayerProps> = props => {
+export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
   const [currentStation, setCurrentStation] = useState(mainStore.local.station)
@@ -94,7 +119,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     return () => {
       sub.remove()
       console.log("Player unmounted")
-     }
+    }
   }, [])
 
   useEffect(() => {
@@ -104,7 +129,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
-    if ((Platform.OS === 'android') && (appState != "active") && props.url) {
+    if (Platform.OS === "android" && appState != "active" && props.url) {
       const metadata = trackMetadata()
       metadata.title = ""
       setMetadata(metadata)
@@ -124,7 +149,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
         android: {
           appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
         },
-      });
+      })
     } catch (error) {
       if (!error.message.includes("The player has already been initialized via setupPlayer")) {
         console.log("setupPlayer", error)
@@ -145,26 +170,28 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   async function currentTrackURL() {
-    const currentTrack = await TrackPlayer.getActiveTrack();
+    const currentTrack = await TrackPlayer.getActiveTrack()
     return currentTrack?.url
   }
 
-  async function setMetadata(metadata :TrackMetadataBase) {
-    const currentTrackIdx = await(safely(TrackPlayer.getCurrentTrack));
+  async function setMetadata(metadata: TrackMetadataBase) {
+    const currentTrackIdx = await safely(TrackPlayer.getCurrentTrack)
     if (currentTrackIdx != null) {
-      await(safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata))
+      await safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata)
     }
   }
 
   useEffect(() => {
     ;(async () => {
-      if (playbackState.state != State.Playing &&
+      if (
+        playbackState.state != State.Playing &&
         playbackState.state != State.Buffering &&
-        playbackState.state != State.Paused) {
-          return
+        playbackState.state != State.Paused
+      ) {
+        return
       }
-      const currentTrack = await currentTrackURL();
-      if (currentTrack && (currentTrack == props.url)) {
+      const currentTrack = await currentTrackURL()
+      if (currentTrack && currentTrack == props.url) {
         const metadata = trackMetadata()
         await setMetadata(metadata)
       }
@@ -174,19 +201,23 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   async function updateTrack() {
     try {
       const running = await TrackPlayer.isServiceRunning()
-      if (!running) { await setupPlayer() }
-      const currentTrack = await currentTrackURL();
-      if (props.url && (currentTrack != props.url)) {
+      if (!running) {
+        await setupPlayer()
+      }
+      const currentTrack = await currentTrackURL()
+      if (props.url && currentTrack != props.url) {
         const prevState = playbackState
-        console.log("Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState)
+        console.log(
+          "Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState,
+        )
         await safely(TrackPlayer.reset)
         let metadata = trackMetadata()
-        let track :Track = {
+        let track: Track = {
           url: props.url,
           userAgent: UserAgent(),
           type: props.url.endsWith(".m3u8") ? TrackType.HLS : TrackType.Default,
-          ...metadata
-        } 
+          ...metadata,
+        }
         await safely(TrackPlayer.add, track)
         if (prevState.state == State.Playing) {
           await safely(TrackPlayer.play)
@@ -198,9 +229,17 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   }
 
   useEffect(() => {
-    const state = {
-      0: "none", 6: "buffering", 8: "connecting", 7: "error", 2: "paused", 3: "playing", 5: "rewinding", 1: "stopped",
-    }[playbackState.state] || playbackState.state
+    const state =
+      {
+        0: "none",
+        6: "buffering",
+        8: "connecting",
+        7: "error",
+        2: "paused",
+        3: "playing",
+        5: "rewinding",
+        1: "stopped",
+      }[playbackState.state] || playbackState.state
     console.log("Playback state: " + state)
   }, [playbackState])
 
@@ -208,8 +247,13 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
     ;(async () => {
       await updateTrack()
       // Start playback when station is changed.
-      if (mainStore.local.station && (mainStore.local.station != currentStation)) {
-        console.log("Starting playback. Prev station " + currentStation + ". New station " + mainStore.local.station)
+      if (mainStore.local.station && mainStore.local.station != currentStation) {
+        console.log(
+          "Starting playback. Prev station " +
+            currentStation +
+            ". New station " +
+            mainStore.local.station,
+        )
         await safely(TrackPlayer.play)
       }
       setCurrentStation(mainStore.local.station)
@@ -232,7 +276,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
   return useObserver(() => (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={background()} resizeMode="stretch">
-        <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback}/>
+        <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback} />
       </ImageBackground>
       <View style={styles.npContainer}>
         <NowPlaying header="live_screen.player_now" text={mainStore.current_track} />
@@ -245,7 +289,7 @@ export const Player: React.FunctionComponent<PlayerProps> = props => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    
+
     flexDirection: "column",
     flex: 1,
     alignItems: "center",
@@ -278,16 +322,23 @@ const styles = StyleSheet.create({
 })
 
 async function safely(action, ...args) {
-  const methodName = action?.name || 'unknown'
+  const methodName = action?.name || "unknown"
   try {
-    console.log(`[TrackPlayer] Calling ${methodName} with args:`, args.map((arg, i) => ({
-      index: i,
-      type: Array.isArray(arg) ? 'array' : typeof arg,
-      value: Array.isArray(arg) ? `[${arg.length} items]` : (typeof arg === 'object' ? JSON.stringify(arg).substring(0, 100) : String(arg))
-    })))
+    console.log(
+      `[TrackPlayer] Calling ${methodName} with args:`,
+      args.map((arg, i) => ({
+        index: i,
+        type: Array.isArray(arg) ? "array" : typeof arg,
+        value: Array.isArray(arg)
+          ? `[${arg.length} items]`
+          : typeof arg === "object"
+          ? JSON.stringify(arg).substring(0, 100)
+          : String(arg),
+      })),
+    )
     return await action(...args)
   } catch (e) {
-    if (e.message.includes('The player is not initialized')) {
+    if (e.message.includes("The player is not initialized")) {
       // reinitialize player and retry
       try {
         await TrackPlayer.setupPlayer(PLAYER_OPTIONS)

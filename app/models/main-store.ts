@@ -3,7 +3,7 @@ import { PreferencesModel, PreferencesSnapshot } from "./preferences"
 import { StreamInfo, StreamInfoModel } from "./stream-info"
 import { Station } from "./station"
 import { LocalSettingsModel } from "./local-settings"
-import { withEnvironment} from "./with-environment"
+import { withEnvironment } from "./with-environment"
 import { GetStreamInfoResult, GetPreferencesResult } from "../services/api"
 import { indefinitely } from "../utils/retry"
 
@@ -19,7 +19,7 @@ export const MainStoreModel = types
     streamsUpdated: 0, // timestamp of last update
   })
   .extend(withEnvironment)
-  .views(self => ({
+  .views((self) => ({
     get current_station(): Station {
       const current = self.local.station
       for (const station of self.preferences.stations) {
@@ -36,7 +36,7 @@ export const MainStoreModel = types
           return stream
         }
       }
-      return {current_track: null, next_track: null, stream_url_low: null, stream_url: null}
+      return { current_track: null, next_track: null, stream_url_low: null, stream_url: null }
     },
     get current_track(): string {
       const stream = this.current_stream
@@ -54,10 +54,10 @@ export const MainStoreModel = types
       return stream.stream_url
     },
   }))
-  .actions(self => ({
+  .actions((self) => ({
     savePreferences: (preferencesSnapshot: PreferencesSnapshot) => {
       self.preferences = PreferencesModel.create(preferencesSnapshot)
-      
+
       // If we have a current station selected, check that it's still valid.
       for (const station of self.preferences.stations) {
         if (station.id == self.local.station) {
@@ -75,9 +75,9 @@ export const MainStoreModel = types
       self.streamsUpdated = Date.now()
     },
   }))
-  .actions(self => ({
-    getPreferences: flow(function*() {
-      indefinitely(async() => {
+  .actions((self) => ({
+    getPreferences: flow(function* () {
+      indefinitely(async () => {
         const result: GetPreferencesResult = await self.environment.api.getPreferences()
         if (result.kind === "ok") {
           self.savePreferences(result.preferences)
@@ -88,7 +88,7 @@ export const MainStoreModel = types
         }
       })
     }),
-    updateStreamInfo: flow(function*() {
+    updateStreamInfo: flow(function* () {
       const result: GetStreamInfoResult = yield self.environment.api.getStreamInfo()
       if (result.kind === "ok") {
         self.saveStreamInfo(result.streams)
@@ -98,7 +98,7 @@ export const MainStoreModel = types
     }),
   }))
 
-  /**
+/**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).
   * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
 

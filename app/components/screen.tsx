@@ -4,19 +4,19 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { Header } from "../components"
 
 interface Props {
-  title?: string,
-  children?: React.ReactNode,
-  style?: ViewStyle,
+  title?: string
+  children?: React.ReactNode
+  style?: ViewStyle
 }
 
-export const Screen: React.FunctionComponent<Props> = props => {
+export const Screen: React.FunctionComponent<Props> = (props) => {
   const insets = useSafeArea()
   const style = props.style || {}
   const insetStyle = { paddingTop: insets.top }
 
-  let header = (<View/>)
+  let header = <View />
   if (props.title) {
-    header = <Header title={props.title}/>
+    header = <Header title={props.title} />
   }
 
   return (

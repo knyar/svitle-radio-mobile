@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, Linking, StyleSheet, ViewStyle, TouchableOpacity } from "react-native"
 import i18n from "i18n-js"
-import IconSupport from '../images/icon.support.svg'
-import IconArchive from '../images/icon.archive.svg'
-import IconVideo from '../images/icon.video.svg'
-import { colors } from '../theme'
+import IconSupport from "../images/icon.support.svg"
+import IconArchive from "../images/icon.archive.svg"
+import IconVideo from "../images/icon.video.svg"
+import { colors } from "../theme"
 import { link_supported } from "../utils/links"
 
 export interface FooterLinkProps {
@@ -31,10 +31,10 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
     if (props.url) {
       console.log("Link '" + props.url + "' is not supported")
     }
-    return useObserver(() => (null))
+    return useObserver(() => null)
   }
 
-  const onPress = () => Linking.openURL(props.url);
+  const onPress = () => Linking.openURL(props.url)
 
   let icons = {
     support: IconSupport,
@@ -44,14 +44,18 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   const IconComponent = icons[props.icon]
 
   let iconHeight = 18
-  if (props.icon == "archive") { iconHeight = 16 }
+  if (props.icon == "archive") {
+    iconHeight = 16
+  }
 
   let textStyle: ViewStyle = { padding: 3 }
-  if (props.icon == "support") { textStyle["padding"] = 5 }
+  if (props.icon == "support") {
+    textStyle["padding"] = 5
+  }
 
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={onPress}>
-      <IconComponent height={iconHeight}  style={styles.icon} fill={colors.primary}/>
+      <IconComponent height={iconHeight} style={styles.icon} fill={colors.primary} />
       <Text style={[styles.text, textStyle]}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>
   ))

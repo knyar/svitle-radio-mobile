@@ -11,14 +11,14 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-stor
 import * as storage from "./utils/storage"
 import getActiveRouteName from "./navigation/get-active-routename"
 import { Timer } from "./components"
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native"
 
-Sentry.init({ 
-  dsn: 'https://aaea4257689efa06f26ca319e6404cf1@o405793.ingest.sentry.io/4505776273686528', 
-});
+Sentry.init({
+  dsn: "https://aaea4257689efa06f26ca319e6404cf1@o405793.ingest.sentry.io/4505776273686528",
+})
 
 // https://github.com/mobxjs/mobx-react-lite#observer-batching
-import 'mobx-react-lite/batchingForReactNative'
+import "mobx-react-lite/batchingForReactNative"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -55,7 +55,7 @@ const App: React.FunctionComponent<{}> = () => {
    * Persist State
    */
   const routeNameRef = useRef<string | undefined>(undefined)
-  const onNavigationStateChange = state => {
+  const onNavigationStateChange = (state) => {
     const previousRouteName = routeNameRef.current
     const currentRouteName = getActiveRouteName(state)
 
@@ -116,7 +116,7 @@ const App: React.FunctionComponent<{}> = () => {
           initialState={initialNavigationState}
           onStateChange={onNavigationStateChange}
         />
-        <Timer/>
+        <Timer />
       </SafeAreaProvider>
     </RootStoreProvider>
   )

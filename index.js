@@ -9,7 +9,7 @@
 // It's easier just to leave it here.
 import App from "./app/app.tsx"
 import { AppRegistry } from "react-native"
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer from "react-native-track-player"
 
 /**
  * This needs to match what's found in your app_delegate.m and MainActivity.java.
@@ -17,4 +17,4 @@ import TrackPlayer from 'react-native-track-player';
 const APP_NAME = "SvitleRadio"
 
 AppRegistry.registerComponent(APP_NAME, () => App)
-TrackPlayer.registerPlaybackService(() => require('./player-service'));
+TrackPlayer.registerPlaybackService(() => require("./player-service"))

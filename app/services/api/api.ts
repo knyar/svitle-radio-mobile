@@ -1,5 +1,5 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
-import { getReadableVersion, getSystemName, getSystemVersion } from 'react-native-device-info'
+import { getReadableVersion, getSystemName, getSystemVersion } from "react-native-device-info"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { StreamInfo } from "../../models/stream-info"
@@ -40,15 +40,15 @@ export class Api {
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
-        'Accept': "application/json",
-        'Cache-Control': 'no-cache',
-        'User-Agent': UserAgent(),
+        Accept: "application/json",
+        "Cache-Control": "no-cache",
+        "User-Agent": UserAgent(),
       },
     })
   }
 
   async getPreferences(): Promise<Types.GetPreferencesResult> {
-    const response: ApiResponse<any> = await this.apisauce.get('/preferences.svitle')
+    const response: ApiResponse<any> = await this.apisauce.get("/preferences.svitle")
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -63,7 +63,7 @@ export class Api {
   }
 
   async getStreamInfo(): Promise<Types.GetStreamInfoResult> {
-    const response: ApiResponse<any> = await this.apisauce.get('/status?recent_tracks=0')
+    const response: ApiResponse<any> = await this.apisauce.get("/status?recent_tracks=0")
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -80,8 +80,7 @@ export class Api {
 }
 
 export const UserAgent = (): string => {
-  return "Svitle/" + getReadableVersion() + " " + 
-    getSystemName() + "/" + getSystemVersion()
+  return "Svitle/" + getReadableVersion() + " " + getSystemName() + "/" + getSystemVersion()
 }
 
 const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {

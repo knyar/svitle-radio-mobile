@@ -2,8 +2,8 @@ import * as React from "react"
 import { useObserver } from "mobx-react-lite"
 import { Text, StyleSheet, ViewStyle, TouchableOpacity } from "react-native"
 import i18n from "i18n-js"
-import IconActive from '../images/icon.check.active.svg'
-import IconInactive from '../images/icon.check.inactive.svg'
+import IconActive from "../images/icon.check.active.svg"
+import IconInactive from "../images/icon.check.inactive.svg"
 import { colors } from "../theme"
 
 export interface FooterCheckboxProps {
@@ -16,10 +16,12 @@ export interface FooterCheckboxProps {
 
 export const FooterCheckbox: React.FunctionComponent<FooterCheckboxProps> = (props) => {
   const IconComponent = props.active ? IconActive : IconInactive
-  if (!props.visible) { return null }
+  if (!props.visible) {
+    return null
+  }
   return useObserver(() => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={props.toggle}>
-      <IconComponent height={18} style={styles.icon} fill={colors.primary}/>
+      <IconComponent height={18} style={styles.icon} fill={colors.primary} />
       <Text style={styles.text}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>
   ))

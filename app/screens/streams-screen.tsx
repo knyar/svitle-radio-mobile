@@ -47,14 +47,18 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
 
   return useObserver(() => (
     <Screen title={i18n.t("streams_screen.title")}>
-      <View style={styles.selector}>
-        {mainStore.preferences.stations.map(stationComponent)}
-      </View>
+      <View style={styles.selector}>{mainStore.preferences.stations.map(stationComponent)}</View>
       <View style={styles.footer}>
-        <FooterLink url={mainStore.preferences.localizedUrl("archive")}
-          icon="archive" text="streams_screen.archive"/>
-        <FooterLink url={mainStore.preferences.localizedUrl("youtube")}
-          icon="video" text="streams_screen.youtube"/>
+        <FooterLink
+          url={mainStore.preferences.localizedUrl("archive")}
+          icon="archive"
+          text="streams_screen.archive"
+        />
+        <FooterLink
+          url={mainStore.preferences.localizedUrl("youtube")}
+          icon="video"
+          text="streams_screen.youtube"
+        />
       </View>
     </Screen>
   ))
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.text,
   },
-  streamSelected: {backgroundColor: colors.menuBackgroundActive},
+  streamSelected: { backgroundColor: colors.menuBackgroundActive },
   footer: {
     width: "100%",
     flex: 0.8,
