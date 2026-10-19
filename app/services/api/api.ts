@@ -83,7 +83,7 @@ export const UserAgent = (): string => {
   return "Svitle/" + getReadableVersion() + " " + getSystemName() + "/" + getSystemVersion()
 }
 
-const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
+export const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
   let result = new Map()
   for (const name in raw.stations) {
     const station = raw.stations[name]

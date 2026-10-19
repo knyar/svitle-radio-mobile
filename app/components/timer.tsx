@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"
 import { useStores } from "../models/root-store"
+import { nextRefreshDelay } from "../utils/refresh-schedule"
 const { REFRESH_INTERVAL } = require("../config/env")
 
 export const Timer: React.FunctionComponent = () => {
@@ -9,16 +10,14 @@ export const Timer: React.FunctionComponent = () => {
     let timer = null
 
     async function refresh() {
-      let next = REFRESH_INTERVAL
       let age = Date.now() - mainStore.streamsUpdated
-      if (age < 5000 || age > 180000) {
+      const schedule = nextRefreshDelay(age, REFRESH_INTERVAL)
+      if (!schedule.refresh) {
         console.log("StreamInfo updated less than 5s or more than 3m ago. Retrying in 5s.")
-        // Retry in 5-6 seconds.
-        next = 5000 + 1000 * Math.random()
       } else {
         await mainStore.updateStreamInfo()
       }
-      timer = setTimeout(refresh, next)
+      timer = setTimeout(refresh, schedule.delay)
     }
 
     timer = setTimeout(refresh, REFRESH_INTERVAL)
