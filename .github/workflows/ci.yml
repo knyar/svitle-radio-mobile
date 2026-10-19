@@ -16,3 +16,83 @@ jobs:
         with: { node-version: 22, cache: yarn }
       - run: yarn install --frozen-lockfile
       - run: yarn verify
+
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: yarn }
+      - uses: actions/setup-java@v6
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          # Caches are written only from pushes to main/master (the repo default
+          # branch is master, PRs merge into main); PR runs read them.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' }}
+      - run: yarn install --frozen-lockfile
+      - run: ./gradlew :app:assembleSvitleDebug :app:assembleSvetloeDebug :app:assembleSvitleE2e --build-cache
+        working-directory: android
+      - name: Verify the e2e APK is signed and installable (exit criterion)
+        run: |
+          APK=android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -E "^package: name='com.svitleradio'"
+          if "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "application-debuggable"; then
+            echo "e2e APK must not be debuggable"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v7
+        with:
+          name: app-svitle-e2e
+          path: android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  ios:
+    # Pinned image AND pinned Xcode: RN 0.81 needs Xcode >= 16.1 and is tested
+    # on the 16.x line. Move both deliberately, never via -latest.
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: yarn }
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.4", bundler-cache: true }
+      - run: sudo xcode-select -s /Applications/Xcode_16.4.app && xcodebuild -version
+      - run: yarn install --frozen-lockfile
+      - uses: actions/cache@v6
+        with:
+          path: ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock', 'Gemfile.lock') }}
+      - run: bundle exec pod install
+        working-directory: ios
+      - name: Podfile.lock must be honoured (only the CocoaPods version line may differ)
+        run: git diff -I '^COCOAPODS:' --exit-code -- ios/Podfile.lock
+      - name: Build Svitle.Release for the simulator
+        run: |
+          set -o pipefail
+          xcodebuild -workspace ios/SvitleRadio.xcworkspace \
+            -scheme SvitleRadio -configuration Svitle.Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ios/build \
+            CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build | xcbeautify --renderer github-actions
+      - name: Verify the .app is a runnable arm64 simulator bundle (exit criterion)
+        run: |
+          APP=ios/build/Build/Products/Svitle.Release-iphonesimulator/SvitleRadio.app
+          test -x "$APP/SvitleRadio"
+          lipo -info "$APP/SvitleRadio" | grep -q arm64
+          test -f "$APP/main.jsbundle"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -qx org.svitle.app1
+      - name: Zip the .app (artifact zips drop executable bits, ditto keeps them)
+        run: ditto -c -k --keepParent ios/build/Build/Products/Svitle.Release-iphonesimulator/SvitleRadio.app SvitleRadio.app.zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: SvitleRadio-simulator
+          path: SvitleRadio.app.zip
+          if-no-files-found: error
+          retention-days: 14
