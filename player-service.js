@@ -1,34 +1,36 @@
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer from "react-native-track-player"
 
 async function stop() {
-    // This forces the player to be fully stopped and removed
-    // from notification bar and lock screen, both on iOS and
-    // Android.
-    try {
-      await TrackPlayer.reset()
-    } catch (e) {
-      console.log("error while stopping ", e)
-    }
+  // This forces the player to be fully stopped and removed
+  // from notification bar and lock screen, both on iOS and
+  // Android.
+  try {
+    await TrackPlayer.reset()
+  } catch (e) {
+    console.log("error while stopping ", e)
+  }
 }
 
-module.exports = async function() {
-  TrackPlayer.addEventListener('remote-play', async () => {
-    console.log('Triggered remote-play')
+module.exports = async function () {
+  TrackPlayer.addEventListener("remote-play", async () => {
+    console.log("Triggered remote-play")
     await TrackPlayer.play()
   })
 
-  TrackPlayer.addEventListener('remote-pause', async () => {
-    console.log('Triggered remote-pause')
+  TrackPlayer.addEventListener("remote-pause", async () => {
+    console.log("Triggered remote-pause")
     await stop()
-  });
+  })
 
-  TrackPlayer.addEventListener('remote-stop', async () => {
-    console.log('Triggered remote-stop')
+  TrackPlayer.addEventListener("remote-stop", async () => {
+    console.log("Triggered remote-stop")
     await stop()
-  });
+  })
 
-  TrackPlayer.addEventListener('remote-duck', async (params) => {
-    console.log('Triggered remote-duck; paused ' + params.paused + ", permanent " + params.permanent)
+  TrackPlayer.addEventListener("remote-duck", async (params) => {
+    console.log(
+      "Triggered remote-duck; paused " + params.paused + ", permanent " + params.permanent,
+    )
     if (params.permanent) {
       await stop()
     } else {
@@ -38,5 +40,5 @@ module.exports = async function() {
         await TrackPlayer.setVolume(1)
       }
     }
-  });
-};
+  })
+}

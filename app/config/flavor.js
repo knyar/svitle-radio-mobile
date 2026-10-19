@@ -1,6 +1,6 @@
-const BuildConfig = require('react-native-build-config')
+const BuildConfig = require("react-native-build-config")
 
 module.exports = {
-    "svitle": require("./flavor.svitle"),
-    "svetloe": require("./flavor.svetloe"),
+  svitle: require("./flavor.svitle"),
+  svetloe: require("./flavor.svetloe"),
 }[BuildConfig.default.FLAVOR]

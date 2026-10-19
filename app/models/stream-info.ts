@@ -12,12 +12,12 @@ export const StreamInfoModel = types
     stream_url: types.maybe(types.string),
     stream_url_low: types.maybe(types.string),
   })
-  .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   // track information gets outdated fast; don't save it into storage.
   .postProcessSnapshot(omit(["current_track", "next_track"]))
 
-  /**
+/**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).
   * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
 

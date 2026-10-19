@@ -6,8 +6,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Screen } from "../components"
 import { ContactBlock } from "../models/contact-block"
 import i18n from "i18n-js"
-import IconSkype from '../images/icon.skype.svg'
-import IconViber from '../images/icon.viber.svg'
+import IconSkype from "../images/icon.skype.svg"
+import IconViber from "../images/icon.viber.svg"
 import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
@@ -32,12 +32,14 @@ const iconLinkComponent = (item: ContactItem) => {
     skype: IconSkype,
     viber: IconViber,
   }
-  if (!(item.text in icons) || !item.url) { return <View key={item.url}/> }
+  if (!(item.text in icons) || !item.url) {
+    return <View key={item.url} />
+  }
   const IconComponent = icons[item.text]
 
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return <View key={item.url}/>
+    return <View key={item.url} />
   }
   const onPress = () => Linking.openURL(item.url)
   return (
@@ -56,10 +58,16 @@ const textLinkComponent = (item: ContactItem) => {
     })()
   }, [])
 
-  if (!item.url) { return <View key={item.url}/> }
+  if (!item.url) {
+    return <View key={item.url} />
+  }
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return <Text key={item.url} style={styles.text}>{item.text}</Text>
+    return (
+      <Text key={item.url} style={styles.text}>
+        {item.text}
+      </Text>
+    )
   }
   const onPress = () => Linking.openURL(item.url)
   return (
@@ -72,11 +80,7 @@ const textLinkComponent = (item: ContactItem) => {
 const blockComponent = (block: ContactBlock) => {
   let icons = null
   if (block.icon_links.length > 0) {
-    icons = (
-      <View style={styles.icons}>
-        {block.icon_links.map(iconLinkComponent)}
-      </View>
-    )
+    icons = <View style={styles.icons}>{block.icon_links.map(iconLinkComponent)}</View>
   }
   return (
     <View style={styles.container} key={block.title}>

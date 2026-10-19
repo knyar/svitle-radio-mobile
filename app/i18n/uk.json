@@ -1,32 +1,32 @@
-{ 
-    "lang": "ua",
-    "live_screen": {
-        "title": "Слухати",
-        "player_now": "Зараз:",
-        "player_next": "Наступне:",
-        "support_radio": "Підтримати радіо",
-        "save_traffic": "Економити трафік",
-        "button_label_play": "Слухати",
-        "button_label_stop": "Зупинити"
-    },
-    "streams_screen": {
-        "title": "Канали",
-        "archive": "Архів передач",
-        "youtube": "Відеоверсії на Youtube",
-        "lang": {
-            "ru": "російською",
-            "ua": "українською"
-        }
-    },
-    "contacts_screen": {
-        "menu_title": "Контакти",
-        "title": "Контакти",
-        "block": {
-            "svitle": "ТРК «Еммануїл»",
-            "live": "Прямий ефір",
-            "editors": "Редакція",
-            "accounting": "Бухгалтерія",
-            "svetloe": "Інтернет-проект російською мовою"
-        }
+{
+  "lang": "ua",
+  "live_screen": {
+    "title": "Слухати",
+    "player_now": "Зараз:",
+    "player_next": "Наступне:",
+    "support_radio": "Підтримати радіо",
+    "save_traffic": "Економити трафік",
+    "button_label_play": "Слухати",
+    "button_label_stop": "Зупинити"
+  },
+  "streams_screen": {
+    "title": "Канали",
+    "archive": "Архів передач",
+    "youtube": "Відеоверсії на Youtube",
+    "lang": {
+      "ru": "російською",
+      "ua": "українською"
     }
+  },
+  "contacts_screen": {
+    "menu_title": "Контакти",
+    "title": "Контакти",
+    "block": {
+      "svitle": "ТРК «Еммануїл»",
+      "live": "Прямий ефір",
+      "editors": "Редакція",
+      "accounting": "Бухгалтерія",
+      "svetloe": "Інтернет-проект російською мовою"
+    }
+  }
 }

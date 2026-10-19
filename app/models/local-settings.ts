@@ -9,8 +9,8 @@ export const LocalSettingsModel = types
     low_quality: false,
     station: types.maybe(types.string),
   })
-  .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  .actions(self => ({
+  .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions((self) => ({
     setStation(station: string) {
       self.station = station
     },
@@ -19,7 +19,7 @@ export const LocalSettingsModel = types
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
-  /**
+/**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).
   * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
 

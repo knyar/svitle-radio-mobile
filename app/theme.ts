@@ -17,6 +17,6 @@ const svitle = {
 }
 
 export const colors = {
-  "svitle": svitle,
-  "svetloe": svetloe,
+  svitle: svitle,
+  svetloe: svetloe,
 }[FLAVOR]
