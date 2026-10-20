@@ -13,9 +13,7 @@ prepare_react_native_project!
 
 project 'SvitleRadio',
         'Svitle.Debug' => :debug,
-        'Svitle.Release' => :release,
-        'Svetloe.Debug' => :debug,
-        'Svetloe.Release' => :release
+        'Svitle.Release' => :release
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil

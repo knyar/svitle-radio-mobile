@@ -10,19 +10,25 @@ JSON API is also open source, available [here](https://github.com/knyar/svitle-a
 
 ## Development instructions
 
+See [AGENTS.md](AGENTS.md) for the authoritative install, verification, build, and contribution
+instructions.
+
 Install system dependencies:
 
 ```
 brew install node
 brew install watchman
-gem install cocoapods --user-install
 ```
 
 ```
-$ yarn install
+corepack enable
+yarn install --frozen-lockfile
+bundle install
+cd ios && bundle exec pod install
 ```
 
-Create `ios/sentry.properties` to allow Sentry to upload debug symbols:
+Native builds must remain secret-free; see the Sentry rule in [AGENTS.md](AGENTS.md). If symbol
+uploads are explicitly enabled, `ios/sentry.properties` uses this template:
 
 ```
 defaults.url=https://sentry.io/

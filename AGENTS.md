@@ -82,10 +82,5 @@ For lint-target files, `.claude/settings.json` runs `yarn typecheck && yarn lint
 
 ## Known debt
 
-- `Button`, `FooterLink`, and `FooterCheckbox` call `useObserver` after early returns; contact link helpers invoke hooks as ordinary functions.
-- Player accessibility labels use missing top-level `button_label_play` and `button_label_stop` translation keys.
 - Player has no error UI and no buffering indicator distinct from the shared disabled control.
-- React Navigation packages are mismatched: native and bottom-tabs are v7 while native-stack is v6.
 - Twenty stale Dependabot PRs from the React Native 0.63 era should be closed or recreated after CI is established.
-- The iOS project has no Svetloe build configurations even though the Podfile names them.
-- The `SvitleRadio-tvOS` scheme and the `SvitleRadioTests` reference in the `SvitleRadio` scheme are stale.
