@@ -2,7 +2,6 @@
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "allowJs": false,
-    "experimentalDecorators": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,

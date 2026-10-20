@@ -5,6 +5,6 @@ module.exports = {
   transformIgnorePatterns: [
     "node_modules/(?!((jest-)?react-native|@react-native(-community)?|@react-navigation|react-native-track-player)/)",
   ],
-  testPathIgnorePatterns: ["/node_modules/", "/android/", "/ios/", "/e2e/"],
+  testPathIgnorePatterns: ["/node_modules/", "/android/", "/ios/"],
   clearMocks: true,
 }

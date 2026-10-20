@@ -2,7 +2,6 @@ node_modules
 ios
 android
 .vscode
-ignite
 patches
 vendor
 yarn.lock
