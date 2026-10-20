@@ -70,8 +70,10 @@ for attempt in 1 2; do
     warmup_ok=1
     echo "$(date -u +%FT%TZ) warm-up attempt $attempt passed" >> "$OUT/warmup.log"
     break
+  else
+    warmup_status=$?
+    echo "$(date -u +%FT%TZ) warm-up attempt $attempt failed (maestro exit $warmup_status)" >> "$OUT/warmup.log"
   fi
-  echo "$(date -u +%FT%TZ) warm-up attempt $attempt failed (exit $?)" >> "$OUT/warmup.log"
   sleep 5
 done
 if (( warmup_ok == 0 )); then
@@ -80,7 +82,11 @@ elif (( warmup_attempts > 1 )); then
   echo "::warning title=e2e-android warm-up retried::The first warm-up launch failed; see warmup.log and warmup/ in the artifact."
 fi
 rm -rf "$warmup_dir"
-adb shell am force-stop "$APP_ID"
+# The warm-up may have failed on the very transport flap it exists to absorb; wait for adb to be
+# stable again (logged to the same device-ready.log) and tolerate a failing force-stop so the suite
+# still runs and reports its own result.
+wait_for_stable_device
+adb shell am force-stop "$APP_ID" || true
 adb logcat -c
 # Evidence must come from this attempt only, even when a local run reuses the directory:
 # the flattened Maestro output has no per-run folder, so stale files would otherwise mix in.
