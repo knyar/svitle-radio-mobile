@@ -325,6 +325,28 @@ test("stream info refreshes when the app becomes active", async () => {
   expect(root.mainStore.updateStreamInfo).toHaveBeenCalledTimes(2)
 })
 
+test("a URL change while backgrounded on Android loads the track without a title", async () => {
+  const os = Object.getOwnPropertyDescriptor(Platform, "OS")
+  Object.defineProperty(Platform, "OS", { configurable: true, value: "android" })
+  ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
+  try {
+    const view = await mountPlayer({ url: "https://radio", state: State.None })
+    const listener = (AppState.addEventListener as jest.Mock).mock.calls[0][1]
+    await act(() => listener("background"))
+    ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue({ url: "https://radio" })
+
+    view.rerender(player("https://other"))
+
+    await waitFor(() =>
+      expect(TrackPlayer.add).toHaveBeenCalledWith(
+        expect.objectContaining({ url: "https://other", title: "" }),
+      ),
+    )
+  } finally {
+    if (os) Object.defineProperty(Platform, "OS", os)
+  }
+})
+
 test("going to background on Android blanks the title", async () => {
   const os = Object.getOwnPropertyDescriptor(Platform, "OS")
   Object.defineProperty(Platform, "OS", { configurable: true, value: "android" })
