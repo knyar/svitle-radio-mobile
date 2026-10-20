@@ -22,36 +22,20 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
       props.navigation.navigate("live")
     }
 
-    const view = (
-      <View style={styles.stream}>
+    const selected = mainStore.local.station === station.id
+    return (
+      <TouchableOpacity
+        disabled={selected}
+        style={[styles.stream, selected && styles.streamSelected]}
+        onPress={onPress}
+        key={station.id}
+        testID={"streams.item." + station.id}
+      >
         <Logo station={station} style={styles.streamLogo} height={80} />
         <Text style={styles.streamText}>{station.name}</Text>
         <Text style={styles.streamLang}>({i18n.t("streams_screen.lang." + station.lang)})</Text>
-      </View>
+      </TouchableOpacity>
     )
-
-    if (mainStore.local.station === station.id) {
-      return (
-        <View
-          style={[styles.stream, styles.streamSelected]}
-          key={station.id}
-          testID={"streams.item." + station.id}
-        >
-          {view}
-        </View>
-      )
-    } else {
-      return (
-        <TouchableOpacity
-          style={styles.stream}
-          onPress={onPress}
-          key={station.id}
-          testID={"streams.item." + station.id}
-        >
-          {view}
-        </TouchableOpacity>
-      )
-    }
   }
 
   return useObserver(() => (

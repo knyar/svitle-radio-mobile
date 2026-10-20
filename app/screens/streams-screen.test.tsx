@@ -40,6 +40,9 @@ test("renders station IDs and switches to a non-selected station", async () => {
   expect(screen.getByTestId("streams.item.svitle")).toBeTruthy()
   expect(screen.getByTestId("streams.item.svetloe")).toBeTruthy()
 
+  fireEvent.press(screen.getByTestId("streams.item.svitle"))
+  expect(setStation).not.toHaveBeenCalled()
+
   fireEvent.press(screen.getByTestId("streams.item.svetloe"))
   expect(setStation).toHaveBeenCalledWith("svetloe")
   expect(navigate).toHaveBeenCalledWith("live")

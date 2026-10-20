@@ -2,6 +2,7 @@ import React from "react"
 import { AppState } from "react-native"
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native"
 import TrackPlayer, { State, TrackType, usePlaybackState } from "react-native-track-player"
+import i18n from "i18n-js"
 import { Player } from "./player"
 import { RootStore, RootStoreProvider } from "../models/root-store"
 
@@ -74,7 +75,10 @@ test.each([
   ["https://radio/stream.m3u8", TrackType.HLS],
 ])("pressing play adds %s with the expected type", async (url, type) => {
   await mountPlayer({ url, state: State.None })
-  fireEvent.press(screen.getByLabelText(/button_label_play/))
+  expect(screen.getByTestId("player.play").props.accessibilityLabel).toBe(
+    i18n.t("live_screen.button_label_play"),
+  )
+  fireEvent.press(screen.getByTestId("player.play"))
   await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalled())
   expect(TrackPlayer.add).toHaveBeenCalledWith(
     expect.objectContaining({ url, userAgent: expect.any(String), type }),
@@ -85,7 +89,7 @@ test("pressing while playing resets playback", async () => {
   const url = "https://radio"
   await mountPlayer({ url, state: State.Playing, activeUrl: url })
   expect(screen.getByTestId("player.pause")).toBeTruthy()
-  fireEvent.press(screen.getByLabelText(/button_label_stop/))
+  fireEvent.press(screen.getByTestId("player.pause"))
   await waitFor(() => expect(TrackPlayer.reset).toHaveBeenCalled())
   expect(TrackPlayer.play).not.toHaveBeenCalled()
 })
@@ -93,5 +97,27 @@ test("pressing while playing resets playback", async () => {
 test("buffering has no pressable control", async () => {
   await mountPlayer({ url: "https://radio", state: State.Buffering })
   expect(screen.getByTestId("player.disabled")).toBeTruthy()
-  expect(screen.queryByLabelText(/button_label/)).toBeNull()
+  expect(screen.queryByTestId("player.play")).toBeNull()
+  expect(screen.queryByTestId("player.pause")).toBeNull()
+})
+
+test("reinitializes the player and reapplies options before retrying play", async () => {
+  await mountPlayer({ url: "https://radio", state: State.None })
+  ;(TrackPlayer.setupPlayer as jest.Mock).mockClear()
+  ;(TrackPlayer.updateOptions as jest.Mock).mockClear()
+  ;(TrackPlayer.play as jest.Mock)
+    .mockRejectedValueOnce(new Error("The player is not initialized"))
+    .mockResolvedValue(undefined)
+
+  fireEvent.press(screen.getByTestId("player.play"))
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(2))
+  expect(TrackPlayer.setupPlayer).toHaveBeenCalledTimes(1)
+  expect(TrackPlayer.updateOptions).toHaveBeenCalledTimes(1)
+
+  const setupOrder = (TrackPlayer.setupPlayer as jest.Mock).mock.invocationCallOrder[0]
+  const optionsOrder = (TrackPlayer.updateOptions as jest.Mock).mock.invocationCallOrder[0]
+  const retryOrder = (TrackPlayer.play as jest.Mock).mock.invocationCallOrder[1]
+  expect(setupOrder).toBeLessThan(optionsOrder)
+  expect(optionsOrder).toBeLessThan(retryOrder)
 })

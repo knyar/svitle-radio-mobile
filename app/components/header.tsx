@@ -5,15 +5,17 @@ import IconSvitle from "../images/header.svitle.svg"
 import { colors } from "../theme"
 const { FLAVOR } = require("../config/flavor")
 
+const icons = {
+  svetloe: IconSvetloe,
+  svitle: IconSvitle,
+}
+
 interface Props {
   title: string
 }
 
 export const Header: React.FunctionComponent<Props> = (props) => {
-  const IconComponent = {
-    svetloe: IconSvetloe,
-    svitle: IconSvitle,
-  }[FLAVOR]
+  const IconComponent = icons[FLAVOR]
   return (
     <View style={styles.header}>
       <IconComponent style={styles.icon} height={40} width={40} fill={colors.primary} />
