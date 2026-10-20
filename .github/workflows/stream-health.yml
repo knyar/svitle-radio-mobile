@@ -1,0 +1,11 @@
+name: Stream health
+on:
+  schedule: [{ cron: "0 */6 * * *" }]
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  stream-health:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - run: scripts/stream-health.sh

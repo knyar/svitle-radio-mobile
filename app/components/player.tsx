@@ -78,17 +78,23 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 
   if (!enabled) {
     return (
-      <ButtonComponent
-        height="200"
-        style={[styles.buttonImage, styles.buttonDisabled]}
-        fill={colors.primary}
-      />
+      <View testID="player.disabled" style={styles.buttonDisabledWrapper}>
+        <ButtonComponent
+          height="200"
+          style={[styles.buttonImage, styles.buttonDisabled]}
+          fill={colors.primary}
+        />
+      </View>
     )
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
-    <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(labelKey)}>
+    <TouchableOpacity
+      onPress={props.toggle}
+      accessibilityLabel={i18n.t(labelKey)}
+      testID={variant === "pause" ? "player.pause" : "player.play"}
+    >
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
     </TouchableOpacity>
   ))
@@ -300,6 +306,12 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.5,
+  },
+  // Full width so the SVG's percentage maxWidth still resolves against the
+  // ImageBackground, as it did before the testID wrapper was added.
+  buttonDisabledWrapper: {
+    width: "100%",
+    alignItems: "center",
   },
   npContainer: {
     flex: 0.6,

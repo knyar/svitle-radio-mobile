@@ -100,7 +100,7 @@ const blockComponent = (block: ContactBlock) => {
 export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = () => {
   const { mainStore } = useStores()
   return useObserver(() => (
-    <Screen title={i18n.t("contacts_screen.title")}>
+    <Screen title={i18n.t("contacts_screen.title")} testID="screen.contacts">
       {mainStore.preferences.contacts.map(blockComponent)}
     </Screen>
   ))

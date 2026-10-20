@@ -1,0 +1,22 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: "screen.streams"
+- extendedWaitUntil:
+    visible: { id: "streams.item.svitle" }
+    timeout: 20000
+- assertVisible:
+    id: "nav.live"
+- assertVisible:
+    id: "nav.streams"
+- assertVisible:
+    id: "nav.contacts"
+- tapOn:
+    id: "nav.live"
+- assertVisible:
+    id: "screen.live"
+- extendedWaitUntil:
+    visible: { id: "player.play" }
+    timeout: 20000
