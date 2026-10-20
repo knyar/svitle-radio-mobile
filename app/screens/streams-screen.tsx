@@ -32,13 +32,22 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
 
     if (mainStore.local.station === station.id) {
       return (
-        <View style={[styles.stream, styles.streamSelected]} key={station.id}>
+        <View
+          style={[styles.stream, styles.streamSelected]}
+          key={station.id}
+          testID={"streams.item." + station.id}
+        >
           {view}
         </View>
       )
     } else {
       return (
-        <TouchableOpacity style={styles.stream} onPress={onPress} key={station.id}>
+        <TouchableOpacity
+          style={styles.stream}
+          onPress={onPress}
+          key={station.id}
+          testID={"streams.item." + station.id}
+        >
           {view}
         </TouchableOpacity>
       )
@@ -46,7 +55,7 @@ export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props
   }
 
   return useObserver(() => (
-    <Screen title={i18n.t("streams_screen.title")}>
+    <Screen title={i18n.t("streams_screen.title")} testID="screen.streams">
       <View style={styles.selector}>{mainStore.preferences.stations.map(stationComponent)}</View>
       <View style={styles.footer}>
         <FooterLink

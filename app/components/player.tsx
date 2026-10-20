@@ -78,17 +78,23 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 
   if (!enabled) {
     return (
-      <ButtonComponent
-        height="200"
-        style={[styles.buttonImage, styles.buttonDisabled]}
-        fill={colors.primary}
-      />
+      <View testID="player.disabled">
+        <ButtonComponent
+          height="200"
+          style={[styles.buttonImage, styles.buttonDisabled]}
+          fill={colors.primary}
+        />
+      </View>
     )
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
   return useObserver(() => (
-    <TouchableOpacity onPress={props.toggle} accessibilityLabel={i18n.t(labelKey)}>
+    <TouchableOpacity
+      onPress={props.toggle}
+      accessibilityLabel={i18n.t(labelKey)}
+      testID={variant === "pause" ? "player.pause" : "player.play"}
+    >
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
     </TouchableOpacity>
   ))

@@ -61,6 +61,7 @@ async function mountPlayer({
 
 test("renders now-playing metadata and runs mount effects", async () => {
   await mountPlayer({ url: "https://radio", state: State.None })
+  expect(screen.getByTestId("player.play")).toBeTruthy()
   expect(screen.getByText("Song")).toBeTruthy()
   expect(screen.getByText("Next")).toBeTruthy()
   expect(TrackPlayer.setupPlayer).toHaveBeenCalled()
@@ -83,6 +84,7 @@ test.each([
 test("pressing while playing resets playback", async () => {
   const url = "https://radio"
   await mountPlayer({ url, state: State.Playing, activeUrl: url })
+  expect(screen.getByTestId("player.pause")).toBeTruthy()
   fireEvent.press(screen.getByLabelText(/button_label_stop/))
   await waitFor(() => expect(TrackPlayer.reset).toHaveBeenCalled())
   expect(TrackPlayer.play).not.toHaveBeenCalled()
@@ -90,5 +92,6 @@ test("pressing while playing resets playback", async () => {
 
 test("buffering has no pressable control", async () => {
   await mountPlayer({ url: "https://radio", state: State.Buffering })
+  expect(screen.getByTestId("player.disabled")).toBeTruthy()
   expect(screen.queryByLabelText(/button_label/)).toBeNull()
 })

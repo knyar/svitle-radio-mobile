@@ -14,7 +14,7 @@ export const LiveScreen: React.FunctionComponent<LiveScreenProps> = () => {
   const { mainStore } = useStores()
 
   return useObserver(() => (
-    <Screen>
+    <Screen testID="screen.live">
       <View style={styles.logo}>
         <Logo station={mainStore.current_station} width={300} style={styles.logoImage} />
       </View>

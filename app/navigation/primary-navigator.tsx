@@ -42,6 +42,7 @@ export function PrimaryNavigator() {
         component={LiveScreen}
         options={{
           tabBarLabel: i18n.t("live_screen.title"),
+          tabBarButtonTestID: "nav.live",
         }}
       />
       <Tab.Screen
@@ -49,6 +50,7 @@ export function PrimaryNavigator() {
         component={StreamsScreen}
         options={{
           tabBarLabel: i18n.t("streams_screen.title"),
+          tabBarButtonTestID: "nav.streams",
         }}
       />
       <Tab.Screen
@@ -56,6 +58,7 @@ export function PrimaryNavigator() {
         component={ContactsScreen}
         options={{
           tabBarLabel: i18n.t("contacts_screen.menu_title"),
+          tabBarButtonTestID: "nav.contacts",
         }}
       />
     </Tab.Navigator>

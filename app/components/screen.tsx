@@ -7,6 +7,7 @@ interface Props {
   title?: string
   children?: React.ReactNode
   style?: ViewStyle
+  testID?: string
 }
 
 export const Screen: React.FunctionComponent<Props> = (props) => {
@@ -20,7 +21,7 @@ export const Screen: React.FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <View style={[styles.outer, insetStyle]}>
+    <View style={[styles.outer, insetStyle]} testID={props.testID}>
       {header}
       <View style={[styles.inner, style]}>{props.children}</View>
     </View>
