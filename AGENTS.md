@@ -59,6 +59,16 @@ waits when investigating flakes. Quarantine only with an owner, reason, and expi
 flow. Add the `run-ios-e2e` PR label to run iOS on demand. Scheduled and manually dispatched
 workflows become available only after the workflow exists on the default `master` branch.
 
+## Agent loop
+
+Build and install the app on a simulator or emulator with the commands above, then explore the change with the `maestro` MCP server (`inspect_screen`, `take_screenshot`, or `run` with inline YAML) or with `mobile-mcp`. Save the working steps as a flow under `.maestro/`, following the stable-ID conventions above. Run `scripts/e2e-android.sh` for Android or `maestro test -e APP_ID=org.svitle.app1 .maestro/` for iOS before pushing. If CI fails, download and inspect the `e2e-android-output` artifact.
+
+The checked-in `.mcp.json` is Claude Code configuration for the Maestro and mobile-mcp servers; Codex configures MCP servers separately. The mobile-mcp version is pinned and should be bumped deliberately. Interactive Claude Code sessions ask once to approve project MCP servers. The `maestro` server requires the Maestro CLI and Java 17 or newer on `PATH`; where they are absent, including Linux CI boxes, it appears as a failed, unavailable server without affecting mobile-mcp. MobileBuildMCP is an optional macOS addition for Xcode build, run, and log access: `npx -y mobilebuildmcp@latest mcp`.
+
+## Editor hook
+
+For lint-target files, `.claude/settings.json` runs `yarn typecheck && yarn lint` after each successful Claude Code `Edit` or `Write` tool call and reports failures to the agent. The hook does not see changes made through Bash or external tools and adds about 8 seconds per edit, so `yarn verify` remains the authoritative gate. Agents without hooks, including Codex, run `yarn verify` before committing.
+
 ## Rules
 
 - Never delete or skip tests, or update snapshots, merely to make CI pass.
