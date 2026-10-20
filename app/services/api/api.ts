@@ -51,23 +51,17 @@ export class Api {
     const response: ApiResponse<any> = await this.apisauce.get("/preferences.svitle")
 
     if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
+      return getGeneralApiProblem(response) ?? { kind: "unknown", temporary: true }
     }
 
-    try {
-      return { kind: "ok", preferences: response.data }
-    } catch {
-      return { kind: "bad-data" }
-    }
+    return { kind: "ok", preferences: response.data }
   }
 
   async getStreamInfo(): Promise<Types.GetStreamInfoResult> {
     const response: ApiResponse<any> = await this.apisauce.get("/status?recent_tracks=0")
 
     if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
+      return getGeneralApiProblem(response) ?? { kind: "unknown", temporary: true }
     }
 
     try {
@@ -84,10 +78,10 @@ export const UserAgent = (): string => {
 }
 
 export const convertStreamInfo = (raw: any): Map<string, StreamInfo> => {
-  let result = new Map()
+  const result = new Map()
   for (const name in raw.stations) {
     const station = raw.stations[name]
-    let s: StreamInfo = {
+    const s: StreamInfo = {
       // eslint-disable-next-line eqeqeq -- raw API data (any), keep loose comparison
       current_track: station.current_track == "" ? undefined : station.current_track,
       // eslint-disable-next-line eqeqeq -- raw API data (any), keep loose comparison

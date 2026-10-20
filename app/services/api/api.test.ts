@@ -62,6 +62,13 @@ test("getPreferences passes data through and maps errors", async () => {
   })
 })
 
+test("cancellation errors become unknown errors", async () => {
+  const response = { ok: false, problem: "CANCEL_ERROR" }
+  const expected = { kind: "unknown", temporary: true }
+  await expect(apiWith(response).getPreferences()).resolves.toEqual(expected)
+  await expect(apiWith(response).getStreamInfo()).resolves.toEqual(expected)
+})
+
 test("convertStreamInfo handles no stations", () => {
   expect(convertStreamInfo({})).toEqual(new Map())
 })
