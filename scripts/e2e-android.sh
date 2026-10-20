@@ -43,6 +43,50 @@ rm -f "$OUT/device-ready.log"
 wait_for_stable_device
 adb install -r "$APK"
 adb shell am force-stop "$APP_ID"
+
+# Every first-flow failure so far died in launchApp (clear state + start) on an adb transport
+# that dropped during the first minute of use, while later flows passed. Exercise that same
+# path once with a throwaway flow before the suite. Its outcome is logged and annotated but
+# never fails the run, so the signal stays visible without hiding a real flake in the suite.
+warmup_dir=$(mktemp -d)
+cat > "$warmup_dir/00-warmup.yaml" <<YAML
+appId: \${APP_ID}
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: { id: "screen.streams" }
+    timeout: 20000
+YAML
+rm -rf "$OUT/warmup" "$OUT/warmup.log"
+mkdir -p "$OUT/warmup"
+warmup_attempts=0
+warmup_ok=0
+for attempt in 1 2; do
+  warmup_attempts=$attempt
+  echo "$(date -u +%FT%TZ) warm-up attempt $attempt" >> "$OUT/warmup.log"
+  if maestro test --debug-output "$OUT/warmup/attempt-$attempt" --test-output-dir "$OUT/warmup/attempt-$attempt" \
+    --flatten-debug-output -e APP_ID="$APP_ID" "$warmup_dir/00-warmup.yaml" >> "$OUT/warmup.log" 2>&1; then
+    warmup_ok=1
+    echo "$(date -u +%FT%TZ) warm-up attempt $attempt passed" >> "$OUT/warmup.log"
+    break
+  else
+    warmup_status=$?
+    echo "$(date -u +%FT%TZ) warm-up attempt $attempt failed (maestro exit $warmup_status)" >> "$OUT/warmup.log"
+  fi
+  sleep 5
+done
+if (( warmup_ok == 0 )); then
+  echo "::warning title=e2e-android warm-up failed::Both warm-up launches failed before the suite; see warmup.log and warmup/ in the artifact."
+elif (( warmup_attempts > 1 )); then
+  echo "::warning title=e2e-android warm-up retried::The first warm-up launch failed; see warmup.log and warmup/ in the artifact."
+fi
+rm -rf "$warmup_dir"
+# The warm-up may have failed on the very transport flap it exists to absorb; wait for adb to be
+# stable again (logged to the same device-ready.log) and tolerate a failing force-stop so the suite
+# still runs and reports its own result.
+wait_for_stable_device
+adb shell am force-stop "$APP_ID" || true
 adb logcat -c
 # Evidence must come from this attempt only, even when a local run reuses the directory:
 # the flattened Maestro output has no per-run folder, so stale files would otherwise mix in.
