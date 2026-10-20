@@ -6,12 +6,12 @@ export function buttonState(
 ): { enabled: boolean; variant: "play" | "pause"; labelKey: string } {
   let enabled = !!url
   let variant: "play" | "pause" = "play"
-  let labelKey = "button_label_play"
+  let labelKey = "live_screen.button_label_play"
 
   switch (state) {
     case State.Playing:
       variant = "pause"
-      labelKey = "button_label_stop"
+      labelKey = "live_screen.button_label_stop"
       break
     case State.Buffering:
     case State.Loading:

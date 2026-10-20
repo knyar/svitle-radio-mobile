@@ -35,12 +35,27 @@ const PLAYER_OPTIONS: PlayerOptions = {
   waitForBuffer: true, // iOS only
 }
 
-const background = (): any => {
-  return {
-    svitle: require("../images/bg.svitle.png"),
-    svetloe: require("../images/bg.svetloe.png"),
-  }[FLAVOR]
+async function setupPlayer() {
+  try {
+    await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
+    await TrackPlayer.updateOptions({
+      capabilities: [Capability.Pause],
+      compactCapabilities: [Capability.Pause],
+      android: {
+        appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+      },
+    })
+  } catch (error) {
+    if (!error.message.includes("The player has already been initialized via setupPlayer")) {
+      console.log("setupPlayer", error)
+    }
+  }
 }
+
+const BACKGROUND = {
+  svitle: require("../images/bg.svitle.png"),
+  svetloe: require("../images/bg.svetloe.png"),
+}[FLAVOR]
 
 const artwork = (logo: string): any => {
   const artworks = {
@@ -88,8 +103,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
     )
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  return useObserver(() => (
+  return (
     <TouchableOpacity
       onPress={props.toggle}
       accessibilityLabel={i18n.t(labelKey)}
@@ -97,7 +111,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
     >
       <ButtonComponent height="200" style={[styles.buttonImage]} fill={colors.primary} />
     </TouchableOpacity>
-  ))
+  )
 }
 
 export interface PlayerProps {
@@ -133,27 +147,6 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [appState])
-
-  async function setupPlayer() {
-    try {
-      // if ((Platform.OS === 'android') && (await TrackPlayer.isServiceRunning())) {
-      //   console.log("Player already running on setupPlayer; skipping")
-      //   return
-      // }
-      await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
-      await TrackPlayer.updateOptions({
-        capabilities: [Capability.Pause],
-        compactCapabilities: [Capability.Pause],
-        android: {
-          appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-        },
-      })
-    } catch (error) {
-      if (!error.message.includes("The player has already been initialized via setupPlayer")) {
-        console.log("setupPlayer", error)
-      }
-    }
-  }
 
   useEffect(() => {
     setupPlayer()
@@ -207,7 +200,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
       if (props.url && currentTrack !== props.url) {
         const prevState = playbackState
         console.log(
-          "Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState,
+          "Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState.state,
         )
         await safely(TrackPlayer.reset)
         let metadata = trackMetadata()
@@ -228,18 +221,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   }
 
   useEffect(() => {
-    const state =
-      {
-        0: "none",
-        6: "buffering",
-        8: "connecting",
-        7: "error",
-        2: "paused",
-        3: "playing",
-        5: "rewinding",
-        1: "stopped",
-      }[playbackState.state] || playbackState.state
-    console.log("Playback state: " + state)
+    console.log("Playback state: " + playbackState.state)
   }, [playbackState])
 
   useEffect(() => {
@@ -275,7 +257,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
 
   return useObserver(() => (
     <View style={styles.container}>
-      <ImageBackground style={styles.lines} source={background()} resizeMode="stretch">
+      <ImageBackground style={styles.lines} source={BACKGROUND} resizeMode="stretch">
         <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback} />
       </ImageBackground>
       <View style={styles.npContainer}>
@@ -330,24 +312,13 @@ const styles = StyleSheet.create({
 async function safely(action, ...args) {
   const methodName = action?.name || "unknown"
   try {
-    console.log(
-      `[TrackPlayer] Calling ${methodName} with args:`,
-      args.map((arg, i) => ({
-        index: i,
-        type: Array.isArray(arg) ? "array" : typeof arg,
-        value: Array.isArray(arg)
-          ? `[${arg.length} items]`
-          : typeof arg === "object"
-          ? JSON.stringify(arg).substring(0, 100)
-          : String(arg),
-      })),
-    )
+    console.log(`[TrackPlayer] Calling ${methodName}`)
     return await action(...args)
   } catch (e) {
     if (e.message.includes("The player is not initialized")) {
       // reinitialize player and retry
       try {
-        await TrackPlayer.setupPlayer(PLAYER_OPTIONS)
+        await setupPlayer()
         return await action(...args)
       } catch (retryError) {
         console.error(`[TrackPlayer] safely err after init for ${methodName}:`, retryError)

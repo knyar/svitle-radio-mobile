@@ -1,7 +1,7 @@
 import * as React from "react"
 import { StyleSheet, ViewStyle, View } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { Header } from "../components"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Header } from "./header"
 
 interface Props {
   title?: string
@@ -11,18 +11,13 @@ interface Props {
 }
 
 export const Screen: React.FunctionComponent<Props> = (props) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const style = props.style || {}
   const insetStyle = { paddingTop: insets.top }
 
-  let header = <View />
-  if (props.title) {
-    header = <Header title={props.title} />
-  }
-
   return (
     <View style={[styles.outer, insetStyle]} testID={props.testID}>
-      {header}
+      {props.title ? <Header title={props.title} /> : <View />}
       <View style={[styles.inner, style]}>{props.children}</View>
     </View>
   )
