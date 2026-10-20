@@ -79,6 +79,7 @@ For lint-target files, `.claude/settings.json` runs `yarn typecheck && yarn lint
 - `test-renderer` must stay on the line that matches the installed React minor (1.1.x for React 19.1; see its docs/versioning.md). Bump it together with `react`, never alone.
 - Native builds must stay secret-free. Sentry uploads happen only when `ios/sentry.properties` or `SENTRY_AUTH_TOKEN` exists; a token in `.xcode.env.local` must be paired with `SENTRY_DISABLE_AUTO_UPLOAD=false`. Never commit `sentry.properties`.
 - Keep `Gemfile` and `Gemfile.lock` in sync; CI runs Bundler in deployment mode.
+- Components that read MobX-State-Tree state during render are wrapped in `observer` from mobx-react-lite; never use `useObserver` (removed in v5). `test/setup.ts` calls `clearTimers()` in `afterEach` and fails any test that triggers a MobX warning; do not relax that with `configure()` or `isolateGlobalState`.
 - `ios/Podfile.lock` must match `ios/Podfile`: after editing the Podfile, set its `PODFILE CHECKSUM` line to `sha1sum ios/Podfile` (or run `bundle exec pod install` on macOS). The `ios` CI job fails on any other lockfile drift.
 
 ## Known debt
