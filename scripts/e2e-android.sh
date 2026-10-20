@@ -4,15 +4,51 @@ set -euo pipefail
 APK=${1:?usage: scripts/e2e-android.sh <apk> [output-dir]}
 OUT=${2:-e2e-output}
 APP_ID=com.svitleradio
+# Maestro's Android driver default is 15 s for the instrumentation start and the gRPC handshake.
+export MAESTRO_DRIVER_STARTUP_TIMEOUT=${MAESTRO_DRIVER_STARTUP_TIMEOUT:-60000}
+
+mkdir -p "$OUT"
+OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
+
+# After a snapshot restore adb has reported the emulator "device offline" for a moment well
+# after boot completed; Maestro's first flow then died with a gRPC UNAVAILABLE on that transport
+# (PR #41, run 39489256984). Require the device to stay online for a continuous window first.
+wait_for_stable_device() {
+  local required=${DEVICE_STABLE_SECONDS:-20} stable=0 waited=0 flaps=0 state
+  while (( waited < 180 )); do
+    state=$(adb get-state 2>/dev/null || echo "unknown")
+    if [[ "$state" == "device" ]] && adb shell true >/dev/null 2>&1; then
+      stable=$((stable + 1))
+    else
+      if (( stable > 0 )); then flaps=$((flaps + 1)); fi
+      echo "$(date -u +%FT%TZ) device not ready: state=$state (stable for ${stable}s so far)" >> "$OUT/device-ready.log"
+      stable=0
+    fi
+    if (( stable >= required )); then
+      echo "$(date -u +%FT%TZ) device online for ${required}s after ${waited}s (flaps seen: $flaps)" | tee -a "$OUT/device-ready.log"
+      if (( flaps > 0 )); then
+        echo "::warning title=e2e-android device flapped::adb reported the emulator offline $flaps time(s) before the suite started; see device-ready.log"
+      fi
+      return 0
+    fi
+    sleep 1
+    waited=$((waited + 1))
+  done
+  echo "device did not stay online for ${required}s within 180s; see $OUT/device-ready.log" >&2
+  return 1
+}
 
 adb wait-for-device
+rm -f "$OUT/device-ready.log"
+wait_for_stable_device
 adb install -r "$APK"
 adb shell am force-stop "$APP_ID"
 adb logcat -c
-mkdir -p "$OUT"
-OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
-# Evidence must come from this attempt only, even when a local run reuses the directory.
-rm -f "$OUT/playing-observed" "$OUT/media_session.log"
+# Evidence must come from this attempt only, even when a local run reuses the directory:
+# the flattened Maestro output has no per-run folder, so stale files would otherwise mix in.
+rm -rf "$OUT/maestro"
+rm -f "$OUT/playing-observed" "$OUT/media_session.log" "$OUT/maestro-report.xml" "$OUT/logcat.txt"
+mkdir -p "$OUT/maestro"
 
 sampler_pid=
 cleanup() {
@@ -22,10 +58,6 @@ cleanup() {
     wait "$sampler_pid" 2>/dev/null || true
   fi
   adb logcat -d > "$OUT/logcat.txt" 2>&1 || true
-  # Maestro also keeps per-run logs and failure screenshots under ~/.maestro/tests.
-  if [[ -d "$HOME/.maestro/tests" ]]; then
-    cp -R "$HOME/.maestro/tests" "$OUT/maestro-home-tests" 2>/dev/null || true
-  fi
   exit "$status"
 }
 trap cleanup EXIT
@@ -56,7 +88,8 @@ sampler_pid=$!
 
 set +e
 maestro test --format JUNIT --output "$OUT/maestro-report.xml" \
-  --debug-output "$OUT/maestro" -e APP_ID="$APP_ID" .maestro/
+  --debug-output "$OUT/maestro" --test-output-dir "$OUT/maestro" --flatten-debug-output \
+  -e APP_ID="$APP_ID" .maestro/
 maestro_status=$?
 set -e
 

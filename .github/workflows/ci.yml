@@ -112,6 +112,7 @@ jobs:
     env:
       {
         MAESTRO_VERSION: "2.11.0",
+        MAESTRO_DRIVER_STARTUP_TIMEOUT: "60000",
         API_LEVEL: "36",
         TARGET: google_apis,
         ARCH: x86_64,
@@ -177,7 +178,8 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'run-ios-e2e')
     runs-on: macos-15
     timeout-minutes: 30
-    env: { MAESTRO_VERSION: "2.11.0" }
+    # Maestro's iOS driver default is 120 s (Android: 15 s); one earlier run timed out at that default.
+    env: { MAESTRO_VERSION: "2.11.0", MAESTRO_DRIVER_STARTUP_TIMEOUT: "240000" }
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -194,7 +196,7 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" e2e-app/SvitleRadio.app
       - name: Run the Maestro flows
-        run: maestro --udid "$UDID" test --format JUNIT --output e2e-output/maestro-report.xml --debug-output e2e-output/maestro -e APP_ID=org.svitle.app1 .maestro/
+        run: maestro --udid "$UDID" test --format JUNIT --output e2e-output/maestro-report.xml --debug-output e2e-output/maestro --test-output-dir e2e-output/maestro --flatten-debug-output -e APP_ID=org.svitle.app1 .maestro/
       - uses: actions/upload-artifact@v7
         if: always()
         with:

@@ -12,7 +12,8 @@ if scripts/e2e-android.sh "$APK" "$OUT"; then
   exit 0
 fi
 
-echo "::warning title=e2e-android retried::First Maestro attempt failed; retrying once (first attempt kept in ${OUT}-attempt-1)."
+failed_flows=$(scripts/failed-flows.sh "$OUT/maestro-report.xml" || echo "unknown flow")
+echo "::warning title=e2e-android retried::First Maestro attempt failed (${failed_flows}); retrying once. Evidence: ${OUT}-attempt-1/maestro-report.xml and ${OUT}-attempt-1/maestro/."
 # The first attempt may fail before it creates its output directory.
 if [[ -d "$OUT" ]]; then
   mv "$OUT" "${OUT}-attempt-1"
