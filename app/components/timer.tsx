@@ -24,8 +24,7 @@ export const Timer: React.FunctionComponent = () => {
     return () => {
       if (timer !== undefined) clearTimeout(timer)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [])
+  }, [mainStore])
 
   return null
 }

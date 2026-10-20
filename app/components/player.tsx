@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useObserver } from "mobx-react-lite"
 import {
   Text,
@@ -125,11 +125,75 @@ export interface PlayerProps {
 export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
-  const [currentStation, setCurrentStation] = useState(mainStore.local.station)
   const [appState, setAppState] = useState(AppState.currentState)
+  const lastStationRef = useRef(mainStore.local.station)
+  const stateRef = useRef(playbackState.state)
+  stateRef.current = playbackState.state
+  const queueRef = useRef<Promise<unknown>>(Promise.resolve())
+  const loadGenerationRef = useRef(0)
+
+  // Component operations are serialized, not transactional: an operation that has started finishes
+  // before a later stop/load, and a successful reset followed by a failed add still leaves the queue
+  // empty. A never-settling TrackPlayer promise stalls later operations. The playback service mutates
+  // TrackPlayer outside this queue in response to remote controls.
+  const enqueue = useCallback(<T,>(op: () => Promise<T>): Promise<T | undefined> => {
+    const run = queueRef.current.then(op, op)
+    const settled = run.catch((error: unknown) => {
+      console.log("[Player] operation failed", error)
+      return undefined
+    })
+    queueRef.current = settled
+    return settled
+  }, [])
+
+  const trackMetadata = useCallback((): TrackMetadataBase => {
+    return {
+      artwork: artwork(mainStore.current_station?.logo ?? ""),
+      artist: mainStore.current_station?.name ?? "",
+      title: mainStore.current_track ?? "",
+    }
+  }, [mainStore])
+
+  const load = useCallback(
+    (url: string | undefined, autoplay: boolean) => {
+      const generation = ++loadGenerationRef.current
+      return enqueue(async () => {
+        if (generation !== loadGenerationRef.current) return "skipped"
+
+        const running = await TrackPlayer.isServiceRunning()
+        if (!running) {
+          await setupPlayer()
+        }
+        const currentTrack = await TrackPlayer.getActiveTrack()
+        const active = currentTrack?.url
+        if (url && active !== url) {
+          console.log("Loading " + url + " instead of " + active)
+          await safely(TrackPlayer.reset)
+          const track: Track = {
+            url,
+            userAgent: UserAgent(),
+            type: url.endsWith(".m3u8") ? TrackType.HLS : TrackType.Default,
+            ...trackMetadata(),
+          }
+          await safely(TrackPlayer.add, track)
+        }
+        // A second play for an already loaded/playing URL is an RNTP no-op and is accepted.
+        if (url && autoplay) {
+          await safely(TrackPlayer.play)
+        }
+        return active !== url ? "loaded" : "unchanged"
+      })
+    },
+    [enqueue, trackMetadata],
+  )
+
+  const stop = useCallback(() => {
+    ++loadGenerationRef.current
+    return enqueue(() => safely(TrackPlayer.reset))
+  }, [enqueue])
 
   useEffect(() => {
-    let sub = AppState.addEventListener("change", setAppState)
+    const sub = AppState.addEventListener("change", setAppState)
     console.log("Player mounted")
     return () => {
       sub.remove()
@@ -141,43 +205,30 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     if (appState === "active") {
       mainStore.updateStreamInfo()
     }
+  }, [appState, mainStore])
+
+  useEffect(() => {
     // Clear track information while going to background on Android.
     // This is necessary because Android app will be stopped and no streaminfo
     // updates will be happening until it's back in foreground.
     if (Platform.OS === "android" && appState !== "active" && props.url) {
       const metadata = trackMetadata()
       metadata.title = ""
-      setMetadata(metadata)
+      enqueue(async () => {
+        const currentTrackIdx = await safely(TrackPlayer.getCurrentTrack)
+        if (currentTrackIdx != null) {
+          await safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata)
+        }
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [appState])
+  }, [appState, props.url, trackMetadata, enqueue])
 
   useEffect(() => {
-    setupPlayer()
-  }, [])
-
-  const trackMetadata = (): TrackMetadataBase => {
-    return {
-      artwork: artwork(mainStore.current_station?.logo ?? ""),
-      artist: mainStore.current_station?.name ?? "",
-      title: mainStore.current_track ?? "",
-    }
-  }
-
-  async function currentTrackURL() {
-    const currentTrack = await TrackPlayer.getActiveTrack()
-    return currentTrack?.url
-  }
-
-  async function setMetadata(metadata: TrackMetadataBase) {
-    const currentTrackIdx = await safely(TrackPlayer.getCurrentTrack)
-    if (currentTrackIdx != null) {
-      await safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata)
-    }
-  }
+    enqueue(setupPlayer)
+  }, [enqueue])
 
   useEffect(() => {
-    ;(async () => {
+    enqueue(async () => {
       if (
         playbackState.state !== State.Playing &&
         playbackState.state !== State.Buffering &&
@@ -185,77 +236,33 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
       ) {
         return
       }
-      const currentTrack = await currentTrackURL()
-      if (currentTrack && currentTrack === props.url) {
+      const currentTrack = await TrackPlayer.getActiveTrack()
+      if (currentTrack?.url && currentTrack.url === props.url) {
         const metadata = trackMetadata()
-        await setMetadata(metadata)
-      }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [props.current_track])
-
-  async function updateTrack() {
-    try {
-      const running = await TrackPlayer.isServiceRunning()
-      if (!running) {
-        await setupPlayer()
-      }
-      const currentTrack = await currentTrackURL()
-      if (props.url && currentTrack !== props.url) {
-        const prevState = playbackState
-        console.log(
-          "Loading " + props.url + " instead of " + currentTrack + "; state: " + prevState.state,
-        )
-        await safely(TrackPlayer.reset)
-        let metadata = trackMetadata()
-        let track: Track = {
-          url: props.url,
-          userAgent: UserAgent(),
-          type: props.url.endsWith(".m3u8") ? TrackType.HLS : TrackType.Default,
-          ...metadata,
-        }
-        await safely(TrackPlayer.add, track)
-        if (prevState.state === State.Playing) {
-          await safely(TrackPlayer.play)
+        const currentTrackIdx = await safely(TrackPlayer.getCurrentTrack)
+        if (currentTrackIdx != null) {
+          await safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata)
         }
       }
-    } catch (error) {
-      console.log("updateTrack error ", error)
-    }
-  }
+    })
+  }, [props.current_track, props.url, playbackState.state, trackMetadata, enqueue])
 
   useEffect(() => {
     console.log("Playback state: " + playbackState.state)
   }, [playbackState])
 
   useEffect(() => {
-    ;(async () => {
-      await updateTrack()
-      // Start playback when station is changed.
-      if (mainStore.local.station && mainStore.local.station !== currentStation) {
-        console.log(
-          "Starting playback. Prev station " +
-            currentStation +
-            ". New station " +
-            mainStore.local.station,
-        )
-        await safely(TrackPlayer.play)
-      }
-      setCurrentStation(mainStore.local.station)
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [props.url])
+    const station = mainStore.local.station
+    const stationChanged = !!station && station !== lastStationRef.current
+    lastStationRef.current = station
+    load(props.url, stateRef.current === State.Playing || stationChanged)
+  }, [props.url, load, mainStore])
 
-  async function togglePlayback() {
-    try {
-      if (playbackState.state === State.Playing) {
-        await safely(TrackPlayer.reset)
-      } else {
-        await updateTrack()
-        await safely(TrackPlayer.play)
-      }
-    } catch (error) {
-      console.log(error)
+  function togglePlayback() {
+    if (stateRef.current === State.Playing) {
+      stop()
+    } else {
+      load(props.url, true)
     }
   }
 
