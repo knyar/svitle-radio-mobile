@@ -1,7 +1,9 @@
 name: CI
 on:
   push: { branches: [main, master] }
-  pull_request:
+  pull_request: { types: [opened, synchronize, reopened, labeled] }
+  schedule: [{ cron: "0 3 * * *" }]
+  workflow_dispatch:
 permissions: { contents: read }
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -102,3 +104,96 @@ jobs:
           path: SvitleRadio.app.zip
           if-no-files-found: error
           retention-days: 14
+
+  e2e-android:
+    needs: android
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env: { MAESTRO_VERSION: "2.11.0", API_LEVEL: "36", TARGET: google_apis, ARCH: x86_64 }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with: { name: app-svitle-e2e, path: e2e-apk }
+      - uses: actions/setup-java@v6
+        with: { distribution: temurin, java-version: 17 }
+      - name: Install Maestro ${{ env.MAESTRO_VERSION }}
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/cache@v6
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.API_LEVEL }}-${{ env.TARGET }}-${{ env.ARCH }}-v1
+      - name: Create the AVD snapshot (cache miss only)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          target: ${{ env.TARGET }}
+          arch: ${{ env.ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+      - name: Run the Maestro flows
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          target: ${{ env.TARGET }}
+          arch: ${{ env.ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            scripts/e2e-android.sh e2e-apk/app-svitle-e2e.apk e2e-output || {
+              echo "::warning title=e2e-android retried::First Maestro attempt failed; retrying once (first attempt kept in e2e-output-attempt-1)."
+              mv e2e-output e2e-output-attempt-1
+              scripts/e2e-android.sh e2e-apk/app-svitle-e2e.apk e2e-output
+            }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: e2e-android-output
+          path: |
+            e2e-output
+            e2e-output-attempt-1
+          if-no-files-found: ignore
+          retention-days: 14
+
+  e2e-ios:
+    needs: ios
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'run-ios-e2e')
+    runs-on: macos-15
+    timeout-minutes: 30
+    env: { MAESTRO_VERSION: "2.11.0" }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with: { name: SvitleRadio-simulator, path: e2e-app }
+      - run: ditto -x -k e2e-app/SvitleRadio.app.zip e2e-app
+      - name: Install Maestro
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Boot the simulator and install the app
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.4.app
+          UDID=$(xcrun simctl create e2e-iphone "iPhone 16")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" e2e-app/SvitleRadio.app
+      - name: Run the Maestro flows
+        run: maestro --udid "$UDID" test --format JUNIT --output e2e-output/maestro-report.xml --debug-output e2e-output/maestro -e APP_ID=org.svitle.app1 .maestro/
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          { name: e2e-ios-output, path: e2e-output, if-no-files-found: ignore, retention-days: 14 }
