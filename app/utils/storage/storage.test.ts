@@ -24,6 +24,12 @@ test("load returns null for invalid JSON", async () => {
   await expect(load("something")).resolves.toBeNull()
 })
 
+test("load returns null for a missing key", async () => {
+  // @ts-ignore mock helper
+  AsyncStorage.getItem.mockResolvedValueOnce(null)
+  await expect(load("missing")).resolves.toBeNull()
+})
+
 test("save", async () => {
   await save("something", VALUE_OBJECT)
   expect(AsyncStorage.setItem).toHaveBeenCalledWith("something", VALUE_STRING)

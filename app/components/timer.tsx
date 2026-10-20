@@ -1,13 +1,13 @@
 import React, { useEffect } from "react"
 import { useStores } from "../models/root-store"
 import { nextRefreshDelay } from "../utils/refresh-schedule"
-const { REFRESH_INTERVAL } = require("../config/env")
+import { REFRESH_INTERVAL } from "../config/env"
 
 export const Timer: React.FunctionComponent = () => {
   const { mainStore } = useStores()
 
   useEffect(() => {
-    let timer = null
+    let timer: ReturnType<typeof setTimeout> | undefined
 
     async function refresh() {
       let age = Date.now() - mainStore.streamsUpdated
@@ -21,7 +21,9 @@ export const Timer: React.FunctionComponent = () => {
     }
 
     timer = setTimeout(refresh, REFRESH_INTERVAL)
-    return () => clearTimeout(timer)
+    return () => {
+      if (timer !== undefined) clearTimeout(timer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
   }, [])
 

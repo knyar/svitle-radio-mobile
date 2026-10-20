@@ -10,10 +10,11 @@ import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
 import { useLinkSupported } from "../utils/use-link-supported"
+import { SvgProps } from "react-native-svg"
 
 const IconLink: React.FunctionComponent<{ item: ContactItem }> = ({ item }) => {
   const supported = useLinkSupported(item.url)
-  const icons = {
+  const icons: Record<string, React.FC<SvgProps>> = {
     // If you add more icon types here, also adjust LSApplicationQueriesSchemes
     // in info.plist
     skype: IconSkype,
@@ -54,7 +55,7 @@ const TextLink: React.FunctionComponent<{ item: ContactItem }> = ({ item }) => {
 }
 
 const blockComponent = (block: ContactBlock) => {
-  let icons = null
+  let icons: React.ReactNode = null
   if (block.icon_links.length > 0) {
     icons = (
       <View style={styles.icons}>
@@ -66,7 +67,7 @@ const blockComponent = (block: ContactBlock) => {
   }
   return (
     <View style={styles.container} key={block.title}>
-      <Text style={styles.header}>{i18n.t(block.title)}</Text>
+      <Text style={styles.header}>{i18n.t(block.title ?? "")}</Text>
       {icons}
       {block.text_links.map((item) => (
         <TextLink key={item.url} item={item} />

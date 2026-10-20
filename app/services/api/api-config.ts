@@ -1,4 +1,4 @@
-const { API_URL } = require("../../config/env")
+import { API_URL } from "../../config/env"
 
 /**
  * The options used to configure the API.

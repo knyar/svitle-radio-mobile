@@ -1,4 +1,4 @@
-const { FLAVOR } = require("./config/flavor")
+import { FLAVOR, Flavor } from "./config/flavor"
 
 const svetloe = {
   primary: "#2183CC",
@@ -16,7 +16,9 @@ const svitle = {
   menuBackgroundActive: "#f5f0f3",
 }
 
-export const colors = {
+const colorsByFlavor: Record<Flavor, typeof svitle> = {
   svitle: svitle,
   svetloe: svetloe,
-}[FLAVOR]
+}
+
+export const colors = colorsByFlavor[FLAVOR]

@@ -12,6 +12,7 @@ test.each([
     State.None,
     { enabled: true, variant: "play", labelKey: "live_screen.button_label_play" },
   ],
+  ["url", undefined, { enabled: true, variant: "play", labelKey: "live_screen.button_label_play" }],
   [
     "url",
     State.Playing,

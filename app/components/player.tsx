@@ -26,7 +26,10 @@ import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
 import { buttonState } from "../utils/player-state"
-const { FLAVOR } = require("../config/flavor")
+import { FLAVOR, Flavor } from "../config/flavor"
+import { LogoId } from "../models/station"
+import { lookup } from "./logo"
+import { errorMessage } from "../utils/errors"
 
 const PLAYER_OPTIONS: PlayerOptions = {
   playBuffer: 5, // Android only
@@ -46,24 +49,25 @@ async function setupPlayer() {
       },
     })
   } catch (error) {
-    if (!error.message.includes("The player has already been initialized via setupPlayer")) {
+    if (!errorMessage(error).includes("The player has already been initialized via setupPlayer")) {
       console.log("setupPlayer", error)
     }
   }
 }
 
-const BACKGROUND = {
+const backgrounds: Record<Flavor, number> = {
   svitle: require("../images/bg.svitle.png"),
   svetloe: require("../images/bg.svetloe.png"),
-}[FLAVOR]
+}
+const BACKGROUND = backgrounds[FLAVOR]
 
 const artwork = (logo: string): any => {
-  const artworks = {
+  const artworks: Record<LogoId, any> = {
     svitle: require("../images/artwork.svitle.png"),
     svetloe: require("../images/artwork.svetloe.png"),
     kids: require("../images/artwork.kids.png"),
   }
-  return artworks[logo]
+  return lookup(artworks, logo)
 }
 
 interface NowPlayingProps {
@@ -84,7 +88,7 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = (props) => {
 
 interface ButtonProps {
   url?: string
-  playbackState: State
+  playbackState: State | undefined
   toggle: () => void
 }
 export const Button: React.FunctionComponent<ButtonProps> = (props) => {
@@ -116,7 +120,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 
 export interface PlayerProps {
   url?: string
-  current_track: string
+  current_track?: string
 }
 export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   const { mainStore } = useStores()
@@ -154,9 +158,9 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
 
   const trackMetadata = (): TrackMetadataBase => {
     return {
-      artwork: artwork(mainStore.current_station.logo),
-      artist: mainStore.current_station.name,
-      title: mainStore.current_track || "",
+      artwork: artwork(mainStore.current_station?.logo ?? ""),
+      artist: mainStore.current_station?.name ?? "",
+      title: mainStore.current_track ?? "",
     }
   }
 
@@ -309,13 +313,16 @@ const styles = StyleSheet.create({
   },
 })
 
-async function safely(action, ...args) {
+async function safely<T extends unknown[], R>(
+  action: (...args: T) => Promise<R>,
+  ...args: T
+): Promise<R | null> {
   const methodName = action?.name || "unknown"
   try {
     console.log(`[TrackPlayer] Calling ${methodName}`)
     return await action(...args)
-  } catch (e) {
-    if (e.message.includes("The player is not initialized")) {
+  } catch (e: unknown) {
+    if (errorMessage(e).includes("The player is not initialized")) {
       // reinitialize player and retry
       try {
         await setupPlayer()

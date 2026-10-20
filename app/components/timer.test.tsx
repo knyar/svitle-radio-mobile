@@ -2,7 +2,7 @@ import React from "react"
 import { act, render } from "@testing-library/react-native"
 import { Timer } from "./timer"
 import { RootStore, RootStoreProvider } from "../models/root-store"
-const { REFRESH_INTERVAL } = require("../config/env")
+import { REFRESH_INTERVAL } from "../config/env"
 
 beforeEach(() => {
   jest.useFakeTimers()

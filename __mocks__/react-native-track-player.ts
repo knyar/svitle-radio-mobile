@@ -60,8 +60,9 @@ export function resetTrackPlayerMock() {
     "setVolume",
     "getQueue",
     "skip",
-  ]) {
-    TrackPlayer[name].mockReset().mockResolvedValue(undefined)
+  ] as (keyof typeof TrackPlayer)[]) {
+    const mock = TrackPlayer[name] as jest.Mock<Promise<unknown>, unknown[]>
+    mock.mockReset().mockResolvedValue(undefined)
   }
   TrackPlayer.getActiveTrack.mockReset().mockResolvedValue(undefined)
   TrackPlayer.getCurrentTrack.mockReset().mockResolvedValue(null)

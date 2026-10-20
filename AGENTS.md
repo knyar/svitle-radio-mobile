@@ -75,7 +75,7 @@ For lint-target files, `.claude/settings.json` runs `yarn typecheck && yarn lint
 - Every behavior change ships with a test.
 - Do not change `newArchEnabled`, the react-native-track-player major version, or anything in `patches/` unless explicitly requested.
 - Keep ESLint below 9 until the planned flat-config migration. React Native 0.81 provides only a legacy ESLint config.
-- TypeScript strict mode is a follow-up; enabling it currently exposes 29 errors.
+- TypeScript `strict` is on. Do not weaken compiler options; fix the types.
 - `test-renderer` must stay on the line that matches the installed React minor (1.1.x for React 19.1; see its docs/versioning.md). Bump it together with `react`, never alone.
 - Native builds must stay secret-free. Sentry uploads happen only when `ios/sentry.properties` or `SENTRY_AUTH_TOKEN` exists; a token in `.xcode.env.local` must be paired with `SENTRY_DISABLE_AUTO_UPLOAD=false`. Never commit `sentry.properties`.
 - Keep `Gemfile` and `Gemfile.lock` in sync; CI runs Bundler in deployment mode.

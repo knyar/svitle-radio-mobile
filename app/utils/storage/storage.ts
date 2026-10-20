@@ -7,8 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
  */
 export async function load(key: string): Promise<any | null> {
   try {
-    const almostThere = await AsyncStorage.getItem(key)
-    return JSON.parse(almostThere)
+    const raw = await AsyncStorage.getItem(key)
+    return raw == null ? null : JSON.parse(raw)
   } catch {
     return null
   }

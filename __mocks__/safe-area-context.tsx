@@ -1,8 +1,9 @@
 import { View } from "react-native"
+import React from "react"
 
 const insets = { top: 0, right: 0, bottom: 0, left: 0 }
 
-export const SafeAreaProvider = ({ children }) => children
+export const SafeAreaProvider = ({ children }: { children: React.ReactNode }) => children
 export const SafeAreaView = View
 export const useSafeArea = () => insets
 export const useSafeAreaInsets = () => insets

@@ -2,6 +2,7 @@ import { onSnapshot } from "mobx-state-tree"
 import { RootStoreModel, RootStore } from "./root-store"
 import { Environment } from "../environment"
 import * as storage from "../../utils/storage"
+import { errorMessage } from "../../utils/errors"
 
 /**
  * The key we'll be saving our state as within async storage.
@@ -40,7 +41,7 @@ export async function setupRootStore() {
     rootStore = RootStoreModel.create({}, env)
 
     // but please inform us what happened
-    __DEV__ && console.log(e.message)
+    __DEV__ && console.log(errorMessage(e))
   }
 
   // track changes & save to storage

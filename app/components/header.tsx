@@ -3,9 +3,10 @@ import { Text, View, StyleSheet } from "react-native"
 import IconSvetloe from "../images/header.svetloe.svg"
 import IconSvitle from "../images/header.svitle.svg"
 import { colors } from "../theme"
-const { FLAVOR } = require("../config/flavor")
+import { FLAVOR, Flavor } from "../config/flavor"
+import { SvgProps } from "react-native-svg"
 
-const icons = {
+const icons: Record<Flavor, React.FC<SvgProps>> = {
   svetloe: IconSvetloe,
   svitle: IconSvitle,
 }

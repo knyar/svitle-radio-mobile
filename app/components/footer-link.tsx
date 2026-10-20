@@ -23,14 +23,15 @@ export interface FooterLinkProps {
 export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   const supported = useLinkSupported(props.url)
 
-  if (!supported) {
+  const url = props.url
+  if (!supported || !url) {
     if (props.url) {
       console.log("Link '" + props.url + "' is not supported")
     }
     return null
   }
 
-  const onPress = () => Linking.openURL(props.url)
+  const onPress = () => Linking.openURL(url)
 
   const { Icon: IconComponent, height, padding } = icons[props.icon]
   const textStyle: TextStyle = { padding }
