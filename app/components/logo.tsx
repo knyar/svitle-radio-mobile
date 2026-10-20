@@ -1,6 +1,5 @@
 import * as React from "react"
 import { ViewStyle } from "react-native"
-import { useObserver } from "mobx-react-lite"
 import { NumberProp } from "react-native-svg"
 import { Station } from "../models/station"
 import SvetloeLogo from "../images/svetloe.svg"
@@ -34,5 +33,5 @@ export const Logo: React.FunctionComponent<LogoProps> = (props) => {
     pr.height = props.height
   }
 
-  return useObserver(() => <LogoComponent {...pr} />)
+  return <LogoComponent {...pr} />
 }

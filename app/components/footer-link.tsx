@@ -1,67 +1,46 @@
-import React, { useState, useEffect } from "react"
-import { useObserver } from "mobx-react-lite"
-import { Text, Linking, StyleSheet, ViewStyle, TouchableOpacity } from "react-native"
+import React from "react"
+import { Text, Linking, StyleSheet, TextStyle, ViewStyle, TouchableOpacity } from "react-native"
 import i18n from "i18n-js"
 import IconSupport from "../images/icon.support.svg"
 import IconArchive from "../images/icon.archive.svg"
 import IconVideo from "../images/icon.video.svg"
 import { colors } from "../theme"
-import { link_supported } from "../utils/links"
+import { useLinkSupported } from "../utils/use-link-supported"
+
+const icons = {
+  support: { Icon: IconSupport, height: 18, padding: 5 },
+  archive: { Icon: IconArchive, height: 16, padding: 3 },
+  video: { Icon: IconVideo, height: 18, padding: 3 },
+}
 
 export interface FooterLinkProps {
-  icon: string
+  icon: keyof typeof icons
   text: string
   url?: string
   style?: ViewStyle | ViewStyle[]
 }
 
 export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
-  const [supported, setSupported] = useState(false)
-  useEffect(() => {
-    ;(async () => {
-      if (props.url) {
-        setSupported(await link_supported(props.url))
-      } else {
-        setSupported(false)
-      }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [])
+  const supported = useLinkSupported(props.url)
 
   if (!supported) {
     if (props.url) {
       console.log("Link '" + props.url + "' is not supported")
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-    return useObserver(() => null)
+    return null
   }
 
   const onPress = () => Linking.openURL(props.url)
 
-  let icons = {
-    support: IconSupport,
-    archive: IconArchive,
-    video: IconVideo,
-  }
-  const IconComponent = icons[props.icon]
+  const { Icon: IconComponent, height, padding } = icons[props.icon]
+  const textStyle: TextStyle = { padding }
 
-  let iconHeight = 18
-  if (props.icon === "archive") {
-    iconHeight = 16
-  }
-
-  let textStyle: ViewStyle = { padding: 3 }
-  if (props.icon === "support") {
-    textStyle.padding = 5
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  return useObserver(() => (
+  return (
     <TouchableOpacity style={[styles.container, props.style]} onPress={onPress}>
-      <IconComponent height={iconHeight} style={styles.icon} fill={colors.primary} />
+      <IconComponent height={height} style={styles.icon} fill={colors.primary} />
       <Text style={[styles.text, textStyle]}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>
-  ))
+  )
 }
 
 const styles = StyleSheet.create({
