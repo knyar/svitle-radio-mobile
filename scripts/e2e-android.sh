@@ -10,6 +10,7 @@ adb install -r "$APK"
 adb shell am force-stop "$APP_ID"
 adb logcat -c
 mkdir -p "$OUT"
+OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
 
 sampler_pid=
 cleanup() {
@@ -19,6 +20,10 @@ cleanup() {
     wait "$sampler_pid" 2>/dev/null || true
   fi
   adb logcat -d > "$OUT/logcat.txt" 2>&1 || true
+  # Maestro also keeps per-run logs and failure screenshots under ~/.maestro/tests.
+  if [[ -d "$HOME/.maestro/tests" ]]; then
+    cp -R "$HOME/.maestro/tests" "$OUT/maestro-home-tests" 2>/dev/null || true
+  fi
   exit "$status"
 }
 trap cleanup EXIT

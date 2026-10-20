@@ -35,7 +35,7 @@ Run one test file with `yarn test app/utils/retry.test.ts`, or select a test by 
 
 The `quality` job runs the fast verification gate. The `android` job builds and verifies the `app-svitle-e2e` artifact, and the `ios` job builds and verifies the `SvitleRadio-simulator` artifact. Download artifacts from a run with `gh run download <run-id> -n app-svitle-e2e` or `gh run download <run-id> -n SvitleRadio-simulator`.
 
-The iOS job pins both `macos-15` and Xcode 16.4. Move both deliberately; do not switch the job to a moving `macos-latest` image.
+The iOS job pins both `macos-15` and Xcode 16.4, and the Linux jobs pin `ubuntu-24.04`. Move these deliberately; never use a moving `-latest` label (GitHub began migrating `ubuntu-latest` to Ubuntu 26 on 2026-10-19).
 
 ## Maestro
 
