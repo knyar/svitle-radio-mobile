@@ -126,6 +126,8 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
   const [appState, setAppState] = useState(AppState.currentState)
+  const appStateRef = useRef(appState)
+  appStateRef.current = appState
   const lastStationRef = useRef(mainStore.local.station)
   const stateRef = useRef(playbackState.state)
   stateRef.current = playbackState.state
@@ -146,11 +148,14 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     return settled
   }, [])
 
+  // While an Android app is backgrounded it receives no stream-info updates, so a track title
+  // would go stale in the notification; tracks loaded or updated in that state carry no title.
   const trackMetadata = useCallback((): TrackMetadataBase => {
+    const backgrounded = Platform.OS === "android" && appStateRef.current !== "active"
     return {
       artwork: artwork(mainStore.current_station?.logo ?? ""),
       artist: mainStore.current_station?.name ?? "",
-      title: mainStore.current_track ?? "",
+      title: backgrounded ? "" : mainStore.current_track ?? "",
     }
   }, [mainStore])
 
