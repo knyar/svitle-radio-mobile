@@ -18,6 +18,15 @@ edited_path=
 
 root=${root:-$(pwd)}
 
+# The hook's cwd can be a nested folder, and CLAUDE_PROJECT_DIR stays fixed
+# across worktrees. The checkout that owns the edited file is authoritative.
+if [[ -n "$edited_path" ]]; then
+  edited_dir=$(dirname "$edited_path")
+  if [[ -d "$edited_dir" ]] && toplevel=$(git -C "$edited_dir" rev-parse --show-toplevel 2>/dev/null); then
+    root=$toplevel
+  fi
+fi
+
 relative_path=$(
   node -e '
     const path = require("path");
@@ -39,6 +48,11 @@ case "$relative_path" in
   app/*.ts | app/*.tsx | app/*.js | test/*.ts | test/*.tsx | test/*.js | __mocks__/*.ts | __mocks__/*.tsx | __mocks__/*.js | index.js | player-service.js) ;;
   *) exit 0 ;;
 esac
+
+# Nothing to check when the edited file is not inside a Yarn project.
+if [[ ! -f "$root/package.json" ]]; then
+  exit 0
+fi
 
 if ! command -v yarn >/dev/null 2>&1; then
   echo "yarn is not on PATH; cannot run typecheck/lint after editing $relative_path" >&2
