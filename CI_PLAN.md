@@ -401,3 +401,5 @@ Open user actions:
 3. Close or recreate the 20 stale Dependabot PRs from the React Native 0.63 era.
 4. Approve the checked-in project MCP servers once in an interactive Claude Code session.
 5. After the plan, evaluate the React Native and audio-library options in spike PRs, but do not begin until `e2e-android` is a required check.
+
+Post-close-out finding (2026-10-20, run 39439776888): the Maestro installer download was cut mid-transfer ("Connection reset by peer") and the `curl | bash` step still passed, so both e2e attempts failed with `maestro: command not found`. `scripts/install-maestro.sh` now retries the download and fails the step unless `maestro --version` runs. This is the first flake on record and it was infrastructure, not the flows; it counts as a non-clean run.
