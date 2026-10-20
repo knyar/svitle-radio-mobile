@@ -13,7 +13,11 @@ export const LiveScreen: React.FunctionComponent = () => {
         <Logo station={mainStore.current_station} width={300} style={styles.logoImage} />
       </View>
       <View style={styles.player}>
-        <Player url={mainStore.current_url} current_track={mainStore.current_track} />
+        <Player
+          url={mainStore.current_url}
+          current_track={mainStore.current_track}
+          streams_updated={mainStore.streamsUpdated}
+        />
       </View>
       <View style={styles.footer}>
         <FooterLink
