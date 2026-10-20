@@ -19,7 +19,12 @@ export const FooterCheckbox: React.FunctionComponent<FooterCheckboxProps> = (pro
   }
   const IconComponent = props.active ? IconActive : IconInactive
   return (
-    <TouchableOpacity style={[styles.container, props.style]} onPress={props.toggle}>
+    <TouchableOpacity
+      style={[styles.container, props.style]}
+      onPress={props.toggle}
+      testID="live.quality"
+      accessibilityState={{ checked: props.active }}
+    >
       <IconComponent height={18} style={styles.icon} fill={colors.primary} />
       <Text style={styles.text}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>

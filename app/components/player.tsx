@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState } from "react-native"
 import TrackPlayer, {
   usePlaybackState,
@@ -116,7 +116,9 @@ export interface PlayerProps {
   current_track?: string
   streams_updated: number
 }
-export const Player: React.FunctionComponent<PlayerProps> = (props) => {
+export const Player: React.FunctionComponent<PlayerProps> = observer(function Player(
+  props: PlayerProps,
+) {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
   const [appState, setAppState] = useState(AppState.currentState)
@@ -265,7 +267,7 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     }
   }
 
-  return useObserver(() => (
+  return (
     <View style={styles.container}>
       <ImageBackground style={styles.lines} source={BACKGROUND} resizeMode="stretch">
         <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback} />
@@ -275,8 +277,8 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
         <NowPlaying header="live_screen.player_next" text={mainStore.next_track} />
       </View>
     </View>
-  ))
-}
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

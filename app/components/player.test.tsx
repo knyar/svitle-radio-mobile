@@ -211,7 +211,7 @@ test("pressing play right after the state turns None plays once", async () => {
   const url = "https://radio"
   const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
-  await view.rerender(player(url))
+  await view.rerender(player(url, "Updated"))
 
   fireEvent.press(screen.getByTestId("player.play"))
 
@@ -282,7 +282,7 @@ test("after an external stop the play button plays again", async () => {
   const url = "https://radio"
   const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.Stopped })
-  await view.rerender(player(url))
+  await view.rerender(player(url, "Updated"))
 
   fireEvent.press(screen.getByTestId("player.play"))
 

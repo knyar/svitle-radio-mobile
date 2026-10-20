@@ -1,13 +1,13 @@
 import * as React from "react"
-import { useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import { View, StyleSheet } from "react-native"
 import { Screen, Player, FooterLink, FooterCheckbox, Logo } from "../components"
 import { useStores } from "../models/root-store"
 
-export const LiveScreen: React.FunctionComponent = () => {
+export const LiveScreen: React.FunctionComponent = observer(function LiveScreen() {
   const { mainStore } = useStores()
 
-  return useObserver(() => (
+  return (
     <Screen testID="screen.live">
       <View style={styles.logo}>
         <Logo station={mainStore.current_station} width={300} style={styles.logoImage} />
@@ -33,8 +33,8 @@ export const LiveScreen: React.FunctionComponent = () => {
         />
       </View>
     </Screen>
-  ))
-}
+  )
+})
 
 const styles = StyleSheet.create({
   logo: {
