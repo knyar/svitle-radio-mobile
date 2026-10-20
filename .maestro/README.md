@@ -9,6 +9,8 @@ With Maestro installed and an Android emulator running, build the e2e APK and ru
 scripts/e2e-android.sh android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk
 ```
 
+Maestro's logs and screenshots are written locally to `e2e-output/maestro/`.
+
 For iOS, install the simulator app and run:
 
 ```sh

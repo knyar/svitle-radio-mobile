@@ -52,9 +52,10 @@ scripts/e2e-android.sh android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.a
 For iOS, build the simulator app, install it with `xcrun simctl install`, then run
 `maestro test -e APP_ID=org.svitle.app1 .maestro/`.
 
-CI runs `scripts/e2e-android-ci.sh`, which wraps the script above with the one-retry policy. The `e2e-android-output` CI artifact contains `maestro-report.xml`, `media_session.log` and
-`logcat.txt`; Maestro 2.11 has not produced debug screenshots or logs in CI even on failures. Android retries once in the same
-emulator; a pass after retry is recorded as a warning and is not a clean pass. First lengthen state
+CI runs `scripts/e2e-android-ci.sh`, which wraps the script above with the one-retry policy. The `e2e-android-output` CI artifact contains `maestro-report.xml`, `media_session.log`,
+`logcat.txt`, and Maestro's own debug output in `maestro/`. The debug output is written flat because
+the artifact upload skips dot-directories. The driver startup budget is 60 seconds on both platforms,
+set with `MAESTRO_DRIVER_STARTUP_TIMEOUT`. Android retries once in the same emulator; a pass after retry is recorded as a warning and is not a clean pass. The retry warning names the failed flows. First lengthen state
 waits when investigating flakes. Quarantine only with an owner, reason, and expiry recorded in the
 flow. Add the `run-ios-e2e` PR label to run iOS on demand. Scheduled and manually dispatched
 workflows become available only after the workflow exists on the default `master` branch.
