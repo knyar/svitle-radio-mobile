@@ -1,5 +1,4 @@
 import "./i18n"
-import "mobx-react-lite/batchingForReactNative"
 import React from "react"
 import { NavigationState } from "@react-navigation/native"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"

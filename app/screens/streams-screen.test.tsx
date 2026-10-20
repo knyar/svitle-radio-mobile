@@ -19,24 +19,16 @@ const root = {
 } as unknown as RootStore
 
 beforeEach(() => {
-  jest.useFakeTimers()
   setStation.mockReset()
   navigate.mockReset()
 })
 
-afterEach(() => jest.useRealTimers())
-
 test("renders station IDs and switches to a non-selected station", async () => {
-  // Fake timers only during render: mobx-react-lite 2.x useObserver schedules a real 10 s
-  // reaction-cleanup setTimeout on first render that would otherwise keep Jest alive after the
-  // suite finishes. Real timers are restored right after so RNTL's async render works.
   await render(
     <RootStoreProvider value={root}>
       <StreamsScreen {...({ navigation: { navigate }, route: {} } as any)} />
     </RootStoreProvider>,
   )
-  jest.useRealTimers()
-
   expect(screen.getByTestId("streams.item.svitle")).toBeTruthy()
   expect(screen.getByTestId("streams.item.svetloe")).toBeTruthy()
 

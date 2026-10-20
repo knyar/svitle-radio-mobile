@@ -22,12 +22,9 @@ const root = {
 } as unknown as RootStore
 
 beforeEach(() => {
-  jest.useFakeTimers()
   ;(Linking.canOpenURL as jest.Mock).mockResolvedValue(false)
   ;(Linking.openURL as jest.Mock).mockResolvedValue(undefined)
 })
-
-afterEach(() => jest.useRealTimers())
 
 test("renders contacts and opens a supported known icon link", async () => {
   await render(
@@ -35,8 +32,6 @@ test("renders contacts and opens a supported known icon link", async () => {
       <ContactsScreen />
     </RootStoreProvider>,
   )
-  jest.useRealTimers()
-
   expect(screen.getByText("Редакція")).toBeTruthy()
   expect(screen.getByText("Email us")).toBeTruthy()
   await waitFor(() => expect(screen.getAllByTestId("svg")).toHaveLength(2))
