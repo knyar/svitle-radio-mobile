@@ -1,16 +1,10 @@
 import * as React from "react"
 import { useObserver } from "mobx-react-lite"
 import { View, StyleSheet } from "react-native"
-import { ParamListBase } from "@react-navigation/native"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Screen, Player, FooterLink, FooterCheckbox, Logo } from "../components"
 import { useStores } from "../models/root-store"
 
-export interface LiveScreenProps {
-  navigation: NativeStackNavigationProp<ParamListBase>
-}
-
-export const LiveScreen: React.FunctionComponent<LiveScreenProps> = () => {
+export const LiveScreen: React.FunctionComponent = () => {
   const { mainStore } = useStores()
 
   return useObserver(() => (
