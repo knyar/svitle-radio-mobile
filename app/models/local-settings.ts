@@ -1,15 +1,11 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
-/**
- * Model description here for TypeScript hints.
- */
 export const LocalSettingsModel = types
   .model("LocalSettings")
   .props({
     low_quality: false,
     station: types.maybe(types.string),
   })
-  .views((_self) => ({}))
   .actions((self) => ({
     setStation(station: string) {
       self.station = station
@@ -18,14 +14,6 @@ export const LocalSettingsModel = types
       self.low_quality = !self.low_quality
     },
   }))
-
-/**
-  * Un-comment the following to omit model attributes from your snapshots (and from async storage).
-  * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
-
-  * Note that you'll need to import `omit` from ramda, which is already included in the project!
-  *  .postProcessSnapshot(omit(["password", "socialSecurityNumber", "creditCardNumber"]))
-  */
 
 type LocalSettingsType = Instance<typeof LocalSettingsModel>
 export interface LocalSettings extends LocalSettingsType {}

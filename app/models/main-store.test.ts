@@ -14,7 +14,11 @@ const env = {
   },
 } as any
 
-beforeEach(() => jest.spyOn(console, "log").mockImplementation())
+beforeEach(() => {
+  jest.spyOn(console, "log").mockImplementation()
+  env.api.getPreferences.mockReset()
+  env.api.getStreamInfo.mockReset()
+})
 
 const streams = () =>
   new Map([
@@ -58,6 +62,33 @@ test("low quality falls back to the high URL", () => {
   store.saveStreamInfo(new Map([["one", { stream_url: "https://high" }]]) as any)
   store.local.toggleQuality()
   expect(store.current_url).toBe("https://high")
+})
+
+test("missing stream values are undefined", () => {
+  const store = MainStoreModel.create({}, env)
+  store.savePreferences({ stations, contacts: [] } as any)
+  expect(store.current_url).toBeUndefined()
+  expect(store.current_track).toBeUndefined()
+  expect(store.next_track).toBeUndefined()
+  expect(store.current_stream.stream_url_low).toBeFalsy()
+})
+
+test("getPreferences retries temporary failures and saves the result", async () => {
+  jest.useFakeTimers()
+  jest.spyOn(Math, "random").mockReturnValue(0)
+  env.api.getPreferences
+    .mockResolvedValueOnce({ kind: "cannot-connect", temporary: true })
+    .mockResolvedValueOnce({ kind: "ok", preferences: { stations, contacts: [] } })
+  const store = MainStoreModel.create({}, env)
+
+  const result = store.getPreferences()
+  await Promise.resolve()
+  await jest.advanceTimersByTimeAsync(500)
+  await result
+
+  expect(store.local.station).toBe("one")
+  expect(env.api.getPreferences).toHaveBeenCalledTimes(2)
+  jest.useRealTimers()
 })
 
 test("failed stream updates leave existing streams untouched", async () => {

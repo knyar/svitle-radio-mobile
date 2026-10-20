@@ -27,6 +27,14 @@ test("retries after a rejection", async () => {
   expect(fn).toHaveBeenCalledTimes(2)
 })
 
+test("resolves with the value of the eventually successful attempt", async () => {
+  const fn = jest.fn().mockRejectedValueOnce(new Error("no")).mockResolvedValueOnce("ok")
+  const result = indefinitely(fn)
+  await Promise.resolve()
+  await jest.advanceTimersByTimeAsync(500)
+  await expect(result).resolves.toBe("ok")
+})
+
 test("doubles delays and caps them", async () => {
   const fn = jest.fn().mockRejectedValue(new Error("no"))
   indefinitely(fn, 4000, 5000)
