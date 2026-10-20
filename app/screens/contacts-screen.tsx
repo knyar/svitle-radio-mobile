@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { useObserver } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet, Linking } from "react-native"
 import { ParamListBase } from "@react-navigation/native"
@@ -11,24 +11,14 @@ import IconViber from "../images/icon.viber.svg"
 import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
-import { link_supported } from "../utils/links"
+import { useLinkSupported } from "../utils/use-link-supported"
 
 export interface ContactsScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-const iconLinkComponent = (item: ContactItem) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  const [supported, setSupported] = useState(false)
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  useEffect(() => {
-    ;(async () => {
-      setSupported(await link_supported(item.url))
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [])
-
+const IconLink: React.FunctionComponent<{ item: ContactItem }> = ({ item }) => {
+  const supported = useLinkSupported(item.url)
   const icons = {
     // If you add more icon types here, also adjust LSApplicationQueriesSchemes
     // in info.plist
@@ -36,48 +26,34 @@ const iconLinkComponent = (item: ContactItem) => {
     viber: IconViber,
   }
   if (!(item.text in icons) || !item.url) {
-    return <View key={item.url} />
+    return <View />
   }
   const IconComponent = icons[item.text]
 
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return <View key={item.url} />
+    return <View />
   }
   const onPress = () => Linking.openURL(item.url)
   return (
-    <TouchableOpacity key={item.url} style={styles.icon} onPress={onPress}>
+    <TouchableOpacity style={styles.icon} onPress={onPress}>
       <IconComponent height={40} fill={colors.primary} />
     </TouchableOpacity>
   )
 }
 
-const textLinkComponent = (item: ContactItem) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  const [supported, setSupported] = useState(false)
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- TODO(M3): hook after early return / hook in non-component helper
-  useEffect(() => {
-    ;(async () => {
-      setSupported(await link_supported(item.url))
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO(M3): deps intentionally incomplete; fixing changes effect timing
-  }, [])
-
+const TextLink: React.FunctionComponent<{ item: ContactItem }> = ({ item }) => {
+  const supported = useLinkSupported(item.url)
   if (!item.url) {
-    return <View key={item.url} />
+    return <View />
   }
   if (!supported) {
     console.log("Link '" + item.url + "' is not supported")
-    return (
-      <Text key={item.url} style={styles.text}>
-        {item.text}
-      </Text>
-    )
+    return <Text style={styles.text}>{item.text}</Text>
   }
   const onPress = () => Linking.openURL(item.url)
   return (
-    <TouchableOpacity onPress={onPress} key={item.url}>
+    <TouchableOpacity onPress={onPress}>
       <Text style={styles.text}>{item.text}</Text>
     </TouchableOpacity>
   )
@@ -86,13 +62,21 @@ const textLinkComponent = (item: ContactItem) => {
 const blockComponent = (block: ContactBlock) => {
   let icons = null
   if (block.icon_links.length > 0) {
-    icons = <View style={styles.icons}>{block.icon_links.map(iconLinkComponent)}</View>
+    icons = (
+      <View style={styles.icons}>
+        {block.icon_links.map((item) => (
+          <IconLink key={item.url} item={item} />
+        ))}
+      </View>
+    )
   }
   return (
     <View style={styles.container} key={block.title}>
       <Text style={styles.header}>{i18n.t(block.title)}</Text>
       {icons}
-      {block.text_links.map(textLinkComponent)}
+      {block.text_links.map((item) => (
+        <TextLink key={item.url} item={item} />
+      ))}
     </View>
   )
 }
@@ -113,11 +97,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: spacing,
-  },
-  website: {
-    fontSize: 35,
-    fontWeight: "300",
-    color: colors.primary,
   },
   header: {
     marginTop: 8,
