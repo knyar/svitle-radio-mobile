@@ -32,7 +32,7 @@ afterEach(() => jest.useRealTimers())
 test("renders contacts and opens a supported known icon link", async () => {
   await render(
     <RootStoreProvider value={root}>
-      <ContactsScreen navigation={{} as any} />
+      <ContactsScreen />
     </RootStoreProvider>,
   )
   jest.useRealTimers()

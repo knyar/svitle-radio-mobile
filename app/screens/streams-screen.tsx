@@ -1,19 +1,17 @@
 import * as React from "react"
 import { useObserver } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native"
-import { ParamListBase } from "@react-navigation/native"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { Screen, FooterLink, Logo } from "../components"
 import i18n from "i18n-js"
 import { useStores } from "../models/root-store"
 import { Station } from "../models/station"
 import { colors } from "../theme"
+import { PrimaryParamList } from "../navigation/types"
 
-export interface StreamsScreenProps {
-  navigation: NativeStackNavigationProp<ParamListBase>
-}
-
-export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = (props) => {
+export const StreamsScreen: React.FunctionComponent<
+  BottomTabScreenProps<PrimaryParamList, "streams">
+> = (props) => {
   const { mainStore } = useStores()
 
   const stationComponent = (station: Station) => {

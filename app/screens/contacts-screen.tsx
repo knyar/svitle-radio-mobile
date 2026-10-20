@@ -1,8 +1,6 @@
 import React from "react"
 import { useObserver } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet, Linking } from "react-native"
-import { ParamListBase } from "@react-navigation/native"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Screen } from "../components"
 import { ContactBlock } from "../models/contact-block"
 import i18n from "i18n-js"
@@ -12,10 +10,6 @@ import { colors } from "../theme"
 import { useStores } from "../models/root-store"
 import { ContactItem } from "../models/contact-item"
 import { useLinkSupported } from "../utils/use-link-supported"
-
-export interface ContactsScreenProps {
-  navigation: NativeStackNavigationProp<ParamListBase>
-}
 
 const IconLink: React.FunctionComponent<{ item: ContactItem }> = ({ item }) => {
   const supported = useLinkSupported(item.url)
@@ -81,7 +75,7 @@ const blockComponent = (block: ContactBlock) => {
   )
 }
 
-export const ContactsScreen: React.FunctionComponent<ContactsScreenProps> = () => {
+export const ContactsScreen: React.FunctionComponent = () => {
   const { mainStore } = useStores()
   return useObserver(() => (
     <Screen title={i18n.t("contacts_screen.title")} testID="screen.contacts">

@@ -32,7 +32,7 @@ test("renders station IDs and switches to a non-selected station", async () => {
   // suite finishes. Real timers are restored right after so RNTL's async render works.
   await render(
     <RootStoreProvider value={root}>
-      <StreamsScreen navigation={{ navigate } as any} />
+      <StreamsScreen {...({ navigation: { navigate }, route: {} } as any)} />
     </RootStoreProvider>,
   )
   jest.useRealTimers()
