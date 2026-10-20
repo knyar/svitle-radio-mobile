@@ -50,6 +50,7 @@
     "@react-native/metro-config": "^0.81.0",
     "@react-native/typescript-config": "0.81.5",
     "@testing-library/react-native": "14.1.0",
+    "@types/i18n-js": "^3.8.9",
     "@types/jest": "^29.5.13",
     "@types/react": "^19.1.0",
     "babel-jest": "^29.2.1",
