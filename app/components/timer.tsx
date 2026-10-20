@@ -13,7 +13,7 @@ export const Timer: React.FunctionComponent = () => {
       let age = Date.now() - mainStore.streamsUpdated
       const schedule = nextRefreshDelay(age, REFRESH_INTERVAL)
       if (!schedule.refresh) {
-        console.log("StreamInfo updated less than 5s or more than 3m ago. Retrying in 5s.")
+        console.log("StreamInfo updated less than 5s ago. Retrying in 5s.")
       } else {
         await mainStore.updateStreamInfo()
       }
