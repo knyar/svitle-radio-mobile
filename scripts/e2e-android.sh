@@ -4,6 +4,7 @@ set -euo pipefail
 APK=${1:?usage: scripts/e2e-android.sh <apk> [output-dir]}
 OUT=${2:-e2e-output}
 APP_ID=com.svitleradio
+# Maestro's Android driver default is 15 s for the instrumentation start and the gRPC handshake.
 export MAESTRO_DRIVER_STARTUP_TIMEOUT=${MAESTRO_DRIVER_STARTUP_TIMEOUT:-60000}
 
 adb wait-for-device
@@ -12,9 +13,11 @@ adb shell am force-stop "$APP_ID"
 adb logcat -c
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
+# Evidence must come from this attempt only, even when a local run reuses the directory:
+# the flattened Maestro output has no per-run folder, so stale files would otherwise mix in.
+rm -rf "$OUT/maestro"
+rm -f "$OUT/playing-observed" "$OUT/media_session.log" "$OUT/maestro-report.xml" "$OUT/logcat.txt"
 mkdir -p "$OUT/maestro"
-# Evidence must come from this attempt only, even when a local run reuses the directory.
-rm -f "$OUT/playing-observed" "$OUT/media_session.log"
 
 sampler_pid=
 cleanup() {
@@ -54,7 +57,8 @@ sampler_pid=$!
 
 set +e
 maestro test --format JUNIT --output "$OUT/maestro-report.xml" \
-  --debug-output "$OUT/maestro" --flatten-debug-output -e APP_ID="$APP_ID" .maestro/
+  --debug-output "$OUT/maestro" --test-output-dir "$OUT/maestro" --flatten-debug-output \
+  -e APP_ID="$APP_ID" .maestro/
 maestro_status=$?
 set -e
 
