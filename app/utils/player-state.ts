@@ -2,7 +2,7 @@ import { State } from "react-native-track-player"
 
 export function buttonState(
   url: string | undefined,
-  state: State,
+  state: State | undefined,
 ): { enabled: boolean; variant: "play" | "pause"; labelKey: string } {
   let enabled = !!url
   let variant: "play" | "pause" = "play"

@@ -96,7 +96,7 @@ test("failed stream updates leave existing streams untouched", async () => {
   store.saveStreamInfo(streams())
   env.api.getStreamInfo.mockResolvedValueOnce({ kind: "cannot-connect", temporary: true })
   await store.updateStreamInfo()
-  expect(store.streams.get("one").stream_url).toBe("https://high")
+  expect(store.streams.get("one")?.stream_url).toBe("https://high")
 })
 
 test("persisted state omits tracks and restores preferences and URLs", () => {
@@ -112,7 +112,7 @@ test("persisted state omits tracks and restores preferences and URLs", () => {
   const restored = RootStoreModel.create(snapshot, env)
   expect(restored.mainStore.local.station).toBe("one")
   expect(restored.mainStore.local.low_quality).toBe(true)
-  expect(restored.mainStore.streams.get("one").stream_url).toBe("https://high")
+  expect(restored.mainStore.streams.get("one")?.stream_url).toBe("https://high")
   expect(restored.mainStore.current_track).toBeUndefined()
   expect(restored.mainStore.next_track).toBeUndefined()
 })

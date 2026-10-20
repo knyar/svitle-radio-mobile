@@ -24,21 +24,23 @@ export const MainStoreModel = types
   })
   .extend(withEnvironment)
   .views((self) => ({
-    get current_station(): Station {
+    get current_station(): Station | null {
       return self.preferences.stations.find((station) => station.id === self.local.station) ?? null
     },
     get current_stream(): StreamInfo {
-      return self.streams.get(self.local.station) ?? EMPTY_STREAM
+      return self.local.station
+        ? self.streams.get(self.local.station) ?? EMPTY_STREAM
+        : EMPTY_STREAM
     },
-    get current_track(): string {
+    get current_track(): string | undefined {
       const stream = this.current_stream
       return stream.current_track
     },
-    get next_track(): string {
+    get next_track(): string | undefined {
       const stream = this.current_stream
       return stream.next_track
     },
-    get current_url(): string {
+    get current_url(): string | undefined {
       const stream = this.current_stream
       if (self.local.low_quality && stream.stream_url_low) {
         return stream.stream_url_low

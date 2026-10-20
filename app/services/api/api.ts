@@ -12,7 +12,7 @@ export class Api {
   /**
    * The underlying apisauce instance which performs the requests.
    */
-  apisauce: ApisauceInstance
+  apisauce!: ApisauceInstance
 
   /**
    * Configurable options.

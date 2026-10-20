@@ -1,5 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
+export type LogoId = "svitle" | "svetloe" | "kids"
+
 export const StationModel = types.model("Station").props({
   id: types.string,
   name: types.string,

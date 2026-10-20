@@ -3,6 +3,8 @@ import { ContactBlockModel } from "./contact-block"
 import { StationModel } from "./station"
 import i18n from "i18n-js"
 
+type LinkId = "support" | "archive" | "youtube"
+
 export const PreferencesModel = types
   .model("Preferences")
   .props({
@@ -16,12 +18,16 @@ export const PreferencesModel = types
     url_youtube_i18n: types.maybe(types.map(types.string)),
   })
   .views((self) => ({
-    localizedUrl(id: string): string {
+    localizedUrl(id: LinkId) {
       const lang = i18n.t("lang")
-      const pref_key = "url_" + id + "_i18n"
-      const fallback = self["url_" + id]
-      if (self[pref_key]) {
-        return self[pref_key].get(lang) || fallback
+      const urls = {
+        support: [self.url_support, self.url_support_i18n],
+        archive: [self.url_archive, self.url_archive_i18n],
+        youtube: [self.url_youtube, self.url_youtube_i18n],
+      } as const
+      const [fallback, localized] = urls[id]
+      if (localized) {
+        return localized.get(lang) || fallback
       }
       return fallback
     },

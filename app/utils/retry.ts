@@ -2,7 +2,7 @@ const random = (min: number, max: number) => Math.floor(Math.random() * (max - m
 
 const pause = (duration: number) => new Promise<void>((res) => setTimeout(res, duration))
 
-export const indefinitely = (fn: () => Promise<unknown>, delay = 1000, maxDelay = 10000) =>
+export const indefinitely = <T>(fn: () => Promise<T>, delay = 1000, maxDelay = 10000): Promise<T> =>
   fn().catch((err) => {
     console.log(err)
     return pause(random(delay / 2, delay)).then(() =>

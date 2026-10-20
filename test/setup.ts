@@ -5,13 +5,16 @@ jest.mock("@react-native-async-storage/async-storage", () =>
 jest.mock("react-native-device-info", () =>
   require("react-native-device-info/jest/react-native-device-info-mock"),
 )
-jest.mock("react-native-build-config", () => ({ default: { FLAVOR: "svitle" } }))
+jest.mock("react-native-build-config", () => ({
+  __esModule: true,
+  default: { FLAVOR: "svitle" },
+}))
 jest.mock("react-native-localize", () => ({
   findBestLanguageTag: () => ({ languageTag: "uk", isRTL: false }),
 }))
 jest.mock("@sentry/react-native", () => ({
   init: jest.fn(),
-  wrap: (component) => component,
+  wrap: (component: unknown) => component,
   captureException: jest.fn(),
 }))
 jest.mock("react-native-safe-area-context", () => require("../__mocks__/safe-area-context"))
