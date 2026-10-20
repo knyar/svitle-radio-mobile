@@ -109,7 +109,14 @@ jobs:
     needs: android
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env: { MAESTRO_VERSION: "2.11.0", API_LEVEL: "36", TARGET: google_apis, ARCH: x86_64 }
+    env:
+      {
+        MAESTRO_VERSION: "2.11.0",
+        API_LEVEL: "36",
+        TARGET: google_apis,
+        ARCH: x86_64,
+        PROFILE: pixel_6,
+      }
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -131,7 +138,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ env.API_LEVEL }}-${{ env.TARGET }}-${{ env.ARCH }}-v1
+          key: avd-${{ env.API_LEVEL }}-${{ env.TARGET }}-${{ env.ARCH }}-${{ env.PROFILE }}-v2
       - name: Create the AVD snapshot (cache miss only)
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
@@ -139,6 +146,7 @@ jobs:
           api-level: ${{ env.API_LEVEL }}
           target: ${{ env.TARGET }}
           arch: ${{ env.ARCH }}
+          profile: ${{ env.PROFILE }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -149,15 +157,13 @@ jobs:
           api-level: ${{ env.API_LEVEL }}
           target: ${{ env.TARGET }}
           arch: ${{ env.ARCH }}
+          profile: ${{ env.PROFILE }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: |
-            scripts/e2e-android.sh e2e-apk/app-svitle-e2e.apk e2e-output || {
-              echo "::warning title=e2e-android retried::First Maestro attempt failed; retrying once (first attempt kept in e2e-output-attempt-1)."
-              mv e2e-output e2e-output-attempt-1
-              scripts/e2e-android.sh e2e-apk/app-svitle-e2e.apk e2e-output
-            }
+          # The action runs each script line in its own shell, so the one-retry
+          # policy lives in the wrapper script.
+          script: scripts/e2e-android-ci.sh e2e-apk/app-svitle-e2e.apk e2e-output
       - uses: actions/upload-artifact@v7
         if: always()
         with:
