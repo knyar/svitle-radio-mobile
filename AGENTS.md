@@ -39,7 +39,25 @@ The iOS job pins both `macos-15` and Xcode 16.4. Move both deliberately; do not 
 
 ## Maestro
 
-On-device Maestro flows are coming in milestone 3. Until then, do not invent or claim an E2E command.
+Maestro flows use stable IDs: `screen.*`, `nav.*`, `player.play|pause|disabled`, and
+`streams.item.<id>`. Never match visible text because the app is localised. When adding a control a
+flow needs, give it a stable `testID` and assert state rather than text.
+
+For Android, install Maestro, build the e2e APK, start an emulator, then run:
+
+```sh
+scripts/e2e-android.sh android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk
+```
+
+For iOS, build the simulator app, install it with `xcrun simctl install`, then run
+`maestro test -e APP_ID=org.svitle.app1 .maestro/`.
+
+The `e2e-android-output` CI artifact contains `maestro-report.xml`, Maestro debug screenshots and
+logs under `maestro/`, `media_session.log`, and `logcat.txt`. Android retries once in the same
+emulator; a pass after retry is recorded as a warning and is not a clean pass. First lengthen state
+waits when investigating flakes. Quarantine only with an owner, reason, and expiry recorded in the
+flow. Add the `run-ios-e2e` PR label to run iOS on demand. Scheduled and manually dispatched
+workflows become available only after the workflow exists on the default `master` branch.
 
 ## Rules
 
@@ -56,6 +74,7 @@ On-device Maestro flows are coming in milestone 3. Until then, do not invent or 
 
 - `Button`, `FooterLink`, and `FooterCheckbox` call `useObserver` after early returns; contact link helpers invoke hooks as ordinary functions.
 - Player accessibility labels use missing top-level `button_label_play` and `button_label_stop` translation keys.
+- Player has no error UI and no buffering indicator distinct from the shared disabled control.
 - React Navigation packages are mismatched: native and bottom-tabs are v7 while native-stack is v6.
 - Twenty stale Dependabot PRs from the React Native 0.63 era should be closed or recreated after CI is established.
 - The iOS project has no Svetloe build configurations even though the Podfile names them.

@@ -323,3 +323,35 @@ Measured durations on the first green PR run (2026-10-19, run 39328212556): `qua
 4. The implementation also removed the implicit, unpinned macOS `pod install` from `bin/postInstall` and declared the already-locked `nkf` dependency in `Gemfile` so Bundler deployment mode is reproducible.
 5. Requiring the `android` and `ios` checks on `main` and `master` remains a user action because the available token receives HTTP 403 for branch-protection settings.
 6. Two facts surfaced only in CI and are now handled in the workflow and build file: the ubuntu image ships NDK 27.3, so the job installs the NDK version pinned in `android/build.gradle`; and the React Native Gradle plugin fills the `usesCleartextTraffic` manifest placeholder for `debug` and `release` only (in a `finalizeDsl` hook that runs after `initWith`), so the `e2e` build type sets it explicitly. DerivedData caching remains deferred; iOS is under the target.
+
+## M3 step 0 findings
+
+- The initial tab is Streams and navigation state is persisted. Clearing app state reliably starts on Streams, so every flow waits for the selected `svitle` station before mounting Live.
+- The player has one enabled control whose state is play or pause, and one disabled rendering shared by missing URL, buffering, and loading. Error renders an enabled play control; there is no separate error UI.
+- Streams are HLS playlists rather than direct `audio/*` responses. Playback evidence must sample the Android media session during the run because the flows stop playback before completing.
+- Android uses app ID `com.svitleradio`; iOS uses `org.svitle.app1`. The shared flows therefore receive `APP_ID` through Maestro environment substitution.
+- Scheduled and manually dispatched workflows are unavailable until their workflow files reach the repository default branch, `master`.
+- The local VM has no Android emulator or Xcode, so on-device and native workflow validation awaits CI.
+
+## Milestone 3 status
+
+Implemented stable UI IDs, five shared Maestro flows, Android and iOS E2E jobs, sampled Android
+playback evidence, and scheduled HLS stream-health checks. Android runs on every PR with one visible
+retry; iOS runs nightly, by manual dispatch, or for PRs labeled `run-ios-e2e`. On-device validation
+and the exit criteria await the first CI run.
+
+Measured durations: TBD (filled in after the first green run).
+
+Deliberate-breakage run: TBD
+
+## Deviations from M3
+
+1. The timer flow was replaced by a switch-station flow because the app has no sleep timer; `timer.tsx` refreshes stream information.
+2. The proposed `player.buffering` and `player.error` IDs are folded into `player.disabled` because the app has one disabled presentation and Error renders the Play control.
+3. `screen.*` IDs were added so navigation flows can assert destinations without matching localised text.
+4. Stream health validates each HLS playlist and a bounded media-segment response because stream URLs return playlists, not `audio/*` bodies.
+5. Android playback evidence is sampled throughout the run instead of captured afterward because the flows intentionally stop playback.
+6. Schedule and `workflow_dispatch` triggers require the workflows on default branch `master`; changing the default branch remains a user decision.
+7. iOS has no M3 playback-evidence check equivalent to Android `dumpsys`; the visible pause state is its playback assertion.
+8. Making `e2e-android` a required check remains a user action after about 10 consecutive clean PRs; passes after retry do not count as clean.
+9. The deliberate-breakage run URL and outcome remain to be recorded after the branch first passes on-device CI.
