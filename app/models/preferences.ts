@@ -3,9 +3,6 @@ import { ContactBlockModel } from "./contact-block"
 import { StationModel } from "./station"
 import i18n from "i18n-js"
 
-/**
- * Model description here for TypeScript hints.
- */
 export const PreferencesModel = types
   .model("Preferences")
   .props({
@@ -29,15 +26,6 @@ export const PreferencesModel = types
       return fallback
     },
   }))
-  .actions((_self) => ({}))
-
-/**
-  * Un-comment the following to omit model attributes from your snapshots (and from async storage).
-  * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
-
-  * Note that you'll need to import `omit` from ramda, which is already included in the project!
-  *  .postProcessSnapshot(omit(["password", "socialSecurityNumber", "creditCardNumber"]))
-  */
 
 type PreferencesType = Instance<typeof PreferencesModel>
 export interface Preferences extends PreferencesType {}

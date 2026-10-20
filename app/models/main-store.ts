@@ -7,9 +7,13 @@ import { withEnvironment } from "./with-environment"
 import { GetStreamInfoResult, GetPreferencesResult } from "../services/api"
 import { indefinitely } from "../utils/retry"
 
-/**
- * Model description here for TypeScript hints.
- */
+const EMPTY_STREAM = {
+  current_track: undefined,
+  next_track: undefined,
+  stream_url: undefined,
+  stream_url_low: undefined,
+}
+
 export const MainStoreModel = types
   .model("MainStore")
   .props({
@@ -21,22 +25,10 @@ export const MainStoreModel = types
   .extend(withEnvironment)
   .views((self) => ({
     get current_station(): Station {
-      const current = self.local.station
-      for (const station of self.preferences.stations) {
-        if (station.id === current) {
-          return station
-        }
-      }
-      return null
+      return self.preferences.stations.find((station) => station.id === self.local.station) ?? null
     },
     get current_stream(): StreamInfo {
-      const current = self.local.station
-      for (const [id, stream] of self.streams) {
-        if (id === current) {
-          return stream
-        }
-      }
-      return { current_track: null, next_track: null, stream_url_low: null, stream_url: null }
+      return self.streams.get(self.local.station) ?? EMPTY_STREAM
     },
     get current_track(): string {
       const stream = this.current_stream
@@ -59,10 +51,8 @@ export const MainStoreModel = types
       self.preferences = PreferencesModel.create(preferencesSnapshot)
 
       // If we have a current station selected, check that it's still valid.
-      for (const station of self.preferences.stations) {
-        if (station.id === self.local.station) {
-          return
-        }
+      if (self.preferences.stations.some((station) => station.id === self.local.station)) {
+        return
       }
 
       // If current station is invalid (or unset), choose the first one.
@@ -76,7 +66,7 @@ export const MainStoreModel = types
     },
   }))
   .actions((self) => ({
-    getPreferences: flow(function* () {
+    getPreferences: () =>
       indefinitely(async () => {
         const result: GetPreferencesResult = await self.environment.api.getPreferences()
         if (result.kind === "ok") {
@@ -84,10 +74,9 @@ export const MainStoreModel = types
           return
         } else {
           __DEV__ && console.log(result.kind)
-          throw "getPreferences error: " + result.kind
+          throw new Error("getPreferences error: " + result.kind)
         }
-      })
-    }),
+      }),
     updateStreamInfo: flow(function* () {
       const result: GetStreamInfoResult = yield self.environment.api.getStreamInfo()
       if (result.kind === "ok") {
@@ -97,14 +86,6 @@ export const MainStoreModel = types
       }
     }),
   }))
-
-/**
-  * Un-comment the following to omit model attributes from your snapshots (and from async storage).
-  * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
-
-  * Note that you'll need to import `omit` from ramda, which is already included in the project!
-  *  .postProcessSnapshot(omit(["password", "socialSecurityNumber", "creditCardNumber"]))
-  */
 
 type MainStoreType = Instance<typeof MainStoreModel>
 export interface MainStore extends MainStoreType {}
