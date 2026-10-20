@@ -1,5 +1,13 @@
 import { State } from "react-native-track-player"
 
+export function isStreamInfoStale(
+  updatedAt: number,
+  now: number,
+  refreshInterval: number,
+): boolean {
+  return updatedAt === 0 || now - updatedAt > 2 * refreshInterval
+}
+
 export function buttonState(
   url: string | undefined,
   state: State | undefined,

@@ -1,14 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useObserver } from "mobx-react-lite"
-import {
-  Text,
-  View,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  AppState,
-  Platform,
-} from "react-native"
+import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, AppState } from "react-native"
 import TrackPlayer, {
   usePlaybackState,
   State,
@@ -25,8 +17,9 @@ import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
-import { buttonState } from "../utils/player-state"
+import { buttonState, isStreamInfoStale } from "../utils/player-state"
 import { FLAVOR, Flavor } from "../config/flavor"
+import { REFRESH_INTERVAL } from "../config/env"
 import { LogoId } from "../models/station"
 import { lookup } from "./logo"
 import { errorMessage } from "../utils/errors"
@@ -121,13 +114,17 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 export interface PlayerProps {
   url?: string
   current_track?: string
+  streams_updated: number
 }
 export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   const { mainStore } = useStores()
   const playbackState = usePlaybackState()
   const [appState, setAppState] = useState(AppState.currentState)
-  const appStateRef = useRef(appState)
-  appStateRef.current = appState
+  const [tick, setTick] = useState(0)
+  // Read through a ref so a stream-info refresh does not recreate trackMetadata/load and re-run
+  // the URL effect; the metadata-sync effect below keys on the timestamp itself.
+  const streamsUpdatedRef = useRef(props.streams_updated)
+  streamsUpdatedRef.current = props.streams_updated
   const lastStationRef = useRef(mainStore.local.station)
   const stateRef = useRef(playbackState.state)
   stateRef.current = playbackState.state
@@ -148,14 +145,14 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     return settled
   }, [])
 
-  // While an Android app is backgrounded it receives no stream-info updates, so a track title
-  // would go stale in the notification; tracks loaded or updated in that state carry no title.
+  // Hide stream info older than twice the refresh interval. This covers a frozen process, offline
+  // operation, and failed refreshes; iOS suspends JavaScript in the background anyway.
   const trackMetadata = useCallback((): TrackMetadataBase => {
-    const backgrounded = Platform.OS === "android" && appStateRef.current !== "active"
+    const stale = isStreamInfoStale(streamsUpdatedRef.current, Date.now(), REFRESH_INTERVAL)
     return {
       artwork: artwork(mainStore.current_station?.logo ?? ""),
       artist: mainStore.current_station?.name ?? "",
-      title: backgrounded ? "" : mainStore.current_track ?? "",
+      title: stale ? "" : mainStore.current_track ?? "",
     }
   }, [mainStore])
 
@@ -213,20 +210,9 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   }, [appState, mainStore])
 
   useEffect(() => {
-    // Clear track information while going to background on Android.
-    // This is necessary because Android app will be stopped and no streaminfo
-    // updates will be happening until it's back in foreground.
-    if (Platform.OS === "android" && appState !== "active" && props.url) {
-      const metadata = trackMetadata()
-      metadata.title = ""
-      enqueue(async () => {
-        const currentTrackIdx = await safely(TrackPlayer.getCurrentTrack)
-        if (currentTrackIdx != null) {
-          await safely(TrackPlayer.updateMetadataForTrack, currentTrackIdx, metadata)
-        }
-      })
-    }
-  }, [appState, props.url, trackMetadata, enqueue])
+    const interval = setInterval(() => setTick((value) => value + 1), REFRESH_INTERVAL)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     enqueue(setupPlayer)
@@ -250,7 +236,15 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
         }
       }
     })
-  }, [props.current_track, props.url, playbackState.state, trackMetadata, enqueue])
+  }, [
+    props.current_track,
+    props.streams_updated,
+    props.url,
+    playbackState.state,
+    tick,
+    trackMetadata,
+    enqueue,
+  ])
 
   useEffect(() => {
     console.log("Playback state: " + playbackState.state)

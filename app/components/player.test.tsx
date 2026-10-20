@@ -1,10 +1,11 @@
 import React from "react"
-import { AppState, Platform } from "react-native"
+import { AppState } from "react-native"
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react-native"
 import TrackPlayer, { State, TrackType, usePlaybackState } from "react-native-track-player"
 import i18n from "i18n-js"
 import { Player } from "./player"
 import { RootStore, RootStoreProvider } from "../models/root-store"
+import { REFRESH_INTERVAL } from "../config/env"
 
 const originalAppState = AppState.currentState
 const { resetTrackPlayerMock } = require("react-native-track-player")
@@ -16,6 +17,7 @@ const testMainStore = {
   updateStreamInfo: jest.fn(),
 }
 const root = { mainStore: testMainStore } as unknown as RootStore
+let streamsUpdated: number
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -31,6 +33,7 @@ beforeEach(() => {
     lang: "ua",
   }
   testMainStore.current_track = "Song"
+  streamsUpdated = Date.now()
   jest.spyOn(console, "log").mockImplementation()
 })
 
@@ -43,10 +46,14 @@ async function mountPlayer({
   url,
   state,
   activeUrl,
+  streamsUpdated: updatedAt = streamsUpdated,
+  keepFakeTimers = false,
 }: {
   url: string
   state: State
   activeUrl?: string
+  streamsUpdated?: number
+  keepFakeTimers?: boolean
 }) {
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state })
   ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue(
@@ -57,10 +64,10 @@ async function mountPlayer({
   // suite finishes. Real timers are restored right after so RNTL's async render/waitFor work.
   const view = await render(
     <RootStoreProvider value={root}>
-      <Player url={url} current_track="Song" />
+      <Player url={url} current_track="Song" streams_updated={updatedAt} />
     </RootStoreProvider>,
   )
-  jest.useRealTimers()
+  if (!keepFakeTimers) jest.useRealTimers()
   await waitFor(() => expect(TrackPlayer.isServiceRunning).toHaveBeenCalled())
   await waitFor(() => expect(TrackPlayer.getActiveTrack).toHaveBeenCalled())
   await flushPromises()
@@ -71,10 +78,10 @@ async function mountPlayer({
   return view
 }
 
-function player(url: string, currentTrack = "Song") {
+function player(url: string, currentTrack = "Song", updatedAt = streamsUpdated) {
   return (
     <RootStoreProvider value={root}>
-      <Player url={url} current_track={currentTrack} />
+      <Player url={url} current_track={currentTrack} streams_updated={updatedAt} />
     </RootStoreProvider>
   )
 }
@@ -325,46 +332,107 @@ test("stream info refreshes when the app becomes active", async () => {
   expect(root.mainStore.updateStreamInfo).toHaveBeenCalledTimes(2)
 })
 
-test("a URL change while backgrounded on Android loads the track without a title", async () => {
-  const os = Object.getOwnPropertyDescriptor(Platform, "OS")
-  Object.defineProperty(Platform, "OS", { configurable: true, value: "android" })
+test("the title follows stream info while backgrounded", async () => {
+  const url = "https://radio"
   ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
-  try {
-    const view = await mountPlayer({ url: "https://radio", state: State.None })
-    const listener = (AppState.addEventListener as jest.Mock).mock.calls[0][1]
-    await act(() => listener("background"))
-    ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue({ url: "https://radio" })
+  const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
+  const listener = (AppState.addEventListener as jest.Mock).mock.calls[0][1]
+  await act(() => listener("background"))
+  ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
+  testMainStore.current_track = "B"
 
-    view.rerender(player("https://other"))
+  await view.rerender(player(url, "B", Date.now()))
 
-    await waitFor(() =>
-      expect(TrackPlayer.add).toHaveBeenCalledWith(
-        expect.objectContaining({ url: "https://other", title: "" }),
-      ),
-    )
-  } finally {
-    if (os) Object.defineProperty(Platform, "OS", os)
-  }
+  await waitFor(() =>
+    expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ title: "B" }),
+    ),
+  )
 })
 
-test("going to background on Android blanks the title", async () => {
-  const os = Object.getOwnPropertyDescriptor(Platform, "OS")
-  Object.defineProperty(Platform, "OS", { configurable: true, value: "android" })
+test("a stream-info refresh does not reload or replay the track", async () => {
+  const url = "https://radio"
+  const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
+
+  await view.rerender(player(url, "Song", Date.now() + 1))
+  await flushPromises()
+
+  expect(TrackPlayer.reset).not.toHaveBeenCalled()
+  expect(TrackPlayer.add).not.toHaveBeenCalled()
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+})
+
+test("the title blanks when stream info is stale", async () => {
+  const url = "https://radio"
   ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
-  try {
-    await mountPlayer({ url: "https://radio", state: State.None })
-    ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
-    const listener = (AppState.addEventListener as jest.Mock).mock.calls[0][1]
+  const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
+  ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
 
-    await act(() => listener("background"))
+  await view.rerender(player(url, "Song", Date.now() - 3 * REFRESH_INTERVAL))
 
-    await waitFor(() =>
-      expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
-        0,
-        expect.objectContaining({ title: "" }),
-      ),
-    )
-  } finally {
-    if (os) Object.defineProperty(Platform, "OS", os)
-  }
+  await waitFor(() =>
+    expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ title: "" }),
+    ),
+  )
+})
+
+test("the title returns when a refresh lands", async () => {
+  const url = "https://radio"
+  ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
+  const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
+  await view.rerender(player(url, "Song", Date.now() - 3 * REFRESH_INTERVAL))
+  await waitFor(() =>
+    expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ title: "" }),
+    ),
+  )
+  ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
+
+  await view.rerender(player(url, "Song", Date.now()))
+
+  await waitFor(() =>
+    expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ title: "Song" }),
+    ),
+  )
+})
+
+test("a track loaded while stream info is stale carries no title", async () => {
+  const view = await mountPlayer({ url: "https://radio", state: State.None })
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue({ url: "https://radio" })
+
+  await view.rerender(player("https://other", "Song", Date.now() - 3 * REFRESH_INTERVAL))
+
+  await waitFor(() =>
+    expect(TrackPlayer.add).toHaveBeenCalledWith(
+      expect.objectContaining({ url: "https://other", title: "" }),
+    ),
+  )
+})
+
+test("the title blanks on the periodic tick when no refresh arrives", async () => {
+  const url = "https://radio"
+  const updatedAt = Date.now()
+  ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
+  await mountPlayer({
+    url,
+    state: State.Playing,
+    activeUrl: url,
+    streamsUpdated: updatedAt,
+    keepFakeTimers: true,
+  })
+  ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
+
+  await act(() => jest.advanceTimersByTimeAsync(3 * REFRESH_INTERVAL))
+
+  expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+    0,
+    expect.objectContaining({ title: "" }),
+  )
+  jest.useRealTimers()
 })

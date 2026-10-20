@@ -1,5 +1,14 @@
 import { State } from "react-native-track-player"
-import { buttonState } from "./player-state"
+import { buttonState, isStreamInfoStale } from "./player-state"
+
+test.each([
+  ["fresh", 90, 100, 10, false],
+  ["exactly at the boundary", 80, 100, 10, false],
+  ["past the boundary", 79, 100, 10, true],
+  ["never fetched", 0, 100, 10, true],
+])("stream info is %s", (_case, updatedAt, now, refreshInterval, expected) => {
+  expect(isStreamInfoStale(updatedAt, now, refreshInterval)).toBe(expected)
+})
 
 test.each([
   [
