@@ -32,7 +32,10 @@ beforeEach(() => {
 
 afterEach(() => {
   clearTimers()
-  const mobxWarnings = consoleWarnSpy.mock.calls.filter((call) => /\[mobx\]/i.test(call.join(" ")))
+  // Matches "[mobx]", "[mobx-state-tree]" and "[mobx-react-lite]" diagnostics alike.
+  const mobxWarnings = consoleWarnSpy.mock.calls.filter((call) =>
+    /\[mobx[^\]]*\]/i.test(call.join(" ")),
+  )
   consoleWarnSpy.mockRestore()
   expect(mobxWarnings).toEqual([])
 })
