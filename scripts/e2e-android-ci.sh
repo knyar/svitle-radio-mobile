@@ -13,5 +13,8 @@ if scripts/e2e-android.sh "$APK" "$OUT"; then
 fi
 
 echo "::warning title=e2e-android retried::First Maestro attempt failed; retrying once (first attempt kept in ${OUT}-attempt-1)."
-mv "$OUT" "${OUT}-attempt-1"
+# The first attempt may fail before it creates its output directory.
+if [[ -d "$OUT" ]]; then
+  mv "$OUT" "${OUT}-attempt-1"
+fi
 scripts/e2e-android.sh "$APK" "$OUT"

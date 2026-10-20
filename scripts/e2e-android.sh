@@ -11,6 +11,8 @@ adb shell am force-stop "$APP_ID"
 adb logcat -c
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
+# Evidence must come from this attempt only, even when a local run reuses the directory.
+rm -f "$OUT/playing-observed" "$OUT/media_session.log"
 
 sampler_pid=
 cleanup() {
@@ -28,13 +30,23 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# True when the dump on stdin shows this app's own media session in PLAYING.
+# Each session block in `dumpsys media_session` carries a `package=` line
+# followed by its `state=PlaybackState {state=PLAYING(3), ...}` line.
+app_is_playing() {
+  awk -v app="$APP_ID" '
+    /package=/ { pkg = $0; sub(/.*package=/, "", pkg) }
+    /state=PlaybackState \{state=PLAYING/ && pkg == app { found = 1 }
+    END { exit found ? 0 : 1 }'
+}
+
 # Sample throughout the suite because later flows intentionally stop playback.
 (
   while true; do
     date -u +'%Y-%m-%dT%H:%M:%SZ'
     session=$(adb shell dumpsys media_session 2>&1 || true)
     printf '%s\n' "$session"
-    if [[ "$session" == *"state=PLAYING"* ]]; then
+    if printf '%s\n' "$session" | app_is_playing; then
       touch "$OUT/playing-observed"
     fi
     sleep 1
@@ -50,7 +62,7 @@ set -e
 
 evidence_status=0
 if [[ ! -f "$OUT/playing-observed" ]]; then
-  echo "no media session reached PLAYING during this attempt; see media_session.log" >&2
+  echo "no $APP_ID media session reached PLAYING during this attempt; see media_session.log" >&2
   evidence_status=1
 fi
 

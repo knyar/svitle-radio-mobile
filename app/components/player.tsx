@@ -78,7 +78,7 @@ export const Button: React.FunctionComponent<ButtonProps> = (props) => {
 
   if (!enabled) {
     return (
-      <View testID="player.disabled">
+      <View testID="player.disabled" style={styles.buttonDisabledWrapper}>
         <ButtonComponent
           height="200"
           style={[styles.buttonImage, styles.buttonDisabled]}
@@ -306,6 +306,12 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.5,
+  },
+  // Full width so the SVG's percentage maxWidth still resolves against the
+  // ImageBackground, as it did before the testID wrapper was added.
+  buttonDisabledWrapper: {
+    width: "100%",
+    alignItems: "center",
   },
   npContainer: {
     flex: 0.6,
