@@ -239,7 +239,7 @@ Make the agent fast locally and the CI robust enough to trust unattended.
 3. **Dependency guardrails.** Dependabot or Renovate limited to patch/minor
    with CI required; pin `react-native-track-player` and `react-native` to
    exact versions with a comment pointing at the upgrade decision below.
-   M2 finding: upgrading the `quality` job's action majors was deferred to M4.
+   Final state: not done by decision; the existing action versions remain unchanged.
 4. **Flake telemetry.** Upload JUnit reports from Jest and Maestro to a
    test-reporter action; review weekly; quarantine only with an owner,
    reason and expiry date recorded in the flow file.
@@ -311,7 +311,7 @@ The plan's type-only bottom-tab generic does not by itself compile with `strict:
 
 ## Milestone 2 status
 
-Implemented the release-like, debug-signed Android e2e build and the independent Android and iOS native-build jobs. The jobs verify the installable artifacts and upload `app-svitle-e2e` and `SvitleRadio-simulator` with 14-day retention. The iOS build is secret-free for clean clones, uses the locked Ruby toolchain, and checks Podfile.lock drift. Native compilation and the artifact exit criteria are awaiting the first CI run.
+Implemented the release-like, debug-signed Android e2e build and the independent Android and iOS native-build jobs. The jobs verify the installable artifacts and upload `app-svitle-e2e` and `SvitleRadio-simulator` with 14-day retention. The iOS build is secret-free for clean clones, uses the locked Ruby toolchain, and checks Podfile.lock drift. Native compilation and the artifact exit criteria were verified by the first green CI run recorded below.
 
 Measured durations on the first green PR run (2026-10-19, run 39328212556): `quality` 44 s; `android` 8 min 27 s wall-clock, of which Gradle 7 min 30 s with a cold dependency cache and the pinned NDK install 22 s; `ios` 11 min 54 s wall-clock, of which `xcodebuild` 9 min 58 s with the Pods cache warm (`bundle exec pod install` 20 s). Artifacts: `app-svitle-e2e` 28.4 MB, `SvitleRadio-simulator` 7.8 MB. iOS is under the ~20 min target, so DerivedData caching stays deferred. The Podfile.lock drift hypothesis held: after `bundle exec pod install` with the locked CocoaPods 1.15.2 only the `COCOAPODS:` line differed.
 
@@ -359,3 +359,49 @@ Deliberate-breakage run: a throwaway commit (470230c, never merged) appended `.b
 9. The deliberate-breakage run is recorded above under "Milestone 3 status".
 10. Linux jobs are pinned to `ubuntu-24.04`: the first M3 runs carried GitHub's notice that `ubuntu-latest` migrates to Ubuntu 26 from 2026-10-19, which would silently change the JDK, Android SDK and emulator stack under the jobs.
 11. Maestro's `--debug-output` directory came back empty in the first runs, even on failure, so the runner now passes an absolute path and also copies `~/.maestro/tests` into the artifact; the first failing run after this change shows which of the two carries the screenshots.
+
+## M4 step 0 findings
+
+- Maestro provides a stdio MCP server through `maestro mcp`, with device inspection, screenshots, and inline or file-based flow execution. It requires the Maestro CLI and Java 17 or newer on `PATH`.
+- `@mobilenext/mobile-mcp` 1.0.12 drives simulators, emulators, and physical devices. The checked-in executable configuration pins that version so upgrades are deliberate.
+- Claude Code project MCP servers belong in `.mcp.json`; interactive sessions ask for approval once. A missing server command makes only that server unavailable.
+- Claude Code `PostToolUse` hooks receive JSON on stdin and can return exit 2 to surface a blocking error after an edit. Node is available in this repository, while `jq` is not guaranteed on macOS.
+- The local typecheck and lint take about 8 seconds together. Codex has no equivalent editor hook, so the full verification gate remains required.
+- PR #38 is merged, but the workflows are not yet on the default `master` branch, so schedules and manual dispatch are not active there.
+
+## Milestone 4 status
+
+Points 1 and 2 are implemented. The checked-in `.mcp.json` gives Claude Code sessions consistent Maestro and pinned mobile-mcp server definitions, while `AGENTS.md` documents the simulator-to-flow-to-CI agent loop and the optional MobileBuildMCP command. `.claude/settings.json` and `scripts/claude-post-edit.sh` run typecheck and lint after Claude Code edits to lint targets, report failures with exit 2, ignore unrelated and out-of-worktree paths, and remain silent on success.
+
+The hook was verified with synthetic `PostToolUse` payloads: a valid `app/` edit ran both checks silently and passed, a README edit returned immediately, and an intentionally invalid temporary TypeScript file produced the expected compiler error and exit 2 before being removed. The settings file is picked up by Claude Code sessions started after it exists; live firing remains for the user's next session to observe.
+
+## Not done, by decision
+
+3. **Dependency guardrails.** This would add Dependabot or Renovate configuration limited to patch/minor updates with required CI, plus exact React Native and react-native-track-player pins.
+4. **Flake telemetry.** This would upload Jest and Maestro JUnit output through a test-reporter action for weekly review.
+5. **Optional, only if wanted.** Firebase Test Lab crawling, signed release automation, and a scoped Stryker mutation run remain optional future work.
+
+## CI effort: final state (2026-10-20)
+
+| Check           | When it runs                                        | Artifact or evidence                                                              | Measured duration                                          |
+| --------------- | --------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `quality`       | Every PR                                            | Typecheck, lint, formatting, and Jest result                                      | 44 s                                                       |
+| `android`       | Every PR                                            | `app-svitle-e2e` (14 days)                                                        | 8 min 27 s cold; about 3 min 20 s warm                     |
+| `ios`           | Every PR                                            | `SvitleRadio-simulator` (14 days)                                                 | 11 min 54 s                                                |
+| `e2e-android`   | Every PR, after `android`                           | `e2e-android-output`: JUnit report, logcat, sampled media-session evidence (Maestro debug-output capture unverified) | 4 min 20–28 s; Android smoke result about 9 min after push |
+| `e2e-ios`       | PR label `run-ios-e2e`, nightly, or manual dispatch | Maestro result for the simulator app                                              | 8 min 12 s after `ios`                                     |
+| `stream-health` | Every six hours and manual dispatch                 | HLS playlist, segment, and metadata health result                                 | Not measured                                               |
+
+Milestone 1's exit criterion is met: the fast local and Linux CI gate is green and completes in under a minute. Milestone 2's exit criterion is met: both native builds compile, verify, and publish installable artifacts within their targets. Milestone 3 is technically complete: all five flows, Android playback evidence, iOS execution, artifacts, retry behavior, and deliberate-breakage validation are proven. Its operational exit criterion—making `e2e-android` required after enough clean runs and running iOS nightly—remains pending the user actions below. Milestone 4 points 1 and 2 are done; points 3–5 are not done by decision. The implementation effort is closed.
+
+Open user actions:
+
+1. Configure branch protection to require `quality`, `android`, and `ios` now, then require `e2e-android` after about 10 consecutive clean PR runs.
+2. Get the workflow files onto the default `master` branch so schedules and manual dispatch work.
+3. Close or recreate the 20 stale Dependabot PRs from the React Native 0.63 era.
+4. Approve the checked-in project MCP servers once in an interactive Claude Code session.
+5. After the plan, evaluate the React Native and audio-library options in spike PRs, but do not begin until `e2e-android` is a required check.
+
+Post-close-out finding (2026-10-20, run 39439776888): the Maestro installer download was cut mid-transfer ("Connection reset by peer") and the `curl | bash` step still passed, so both e2e attempts failed with `maestro: command not found`. `scripts/install-maestro.sh` now retries the download and fails the step unless `maestro --version` runs. This is the first flake on record and it was infrastructure, not the flows; it counts as a non-clean run.
+
+Second non-clean run (2026-10-20, run 39442207269): the first Maestro attempt failed on the first flow executed after the emulator boot (`05-switch-station`, 9 s, Maestro reported "Unknown error"); the other four flows passed and logcat shows no app crash, so this is Maestro driver start-up, not the app. The retry passed all five flows. That failure also settled the open question from M3: Maestro 2.11 wrote nothing to `--debug-output` and nothing under `~/.maestro/tests` even on a failure, so the artifact consists of the JUnit report, logcat and the media-session samples; a Maestro warm-up step or `maestro --verbose` are the next things to try if this recurs. Flake tally for the "10 consecutive clean PRs" rule: PR #38 clean on all runs; PR #39 two non-clean runs.

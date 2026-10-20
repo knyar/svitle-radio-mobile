@@ -80,4 +80,8 @@ yarn-error.log
 # Configurations
 !env.js
 
+# Claude Code
+.claude/*
+!.claude/settings.json
+
 ios/sentry.properties
