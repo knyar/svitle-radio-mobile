@@ -33,9 +33,12 @@ committing.
 - `ios/Podfile.lock` must match `ios/Podfile`: after editing the Podfile, set its
   `PODFILE CHECKSUM` line to `sha1sum ios/Podfile` (or run `bundle exec pod install` on macOS).
   The `ios` CI job fails on any other lockfile drift.
-- CI runners are pinned: `ubuntu-24.04`, `macos-15` with Xcode 16.4. Move these deliberately;
-  never use a moving `-latest` label (GitHub began migrating `ubuntu-latest` to Ubuntu 26 on
-  2026-10-19).
+- CI runners are pinned: `ubuntu-24.04`, and the `xcode-27` image with Xcode 27.0 for the macOS
+  jobs. Move these deliberately; never use a moving `-latest` label (GitHub began migrating
+  `ubuntu-latest` to Ubuntu 26 on 2026-10-19).
+- The Podfile's `post_install` carries Xcode 27 workarounds for React Native 0.81 (pod deployment
+  targets, fmt consteval). Remove them only when upgrading to a React Native release that has the
+  upstream fixes (0.83.5+ for fmt, react-native#58687 for resource bundles).
 - Maestro flows match stable IDs only: `screen.*`, `nav.*`, `player.play|pause|disabled`, and
   `streams.item.<id>`. Never match visible text; the app is localised. When adding a control a
   flow needs, give it a stable `testID` and assert state rather than text.

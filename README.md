@@ -36,7 +36,10 @@ brew install node watchman yarn
   rbenv, rvm, or mise with a 3.4.x release work just as well. `bundle install` switches to Bundler
   2.7.2 on its own; if it does not, run `gem install bundler:2.7.2` first.
 
-- Xcode 16.4 (iOS only). CI pins this version; newer Xcode usually works but is untested.
+- Xcode 27 (iOS only). CI pins Xcode 27.0 and the project carries the workarounds React
+  Native 0.81 needs for it: the Podfile raises every pod to iOS 15.1 and disables `consteval` in
+  the bundled fmt 11 headers, and the app adopts the UIScene life cycle that the iOS 27 SDK
+  requires at launch. Xcode 26.x should still work but is no longer what CI tests.
 - Android Studio with the Android SDK, platform 36, and a JDK 17 (Android only). Gradle installs
   the pinned NDK itself.
 - [Maestro](https://maestro.mobile.dev/) and Java 17 or newer, only if you want to run the
@@ -133,6 +136,10 @@ Android:
 iOS releases are archived from Xcode with the `SvitleRadio` scheme.
 
 ### Sentry
+
+If `bundle install` fails compiling native extensions with "unknown architecture" linker errors,
+your Command Line Tools and SDK are mismatched, usually a beta toolchain; select Xcode with
+`sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` and retry.
 
 Builds work without Sentry credentials: the Xcode script phases skip symbol and source-map uploads
 when neither `ios/sentry.properties` nor `SENTRY_AUTH_TOKEN` is present. To upload, copy
