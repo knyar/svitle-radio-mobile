@@ -1,1 +1,2 @@
-Read AGENTS.md first; it is the source of truth for building, testing and rules in this repo.
+Read AGENTS.md first; it holds the gate, rules, and CI debugging notes for this repo. README.md
+holds setup, run, build, and release commands.
