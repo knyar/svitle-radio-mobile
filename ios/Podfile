@@ -38,5 +38,37 @@ target 'SvitleRadio' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Xcode 27 refuses deployment targets below iOS 15 as a hard error. React Native's
+    # post_install raises the native library targets to min_ios_version_supported but skips
+    # resource-bundle targets (RNSVG-RNSVGFilters, RNCAsyncStorage_resources, ...), which keep
+    # the floors from their podspecs. Fixed upstream in react-native#58687 (not in 0.81).
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
+    end
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < min_ios_version_supported.to_f
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
+        end
+      end
+    end
+
+    # Apple clang 21 (Xcode 26.4 and later) rejects fmt 11's consteval format strings with
+    # "call to consteval function ... is not a constant expression". React Native 0.83.5+ moved
+    # to fmt 12.1.0 (react-native#55601); 0.81 still pins 11.0.2, so turn consteval off in the
+    # header every pod includes. Idempotent: pod install reruns this on the cached Pods tree.
+    fmt_base = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base)
+      marker = '// Podfile: consteval off for Apple clang 21'
+      source = File.read(fmt_base)
+      unless source.include?(marker)
+        anchor = "#if FMT_USE_CONSTEVAL\n#  define FMT_CONSTEVAL consteval"
+        raise "fmt/base.h changed; update the consteval workaround in the Podfile" unless source.include?(anchor)
+        source = source.sub(anchor, "#undef FMT_USE_CONSTEVAL\n#define FMT_USE_CONSTEVAL 0 #{marker}\n#{anchor}")
+        File.write(fmt_base, source)
+        Pod::UI.puts 'fmt: consteval disabled in fmt/base.h for Apple clang 21'.green
+      end
+    end
   end
 end

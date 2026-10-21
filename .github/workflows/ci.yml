@@ -59,9 +59,10 @@ jobs:
           retention-days: 14
 
   ios:
-    # Pinned image AND pinned Xcode: RN 0.81 needs Xcode >= 16.1 and is tested
-    # on the 16.x line. Move both deliberately, never via -latest.
-    runs-on: macos-15
+    # Pinned image AND pinned Xcode. The xcode-27 image (macOS 27) is the only hosted
+    # runner with Xcode 27; macos-26 stops at Xcode 26.x. Move both deliberately, never
+    # via -latest. The Podfile carries the Xcode 27 workarounds RN 0.81 lacks.
+    runs-on: xcode-27
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
@@ -69,7 +70,7 @@ jobs:
         with: { node-version: 22, cache: yarn }
       - uses: ruby/setup-ruby@v1
         with: { ruby-version: "3.4", bundler-cache: true }
-      - run: sudo xcode-select -s /Applications/Xcode_16.4.app && xcodebuild -version
+      - run: sudo xcode-select -s /Applications/Xcode_27.0.app && xcodebuild -version
       - run: yarn install --frozen-lockfile
       - uses: actions/cache@v6
         with:
@@ -176,7 +177,7 @@ jobs:
   e2e-ios:
     needs: ios
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'run-ios-e2e')
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 30
     # Maestro's iOS driver default is 120 s (Android: 15 s); one earlier run timed out at that default.
     env: { MAESTRO_VERSION: "2.11.0", MAESTRO_DRIVER_STARTUP_TIMEOUT: "240000" }
@@ -189,8 +190,8 @@ jobs:
         run: scripts/install-maestro.sh
       - name: Boot the simulator and install the app
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.4.app
-          UDID=$(xcrun simctl create e2e-iphone "iPhone 16")
+          sudo xcode-select -s /Applications/Xcode_27.0.app
+          UDID=$(xcrun simctl create e2e-iphone "iPhone 17")
           echo "UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
