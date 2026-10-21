@@ -22,8 +22,20 @@ brew install node watchman yarn
   1.22.22, which is the version this repository pins. If you prefer Corepack, run
   `brew install corepack && corepack enable` instead of installing `yarn` (the two formulas
   conflict).
-- Ruby 2.6.10 or newer with Bundler, for CocoaPods (iOS only). The system Ruby works; rbenv or
-  rvm work too.
+- Ruby 3.4 with Bundler, for CocoaPods (iOS only). The lockfile was resolved with Ruby 3.4 and
+  Bundler 2.7.2, which is what CI uses; the macOS system Ruby (2.6) is too old and fails with
+  "Could not find 'bundler' (2.7.2)". Homebrew's plain `ruby` formula is already Ruby 4, so install
+  the versioned formula and put it first on your `PATH`:
+
+  ```sh
+  brew install ruby@3.4
+  echo 'export PATH="$(brew --prefix ruby@3.4)/bin:$PATH"' >> ~/.zshrc && exec zsh
+  ruby --version   # ruby 3.4.x
+  ```
+
+  rbenv, rvm, or mise with a 3.4.x release work just as well. `bundle install` switches to Bundler
+  2.7.2 on its own; if it does not, run `gem install bundler:2.7.2` first.
+
 - Xcode 16.4 (iOS only). CI pins this version; newer Xcode usually works but is untested.
 - Android Studio with the Android SDK, platform 36, and a JDK 17 (Android only). Gradle installs
   the pinned NDK itself.
