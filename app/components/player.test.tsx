@@ -20,7 +20,6 @@ const root = { mainStore: testMainStore } as unknown as RootStore
 let streamsUpdated: number
 
 beforeEach(() => {
-  jest.useFakeTimers()
   resetTrackPlayerMock()
   ;(root.mainStore.updateStreamInfo as unknown as jest.Mock).mockReset()
   ;(AppState.addEventListener as jest.Mock).mockReturnValue({ remove: jest.fn() })
@@ -39,7 +38,6 @@ beforeEach(() => {
 
 afterEach(() => {
   ;(AppState as any).currentState = originalAppState
-  jest.useRealTimers()
 })
 
 async function mountPlayer({
@@ -59,9 +57,6 @@ async function mountPlayer({
   ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue(
     activeUrl ? { url: activeUrl } : undefined,
   )
-  // Fake timers only during render: mobx-react-lite 2.x useObserver schedules a real 10 s
-  // reaction-cleanup setTimeout on first render that would otherwise keep Jest alive after the
-  // suite finishes. Real timers are restored right after so RNTL's async render/waitFor work.
   const view = await render(
     <RootStoreProvider value={root}>
       <Player url={url} current_track="Song" streams_updated={updatedAt} />
@@ -211,7 +206,7 @@ test("pressing play right after the state turns None plays once", async () => {
   const url = "https://radio"
   const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
-  await view.rerender(player(url))
+  await view.rerender(player(url, "Updated"))
 
   fireEvent.press(screen.getByTestId("player.play"))
 
@@ -282,7 +277,7 @@ test("after an external stop the play button plays again", async () => {
   const url = "https://radio"
   const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.Stopped })
-  await view.rerender(player(url))
+  await view.rerender(player(url, "Updated"))
 
   fireEvent.press(screen.getByTestId("player.play"))
 
@@ -416,6 +411,8 @@ test("a track loaded while stream info is stale carries no title", async () => {
 })
 
 test("the title blanks on the periodic tick when no refresh arrives", async () => {
+  // Fake timers from before mount so the Player's interval lands on the fake clock.
+  jest.useFakeTimers()
   const url = "https://radio"
   const updatedAt = Date.now()
   ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)

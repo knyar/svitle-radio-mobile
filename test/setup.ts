@@ -19,8 +19,23 @@ jest.mock("@sentry/react-native", () => ({
 }))
 jest.mock("react-native-safe-area-context", () => require("../__mocks__/safe-area-context"))
 
-import "mobx-react-lite/batchingForReactNative"
+import { clearTimers } from "mobx-react-lite"
 import "../app/i18n"
 const { resetTrackPlayerMock } = require("react-native-track-player")
 
-beforeEach(() => resetTrackPlayerMock())
+let consoleWarnSpy: jest.SpyInstance
+
+beforeEach(() => {
+  resetTrackPlayerMock()
+  consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
+})
+
+afterEach(() => {
+  clearTimers()
+  // Matches "[mobx]", "[mobx-state-tree]" and "[mobx-react-lite]" diagnostics alike.
+  const mobxWarnings = consoleWarnSpy.mock.calls.filter((call) =>
+    /\[mobx[^\]]*\]/i.test(call.join(" ")),
+  )
+  consoleWarnSpy.mockRestore()
+  expect(mobxWarnings).toEqual([])
+})

@@ -1,5 +1,5 @@
 import React from "react"
-import { useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet, Linking } from "react-native"
 import { Screen } from "../components"
 import { ContactBlock } from "../models/contact-block"
@@ -76,14 +76,14 @@ const blockComponent = (block: ContactBlock) => {
   )
 }
 
-export const ContactsScreen: React.FunctionComponent = () => {
+export const ContactsScreen: React.FunctionComponent = observer(function ContactsScreen() {
   const { mainStore } = useStores()
-  return useObserver(() => (
+  return (
     <Screen title={i18n.t("contacts_screen.title")} testID="screen.contacts">
       {mainStore.preferences.contacts.map(blockComponent)}
     </Screen>
-  ))
-}
+  )
+})
 
 const spacing = 3
 const styles = StyleSheet.create({

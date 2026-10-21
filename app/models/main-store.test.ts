@@ -116,3 +116,31 @@ test("persisted state omits tracks and restores preferences and URLs", () => {
   expect(restored.mainStore.current_track).toBeUndefined()
   expect(restored.mainStore.next_track).toBeUndefined()
 })
+
+test("restores an MST 3 persisted snapshot", () => {
+  const legacySnapshot = {
+    mainStore: {
+      preferences: {
+        stations: [{ id: "one", name: "One", logo: "svitle", lang: "uk" }],
+        contacts: [],
+        url_support: "https://support",
+        url_support_i18n: { ua: "https://support/ua" },
+      },
+      local: { low_quality: true, station: "one" },
+      streams: {
+        one: { stream_url: "https://high", stream_url_low: "https://low" },
+      },
+      streamsUpdated: 0,
+    },
+  }
+
+  const restored = RootStoreModel.create(legacySnapshot, env)
+
+  expect(restored.mainStore.local.station).toBe("one")
+  expect(restored.mainStore.local.low_quality).toBe(true)
+  expect(restored.mainStore.current_url).toBe("https://low")
+  expect(restored.mainStore.streams.get("one")?.stream_url).toBe("https://high")
+  expect(restored.mainStore.streams.get("one")?.stream_url_low).toBe("https://low")
+  expect(restored.mainStore.preferences.url_support).toBe("https://support")
+  expect(restored.mainStore.preferences.url_support_i18n?.get("ua")).toBe("https://support/ua")
+})

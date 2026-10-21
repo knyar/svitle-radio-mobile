@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native"
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { Screen, FooterLink, Logo } from "../components"
@@ -9,51 +9,53 @@ import { Station } from "../models/station"
 import { colors } from "../theme"
 import { PrimaryParamList } from "../navigation/types"
 
-export const StreamsScreen: React.FunctionComponent<
-  BottomTabScreenProps<PrimaryParamList, "streams">
-> = (props) => {
-  const { mainStore } = useStores()
+type StreamsScreenProps = BottomTabScreenProps<PrimaryParamList, "streams">
 
-  const stationComponent = (station: Station) => {
-    const onPress = () => {
-      mainStore.local.setStation(station.id)
-      props.navigation.navigate("live")
+export const StreamsScreen: React.FunctionComponent<StreamsScreenProps> = observer(
+  function StreamsScreen(props: StreamsScreenProps) {
+    const { mainStore } = useStores()
+
+    const stationComponent = (station: Station) => {
+      const onPress = () => {
+        mainStore.local.setStation(station.id)
+        props.navigation.navigate("live")
+      }
+
+      const selected = mainStore.local.station === station.id
+      return (
+        <TouchableOpacity
+          disabled={selected}
+          style={[styles.stream, selected && styles.streamSelected]}
+          onPress={onPress}
+          key={station.id}
+          testID={"streams.item." + station.id}
+        >
+          <Logo station={station} style={styles.streamLogo} height={80} />
+          <Text style={styles.streamText}>{station.name}</Text>
+          <Text style={styles.streamLang}>({i18n.t("streams_screen.lang." + station.lang)})</Text>
+        </TouchableOpacity>
+      )
     }
 
-    const selected = mainStore.local.station === station.id
     return (
-      <TouchableOpacity
-        disabled={selected}
-        style={[styles.stream, selected && styles.streamSelected]}
-        onPress={onPress}
-        key={station.id}
-        testID={"streams.item." + station.id}
-      >
-        <Logo station={station} style={styles.streamLogo} height={80} />
-        <Text style={styles.streamText}>{station.name}</Text>
-        <Text style={styles.streamLang}>({i18n.t("streams_screen.lang." + station.lang)})</Text>
-      </TouchableOpacity>
+      <Screen title={i18n.t("streams_screen.title")} testID="screen.streams">
+        <View style={styles.selector}>{mainStore.preferences.stations.map(stationComponent)}</View>
+        <View style={styles.footer}>
+          <FooterLink
+            url={mainStore.preferences.localizedUrl("archive")}
+            icon="archive"
+            text="streams_screen.archive"
+          />
+          <FooterLink
+            url={mainStore.preferences.localizedUrl("youtube")}
+            icon="video"
+            text="streams_screen.youtube"
+          />
+        </View>
+      </Screen>
     )
-  }
-
-  return useObserver(() => (
-    <Screen title={i18n.t("streams_screen.title")} testID="screen.streams">
-      <View style={styles.selector}>{mainStore.preferences.stations.map(stationComponent)}</View>
-      <View style={styles.footer}>
-        <FooterLink
-          url={mainStore.preferences.localizedUrl("archive")}
-          icon="archive"
-          text="streams_screen.archive"
-        />
-        <FooterLink
-          url={mainStore.preferences.localizedUrl("youtube")}
-          icon="video"
-          text="streams_screen.youtube"
-        />
-      </View>
-    </Screen>
-  ))
-}
+  },
+)
 
 const styles = StyleSheet.create({
   selector: {
