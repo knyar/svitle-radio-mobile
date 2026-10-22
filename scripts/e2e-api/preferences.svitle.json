@@ -22,11 +22,11 @@
       "title": "contacts_screen.block.live",
       "icon_links": [
         { "text": "skype", "url": "skype:svitleradio?chat" },
-        { "text": "viber", "url": "viber://chat?number=+380935584412" }
+        { "text": "viber", "url": "viber://chat?number=+380000000000" }
       ],
       "text_links": [
-        { "text": "+38 (067) 123-75-75", "url": "tel:+380671237575" },
-        { "text": "+38 (044) 357-67-28", "url": "tel:+380443576728" },
+        { "text": "+38 (000) 000-00-01", "url": "tel:+380000000001" },
+        { "text": "+38 (000) 000-00-02", "url": "tel:+380000000002" },
         { "text": "facebook.com/svitleradio", "url": "https://www.facebook.com/svitleradio" }
       ]
     },
@@ -34,14 +34,14 @@
       "title": "contacts_screen.block.editors",
       "icon_links": [],
       "text_links": [
-        { "text": "+38 (044) 221-54-20", "url": "tel:+380442215420" },
-        { "text": "radio@svitle.org", "url": "mailto:radio@svitle.org" }
+        { "text": "+38 (000) 000-00-03", "url": "tel:+380000000003" },
+        { "text": "radio@example.org", "url": "mailto:radio@example.org" }
       ]
     },
     {
       "title": "contacts_screen.block.accounting",
       "icon_links": [],
-      "text_links": [{ "text": "+38 (099) 207-58-22", "url": "tel:+380992075822" }]
+      "text_links": [{ "text": "+38 (000) 000-00-04", "url": "tel:+380000000004" }]
     }
   ]
 }
