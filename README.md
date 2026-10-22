@@ -65,6 +65,10 @@ yarn run-svitle-android    # Svitle on an Android emulator
 yarn run-svetloe-android   # Svetloe on an Android emulator
 ```
 
+With no simulator booted, `run-ios` launches the first one Xcode lists, which may be an unusual
+device; boot the one you want first or pass `--simulator "iPhone 17"`. Let `run-ios` start Metro,
+or make sure yours is on port 8081, because the app is built for the port the CLI chose.
+
 To work in Xcode: `open ios/SvitleRadio.xcworkspace`.
 
 ## Verify
