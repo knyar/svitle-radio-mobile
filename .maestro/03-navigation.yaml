@@ -19,6 +19,7 @@ appId: ${APP_ID}
     id: "nav.contacts"
 - assertVisible:
     id: "screen.contacts"
+- takeScreenshot: 03-navigation-contacts
 - tapOn:
     id: "nav.live"
 - assertVisible:

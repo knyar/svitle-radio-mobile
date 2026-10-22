@@ -7,6 +7,7 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "streams.item.svitle" }
     timeout: 20000
+- takeScreenshot: 01-launch-streams
 - assertVisible:
     id: "nav.live"
 - assertVisible:
@@ -20,3 +21,4 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "player.play" }
     timeout: 20000
+- takeScreenshot: 01-launch-live

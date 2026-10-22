@@ -23,6 +23,7 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "player.pause" }
     timeout: 30000
+- takeScreenshot: 05-switch-station-svetloe-playing
 - tapOn:
     id: "player.pause"
 - extendedWaitUntil:
