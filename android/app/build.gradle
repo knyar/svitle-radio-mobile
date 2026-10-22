@@ -127,6 +127,9 @@ android {
             // "debug" and "release" only, in a finalizeDsl hook that runs after
             // initWith has copied the release build type, so set it here.
             manifestPlaceholders = [usesCleartextTraffic: "false"]
+            // 10.0.2.2 is the emulator's host loopback; 8484 is the fixed port
+            // used by scripts/e2e-api/server.js.
+            buildConfigField "String", "API_URL", "\"http://10.0.2.2:8484/v2\""
         }
     }
     flavorDimensions "variant"

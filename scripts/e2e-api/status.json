@@ -1,0 +1,40 @@
+{
+  "stations": {
+    "svitle": {
+      "current_track": "E2E: Світле Радіо now playing",
+      "next_track": "E2E: Світле Радіо up next",
+      "recent_tracks": [],
+      "streams": [
+        { "name": "default", "url": "{{origin}}/hls/svitle/default.m3u8" },
+        { "name": "low", "url": "{{origin}}/hls/svitle/low.m3u8" }
+      ]
+    },
+    "svid": {
+      "current_track": "E2E: Свідчення now playing",
+      "next_track": "",
+      "recent_tracks": [],
+      "streams": [
+        { "name": "default", "url": "{{origin}}/hls/svid/default.m3u8" },
+        { "name": "low", "url": "{{origin}}/hls/svid/low.m3u8" }
+      ]
+    },
+    "svetloe": {
+      "current_track": "E2E: Светлое Радио now playing",
+      "next_track": "E2E: Светлое Радио up next",
+      "recent_tracks": [],
+      "streams": [
+        { "name": "default", "url": "{{origin}}/hls/svetloe/default.m3u8" },
+        { "name": "low", "url": "{{origin}}/hls/svetloe/low.m3u8" }
+      ]
+    },
+    "kids": {
+      "current_track": "E2E: Дитяче Світле Радіо now playing",
+      "next_track": "",
+      "recent_tracks": [],
+      "streams": [
+        { "name": "default", "url": "{{origin}}/hls/kids/default.m3u8" },
+        { "name": "low", "url": "{{origin}}/hls/kids/low.m3u8" }
+      ]
+    }
+  }
+}

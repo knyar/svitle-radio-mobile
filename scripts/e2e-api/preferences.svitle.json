@@ -1,0 +1,47 @@
+{
+  "url_support": "https://svitle.org/ru/partnjorstvo",
+  "url_support_i18n": {
+    "ru": "https://svitle.org/ru/partnjorstvo",
+    "ua": "https://svitle.org/partnerstvo"
+  },
+  "url_archive": "https://media.svitle.org/podcasts",
+  "url_youtube": "https://www.youtube.com/c/svitleradioEmmanuel/live",
+  "stations": [
+    { "id": "svitle", "name": "Світле Радіо Еммануїл", "logo": "svitle", "lang": "ua" },
+    { "id": "svid", "name": "Свідчення", "logo": "svitle", "lang": "ua" },
+    { "id": "svetloe", "name": "Светлое Радио", "logo": "svetloe", "lang": "ru" },
+    { "id": "kids", "name": "Дитяче Світле Радіо", "logo": "kids", "lang": "ua" }
+  ],
+  "contacts": [
+    {
+      "title": "contacts_screen.block.svitle",
+      "icon_links": [],
+      "text_links": [{ "text": "svitle.org", "url": "https://www.svitle.org" }]
+    },
+    {
+      "title": "contacts_screen.block.live",
+      "icon_links": [
+        { "text": "skype", "url": "skype:svitleradio?chat" },
+        { "text": "viber", "url": "viber://chat?number=+380000000000" }
+      ],
+      "text_links": [
+        { "text": "+38 (000) 000-00-01", "url": "tel:+380000000001" },
+        { "text": "+38 (000) 000-00-02", "url": "tel:+380000000002" },
+        { "text": "facebook.com/svitleradio", "url": "https://www.facebook.com/svitleradio" }
+      ]
+    },
+    {
+      "title": "contacts_screen.block.editors",
+      "icon_links": [],
+      "text_links": [
+        { "text": "+38 (000) 000-00-03", "url": "tel:+380000000003" },
+        { "text": "radio@example.org", "url": "mailto:radio@example.org" }
+      ]
+    },
+    {
+      "title": "contacts_screen.block.accounting",
+      "icon_links": [],
+      "text_links": [{ "text": "+38 (000) 000-00-04", "url": "tel:+380000000004" }]
+    }
+  ]
+}

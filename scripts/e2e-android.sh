@@ -9,6 +9,42 @@ export MAESTRO_DRIVER_STARTUP_TIMEOUT=${MAESTRO_DRIVER_STARTUP_TIMEOUT:-60000}
 
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd) # Maestro resolves --debug-output more reliably as an absolute path
+readonly E2E_API_PORT=8484
+api_pid=
+sampler_pid=
+adb_used=0
+
+cleanup() {
+  status=$?
+  if [[ -n "$sampler_pid" ]]; then
+    kill "$sampler_pid" 2>/dev/null || true
+    wait "$sampler_pid" 2>/dev/null || true
+  fi
+  if [[ -n "$api_pid" ]]; then
+    kill "$api_pid" 2>/dev/null || true
+    wait "$api_pid" 2>/dev/null || true
+  fi
+  if (( adb_used == 1 )); then
+    adb logcat -d > "$OUT/logcat.txt" 2>&1 || true
+  fi
+  exit "$status"
+}
+trap cleanup EXIT
+
+node scripts/e2e-api/server.js --port "$E2E_API_PORT" > "$OUT/api-server.log" 2>&1 &
+api_pid=$!
+api_ready=0
+for _attempt in {1..20}; do
+  if curl -sf "http://127.0.0.1:$E2E_API_PORT/v2/preferences.svitle" >/dev/null; then
+    api_ready=1
+    break
+  fi
+  sleep 0.5
+done
+if (( api_ready == 0 )); then
+  echo "local e2e API did not become ready on port $E2E_API_PORT; see $OUT/api-server.log" >&2
+  exit 1
+fi
 
 # After a snapshot restore adb has reported the emulator "device offline" for a moment well
 # after boot completed; Maestro's first flow then died with a gRPC UNAVAILABLE on that transport
@@ -38,6 +74,7 @@ wait_for_stable_device() {
   return 1
 }
 
+adb_used=1
 adb wait-for-device
 rm -f "$OUT/device-ready.log"
 wait_for_stable_device
@@ -93,18 +130,6 @@ adb logcat -c
 rm -rf "$OUT/maestro"
 rm -f "$OUT/playing-observed" "$OUT/media_session.log" "$OUT/maestro-report.xml" "$OUT/logcat.txt"
 mkdir -p "$OUT/maestro"
-
-sampler_pid=
-cleanup() {
-  status=$?
-  if [[ -n "$sampler_pid" ]]; then
-    kill "$sampler_pid" 2>/dev/null || true
-    wait "$sampler_pid" 2>/dev/null || true
-  fi
-  adb logcat -d > "$OUT/logcat.txt" 2>&1 || true
-  exit "$status"
-}
-trap cleanup EXIT
 
 # True when the dump on stdin shows this app's own media session in PLAYING.
 # Each session block in `dumpsys media_session` carries a `package=` line
