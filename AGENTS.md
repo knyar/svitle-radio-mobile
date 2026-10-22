@@ -39,9 +39,9 @@ committing.
 - The Podfile's `post_install` carries Xcode 27 workarounds for React Native 0.81 (pod deployment
   targets, fmt consteval). Remove them only when upgrading to a React Native release that has the
   upstream fixes (0.83.5+ for fmt, react-native#58687 for resource bundles).
-- Maestro flows match stable IDs only: `screen.*`, `nav.*`, `player.play|pause|disabled`, and
-  `streams.item.<id>`. Never match visible text; the app is localised. When adding a control a
-  flow needs, give it a stable `testID` and assert state rather than text.
+- Maestro flows match stable IDs only: `screen.*`, `nav.*`, `player.play|pause|disabled`,
+  `streams.item.<id>`, and `logo.<logo>`. Never match visible text; the app is localised. When adding
+  a control a flow needs, give it a stable `testID` and assert state rather than text.
 - When a flow flakes, first lengthen its state wait. Quarantine only with an owner, reason, and
   expiry recorded in the flow.
 
@@ -55,6 +55,7 @@ one-retry policy. A pass after retry is recorded as a warning naming the failed 
 (`scripts/failed-flows.sh`) and is not a clean pass. The `e2e-android-output` artifact contains:
 
 - `maestro-report.xml`, the JUnit report
+- `api-server.log`, the local API request log
 - `logcat.txt` and `media_session.log`, the device log and sampled playback evidence
 - `device-ready.log`, how long adb took to report the emulator stably online (a warning annotation
   if it flapped; a transient "device offline" after snapshot restore has killed the first flow)
@@ -66,6 +67,9 @@ one-retry policy. A pass after retry is recorded as a warning naming the failed 
 `MAESTRO_DRIVER_STARTUP_TIMEOUT` is 60 s on Android (Maestro default 15 s) and 240 s on iOS
 (default 120 s). Scheduled and manually dispatched workflows become available only after the
 workflow exists on the default `master` branch.
+
+The e2e suites use only the local server in `scripts/e2e-api` and never contact `m.svitle.org`.
+Production stream monitoring remains in `scripts/stream-health.sh`.
 
 ## Agent loop
 

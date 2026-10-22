@@ -21,6 +21,9 @@ appId: ${APP_ID}
 - assertVisible:
     id: "screen.live"
 - extendedWaitUntil:
+    visible: { id: "logo.svetloe" }
+    timeout: 20000
+- extendedWaitUntil:
     visible: { id: "player.pause" }
     timeout: 30000
 - takeScreenshot: 05-switch-station-svetloe-playing
@@ -29,3 +32,14 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "player.play" }
     timeout: 10000
+- tapOn:
+    id: "nav.streams"
+- assertVisible:
+    id: "screen.streams"
+- tapOn:
+    id: "streams.item.svid"
+- assertVisible:
+    id: "screen.live"
+- extendedWaitUntil:
+    visible: { id: "logo.svitle" }
+    timeout: 20000

@@ -24,6 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FLAVOR</key>
 	<string>$(FLAVOR)</string>
+	<key>API_URL</key>
+	<string>$(API_URL)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>http</string>

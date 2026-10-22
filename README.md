@@ -87,7 +87,8 @@ Use `yarn lint:fix` and `yarn format` to apply automatic fixes. Run one test fil
 ## End-to-end tests
 
 The Maestro flows in `.maestro/` launch the app, play and pause, navigate, background the app, and
-switch stations. They need a release-like build with the JavaScript bundle included.
+switch stations. They use the hermetic API and HLS fixtures in `scripts/e2e-api`, which the platform
+scripts start on fixed port 8484, and need a release-like build with the JavaScript bundle included.
 
 Android, with an emulator running:
 
@@ -95,6 +96,9 @@ Android, with an emulator running:
 cd android && ./gradlew :app:assembleSvitleE2e && cd ..
 scripts/e2e-android.sh android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk
 ```
+
+The e2e APK has `http://10.0.2.2:8484/v2` baked in; `10.0.2.2` is the Android emulator's route to
+the host loopback interface.
 
 The script waits for the emulator to settle, installs the APK, runs a warm-up launch and then the
 flows, and writes logs and screenshots to `e2e-output/`.
@@ -104,10 +108,14 @@ iOS, with a simulator booted:
 ```sh
 xcodebuild -workspace ios/SvitleRadio.xcworkspace -scheme SvitleRadio -configuration Release \
   -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build \
-  CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 COMPILER_INDEX_STORE_ENABLE=NO build
+  CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 COMPILER_INDEX_STORE_ENABLE=NO \
+  API_URL=http://127.0.0.1:8484/v2 build
 xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app
-maestro test -e APP_ID=org.svitle.app1 .maestro/
+scripts/e2e-ios.sh e2e-output
 ```
+
+Port 8484 is fixed because each e2e artifact embeds its platform-specific URL. Changing the port
+requires updating the native build configuration and rebuilding the app.
 
 ## Continuous integration
 

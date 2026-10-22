@@ -51,6 +51,13 @@ jobs:
             echo "e2e APK must not be debuggable"
             exit 1
           fi
+          unzip -p "$APK" 'classes*.dex' | grep -a -q 'http://10.0.2.2:8484/v2'
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump xmltree "$APK" res/xml/network_security_config.xml | grep -q '10.0.2.2'
+          DEBUG_APK=android/app/build/outputs/apk/svitle/debug/app-svitle-debug.apk
+          if unzip -p "$DEBUG_APK" 'classes*.dex' | grep -a -q '10.0.2.2:8484'; then
+            echo "debug APK must not contain the e2e API URL"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v7
         with:
           name: app-svitle-e2e
@@ -83,12 +90,14 @@ jobs:
       - name: Build Release for the simulator
         run: |
           set -o pipefail
+          # This simulator artifact is built only for the e2e-ios job.
           xcodebuild -workspace ios/SvitleRadio.xcworkspace \
             -scheme SvitleRadio -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath ios/build \
             CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 \
             COMPILER_INDEX_STORE_ENABLE=NO \
+            API_URL=http://127.0.0.1:8484/v2 \
             build | xcbeautify --renderer github-actions
       - name: Verify the .app is a runnable arm64 simulator bundle (exit criterion)
         run: |
@@ -97,6 +106,7 @@ jobs:
           lipo -info "$APP/SvitleRadio" | grep -q arm64
           test -f "$APP/main.jsbundle"
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -qx org.svitle.app1
+          /usr/libexec/PlistBuddy -c 'Print :API_URL' "$APP/Info.plist" | grep -qx 'http://127.0.0.1:8484/v2'
       - name: Zip the .app (artifact zips drop executable bits, ditto keeps them)
         run: ditto -c -k --keepParent ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app SvitleRadio.app.zip
       - uses: actions/upload-artifact@v7
@@ -121,6 +131,8 @@ jobs:
       }
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22 }
       - uses: actions/download-artifact@v8
         with: { name: app-svitle-e2e, path: e2e-apk }
       - uses: actions/setup-java@v6
@@ -183,6 +195,8 @@ jobs:
     env: { MAESTRO_VERSION: "2.11.0", MAESTRO_DRIVER_STARTUP_TIMEOUT: "240000" }
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22 }
       - uses: actions/download-artifact@v8
         with: { name: SvitleRadio-simulator, path: e2e-app }
       - run: ditto -x -k e2e-app/SvitleRadio.app.zip e2e-app
@@ -197,7 +211,7 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" e2e-app/SvitleRadio.app
       - name: Run the Maestro flows
-        run: maestro --udid "$UDID" test --format JUNIT --output e2e-output/maestro-report.xml --debug-output e2e-output/maestro --test-output-dir e2e-output/maestro --flatten-debug-output -e APP_ID=org.svitle.app1 .maestro/
+        run: scripts/e2e-ios.sh e2e-output
       - uses: actions/upload-artifact@v7
         if: always()
         with:
