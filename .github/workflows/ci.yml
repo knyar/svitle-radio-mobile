@@ -51,8 +51,17 @@ jobs:
             echo "e2e APK must not be debuggable"
             exit 1
           fi
+          AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
           unzip -p "$APK" 'classes*.dex' | grep -a -q 'http://10.0.2.2:8484/v2'
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump xmltree "$APK" res/xml/network_security_config.xml | grep -q '10.0.2.2'
+          # Non-debuggable builds get AAPT2 path shortening, so resolve the e2e network security
+          # config's path through the resource table rather than assuming res/xml/....
+          NSC_PATH=$("$AAPT" dump resources "$APK" | grep -A1 'xml/network_security_config:' | sed -nE 's/.*"(res\/[^"]+)".*/\1/p' | head -1)
+          if [[ -z "$NSC_PATH" ]] || ! "$AAPT" dump xmltree "$APK" "$NSC_PATH" | grep -q '10.0.2.2'; then
+            echo "e2e APK network security config (path: '${NSC_PATH:-not found}') does not allow cleartext to 10.0.2.2"
+            "$AAPT" dump resources "$APK" | grep -A1 'network_security_config' || true
+            unzip -Z1 "$APK" | grep '^res/' | head -40
+            exit 1
+          fi
           DEBUG_APK=android/app/build/outputs/apk/svitle/debug/app-svitle-debug.apk
           if unzip -p "$DEBUG_APK" 'classes*.dex' | grep -a -q '10.0.2.2:8484'; then
             echo "debug APK must not contain the e2e API URL"
