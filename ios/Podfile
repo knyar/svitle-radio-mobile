@@ -66,6 +66,8 @@ target 'SvitleRadio' do
         anchor = "#if FMT_USE_CONSTEVAL\n#  define FMT_CONSTEVAL consteval"
         raise "fmt/base.h changed; update the consteval workaround in the Podfile" unless source.include?(anchor)
         source = source.sub(anchor, "#undef FMT_USE_CONSTEVAL\n#define FMT_USE_CONSTEVAL 0 #{marker}\n#{anchor}")
+        # Some Pods trees carry the file read-only (CocoaPods keeps the cache's mode bits).
+        File.chmod(File.stat(fmt_base).mode | 0200, fmt_base)
         File.write(fmt_base, source)
         Pod::UI.puts 'fmt: consteval disabled in fmt/base.h for Apple clang 21'.green
       end
