@@ -80,11 +80,11 @@ jobs:
         working-directory: ios
       - name: Podfile.lock must be honoured (only the CocoaPods version line may differ)
         run: git diff -I '^COCOAPODS:' --exit-code -- ios/Podfile.lock
-      - name: Build Svitle.Release for the simulator
+      - name: Build Release for the simulator
         run: |
           set -o pipefail
           xcodebuild -workspace ios/SvitleRadio.xcworkspace \
-            -scheme SvitleRadio -configuration Svitle.Release \
+            -scheme SvitleRadio -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath ios/build \
             CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 \
@@ -92,13 +92,13 @@ jobs:
             build | xcbeautify --renderer github-actions
       - name: Verify the .app is a runnable arm64 simulator bundle (exit criterion)
         run: |
-          APP=ios/build/Build/Products/Svitle.Release-iphonesimulator/SvitleRadio.app
+          APP=ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app
           test -x "$APP/SvitleRadio"
           lipo -info "$APP/SvitleRadio" | grep -q arm64
           test -f "$APP/main.jsbundle"
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -qx org.svitle.app1
       - name: Zip the .app (artifact zips drop executable bits, ditto keeps them)
-        run: ditto -c -k --keepParent ios/build/Build/Products/Svitle.Release-iphonesimulator/SvitleRadio.app SvitleRadio.app.zip
+        run: ditto -c -k --keepParent ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app SvitleRadio.app.zip
       - uses: actions/upload-artifact@v7
         with:
           name: SvitleRadio-simulator

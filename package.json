@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "run-svitle-ios": "react-native run-ios --scheme SvitleRadio --mode Svitle.Debug",
+    "run-svitle-ios": "react-native run-ios --scheme SvitleRadio",
     "run-svitle-android": "react-native run-android --mode svitleDebug --appId com.svitleradio",
     "run-svetloe-android": "react-native run-android --mode svetloeDebug --appId org.svetloe",
     "release-svitle-android": "cd android && ./gradlew bundleSvitleRelease",
