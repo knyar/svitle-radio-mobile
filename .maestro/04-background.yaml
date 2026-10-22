@@ -23,5 +23,6 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "player.pause" }
     timeout: 15000
+- takeScreenshot: 04-background-resumed
 - tapOn:
     id: "player.pause"

@@ -17,8 +17,10 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: { id: "player.pause" }
     timeout: 30000
+- takeScreenshot: 02-play-pause-playing
 - tapOn:
     id: "player.pause"
 - extendedWaitUntil:
     visible: { id: "player.play" }
     timeout: 10000
+- takeScreenshot: 02-play-pause-paused
