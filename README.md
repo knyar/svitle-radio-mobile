@@ -102,10 +102,10 @@ flows, and writes logs and screenshots to `e2e-output/`.
 iOS, with a simulator booted:
 
 ```sh
-xcodebuild -workspace ios/SvitleRadio.xcworkspace -scheme SvitleRadio -configuration Svitle.Release \
+xcodebuild -workspace ios/SvitleRadio.xcworkspace -scheme SvitleRadio -configuration Release \
   -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build \
   CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 COMPILER_INDEX_STORE_ENABLE=NO build
-xcrun simctl install booted ios/build/Build/Products/Svitle.Release-iphonesimulator/SvitleRadio.app
+xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app
 maestro test -e APP_ID=org.svitle.app1 .maestro/
 ```
 
