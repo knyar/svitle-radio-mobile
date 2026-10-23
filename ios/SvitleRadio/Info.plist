@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>API_URL</key>
+	<string>$(API_URL)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -24,8 +26,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FLAVOR</key>
 	<string>$(FLAVOR)</string>
-	<key>API_URL</key>
-	<string>$(API_URL)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>http</string>
