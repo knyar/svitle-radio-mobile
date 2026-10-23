@@ -10,12 +10,15 @@ import { colors } from "../theme"
 import { PrimaryParamList } from "../navigation/types"
 
 // Spacing follows a 4 dp scale. Every channel is one row of intrinsic height: the logo sits in a
-// fixed box so the four marks read at one size, and the text below it sets the rest. Rows grow
-// evenly up to ROW_MAX_HEIGHT when the screen has room, the block centres in what is left, and the
-// list scrolls when it does not fit (short phones, large OS text, more channels from the API).
+// fixed box so the four marks read at one size, and the text below it sets the rest, so large OS
+// text and wrapped names only make a row taller. The empty spacers around the rows carry the
+// growth instead: they widen evenly from GAP_MIN to GAP_MAX when the screen has room, the block
+// centres in what is left, and the list scrolls when it does not fit (short phones, large text,
+// more channels from the API).
 const LOGO_WIDTH = 220
 const LOGO_HEIGHT = 72
-const ROW_MAX_HEIGHT = 200
+const GAP_MIN = 8
+const GAP_MAX = 32
 const LIST_MAX_WIDTH = 480
 
 export const StreamsScreen: React.FunctionComponent<
@@ -35,7 +38,6 @@ export const StreamsScreen: React.FunctionComponent<
         disabled={selected}
         style={[styles.stream, selected && styles.streamSelected]}
         onPress={onPress}
-        key={station.id}
         testID={"streams.item." + station.id}
         accessibilityRole="button"
         accessibilityState={{ selected, disabled: selected }}
@@ -52,7 +54,15 @@ export const StreamsScreen: React.FunctionComponent<
   return useObserver(() => (
     <Screen title={i18n.t("streams_screen.title")} testID="screen.streams">
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.selector}>{mainStore.preferences.stations.map(stationComponent)}</View>
+        <View style={styles.selector}>
+          <View style={styles.gap} />
+          {mainStore.preferences.stations.map((station) => (
+            <React.Fragment key={station.id}>
+              {stationComponent(station)}
+              <View style={styles.gap} />
+            </React.Fragment>
+          ))}
+        </View>
       </ScrollView>
       <View style={styles.footer}>
         <FooterLink
@@ -80,22 +90,22 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    paddingVertical: 8,
   },
   selector: {
     alignSelf: "center",
     flexGrow: 1,
-    gap: 8,
     justifyContent: "center",
     maxWidth: LIST_MAX_WIDTH,
     width: "100%",
   },
+  gap: {
+    flexGrow: 1,
+    maxHeight: GAP_MAX,
+    minHeight: GAP_MIN,
+  },
   stream: {
     alignItems: "center",
     borderRadius: 16,
-    flexGrow: 1,
-    justifyContent: "center",
-    maxHeight: ROW_MAX_HEIGHT,
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
