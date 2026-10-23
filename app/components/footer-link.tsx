@@ -18,6 +18,7 @@ export interface FooterLinkProps {
   text: string
   url?: string
   style?: ViewStyle | ViewStyle[]
+  testID?: string
 }
 
 export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
@@ -37,7 +38,11 @@ export const FooterLink: React.FunctionComponent<FooterLinkProps> = (props) => {
   const textStyle: TextStyle = { padding }
 
   return (
-    <TouchableOpacity style={[styles.container, props.style]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, props.style]}
+      onPress={onPress}
+      testID={props.testID}
+    >
       <IconComponent height={height} style={styles.icon} fill={colors.primary} />
       <Text style={[styles.text, textStyle]}>{i18n.t(props.text)}</Text>
     </TouchableOpacity>
@@ -54,5 +59,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.primary,
+    flexShrink: 1,
   },
 })
