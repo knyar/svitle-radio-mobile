@@ -79,6 +79,10 @@ YAML) or with `mobile-mcp`. Save the working steps as a flow under `.maestro/`, 
 stable-ID rule above. Run `scripts/e2e-android.sh` for Android or
 `maestro test -e APP_ID=org.svitle.app1 .maestro/` for iOS before pushing. If CI fails, download
 and inspect the `e2e-android-output` artifact.
+For layout work, `scripts/screenshot-sizes.sh <apk>` screenshots every screen at several display
+sizes on one emulator (README, "Screenshots at several screen sizes"); the `e2e-android-output`
+artifact has the same gallery under `sizes/`. Flows in `.maestro/screenshots/` are helpers for that
+script, not part of the suite: `maestro test .maestro/` does not descend into subfolders.
 
 The checked-in `.mcp.json` is Claude Code configuration for the Maestro and mobile-mcp servers;
 Codex configures MCP servers separately. The mobile-mcp version is pinned and should be bumped

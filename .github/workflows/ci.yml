@@ -189,8 +189,11 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           # The action runs each script line in its own shell, so the one-retry
-          # policy lives in the wrapper script.
-          script: scripts/e2e-android-ci.sh e2e-apk/app-svitle-e2e.apk e2e-output
+          # policy lives in the wrapper script. The size sweep reuses the booted
+          # emulator to screenshot every screen at several display sizes.
+          script: |
+            scripts/e2e-android-ci.sh e2e-apk/app-svitle-e2e.apk e2e-output
+            scripts/screenshot-sizes.sh e2e-apk/app-svitle-e2e.apk e2e-output/sizes
       - uses: actions/upload-artifact@v7
         if: always()
         with:
