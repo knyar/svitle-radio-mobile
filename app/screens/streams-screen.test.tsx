@@ -26,7 +26,7 @@ beforeEach(() => {
 
 afterEach(() => jest.useRealTimers())
 
-test("renders station IDs and switches to a non-selected station", async () => {
+test("marks the current station selected and switches to a non-selected station", async () => {
   // Fake timers only during render: mobx-react-lite 2.x useObserver schedules a real 10 s
   // reaction-cleanup setTimeout on first render that would otherwise keep Jest alive after the
   // suite finishes. Real timers are restored right after so RNTL's async render works.
@@ -37,8 +37,10 @@ test("renders station IDs and switches to a non-selected station", async () => {
   )
   jest.useRealTimers()
 
-  expect(screen.getByTestId("streams.item.svitle")).toBeTruthy()
-  expect(screen.getByTestId("streams.item.svetloe")).toBeTruthy()
+  expect(screen.getByTestId("streams.item.svitle")).toBeSelected()
+  expect(screen.getByTestId("streams.item.svitle")).toBeDisabled()
+  expect(screen.getByTestId("streams.item.svetloe")).not.toBeSelected()
+  expect(screen.getByTestId("streams.item.svetloe")).toBeEnabled()
 
   fireEvent.press(screen.getByTestId("streams.item.svitle"))
   expect(setStation).not.toHaveBeenCalled()
