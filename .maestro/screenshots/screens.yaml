@@ -1,0 +1,21 @@
+# Captures each screen once; scripts/screenshot-sizes.sh runs this per display size.
+# Maestro's `maestro test .maestro/` ignores subfolders, so the e2e suites do not run this flow.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: { id: "streams.item.svitle" }
+    timeout: 20000
+- takeScreenshot: streams
+- tapOn:
+    id: "nav.live"
+- extendedWaitUntil:
+    visible: { id: "player.play" }
+    timeout: 20000
+- takeScreenshot: live
+- tapOn:
+    id: "nav.contacts"
+- assertVisible:
+    id: "screen.contacts"
+- takeScreenshot: contacts

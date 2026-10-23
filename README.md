@@ -117,6 +117,22 @@ scripts/e2e-ios.sh e2e-output
 Port 8484 is fixed because each e2e artifact embeds its platform-specific URL. Changing the port
 requires updating the native build configuration and rebuilding the app.
 
+### Screenshots at several screen sizes
+
+To check a layout across phone classes without a device per class, resize one emulator:
+
+```sh
+scripts/screenshot-sizes.sh android/app/build/outputs/apk/svitle/e2e/app-svitle-e2e.apk e2e-output/sizes
+```
+
+The script runs `.maestro/screenshots/screens.yaml` once per profile, setting the display with
+`adb shell wm size` and `wm density`, and writes `<out>/<profile>/{streams,live,contacts}.png` plus
+a `<out>/<screen>.png` contact sheet when ImageMagick is installed. The defaults cover a 360x640 dp
+phone, the Pixel 6, a Pro Max class phone, a Surface Duo screen, and an 800x1280 dp tablet; pass
+`name:WxH:dpi` arguments to choose others. Notches and safe-area insets are not emulated. CI runs
+the same sweep at the end of `e2e-android`, so every pull request's `e2e-android-output` artifact
+carries a `sizes/` gallery.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every pull request:
