@@ -23,9 +23,9 @@ import { PrimaryParamList } from "../navigation/types"
 // The empty spacers between rows carry the vertical growth: they widen evenly from GAP_MIN to
 // GAP_MAX when the screen has room; what is left goes one third above the block and two thirds
 // below it, so on tall screens the channels sit at the optical centre under the header rather
-// than at the geometric one. The footer links end the scrolling content, so when the list does
-// not fit (short phones, large text, more channels from the API) a cut-off tile shows that it
-// scrolls.
+// than at the geometric one. The footer links stay put above the tab bar, behind a hairline that
+// the list scrolls under when it does not fit (short phones, large text, more channels from the
+// API).
 const SCREEN_PADDING = 16
 const TILE_PADDING = 12
 const COLUMN_GAP = 8
@@ -95,21 +95,21 @@ export const StreamsScreen: React.FunctionComponent<
           ))}
           <View style={styles.trail} />
         </View>
-        <View style={styles.footer}>
-          <FooterLink
-            url={mainStore.preferences.localizedUrl("archive")}
-            icon="archive"
-            text="streams_screen.archive"
-            style={styles.footerLink}
-          />
-          <FooterLink
-            url={mainStore.preferences.localizedUrl("youtube")}
-            icon="video"
-            text="streams_screen.youtube"
-            style={styles.footerLink}
-          />
-        </View>
       </ScrollView>
+      <View style={styles.footer}>
+        <FooterLink
+          url={mainStore.preferences.localizedUrl("archive")}
+          icon="archive"
+          text="streams_screen.archive"
+          style={styles.footerLink}
+        />
+        <FooterLink
+          url={mainStore.preferences.localizedUrl("youtube")}
+          icon="video"
+          text="streams_screen.youtube"
+          style={styles.footerLink}
+        />
+      </View>
     </Screen>
   ))
 }
@@ -173,10 +173,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: "center",
+    alignSelf: "stretch",
+    borderTopColor: colors.divider,
+    borderTopWidth: StyleSheet.hairlineWidth,
     columnGap: 16,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-evenly",
+    paddingHorizontal: SCREEN_PADDING,
     paddingVertical: 8,
   },
   footerLink: {
