@@ -19,7 +19,8 @@ import { PrimaryParamList } from "../navigation/types"
 // Spacing follows a 4 dp scale. Every channel is one tile of intrinsic height: the logo sits in a
 // fixed box so the marks read at one size, and the text below it sets the rest, so large OS text
 // and wrapped names only make a tile taller. Tiles sit one per row on phones and two per row as
-// soon as two fit side by side (Surface Duo, tablets, landscape), where the logo box also grows.
+// soon as two fit side by side (Surface Duo, tablets, landscape); the logo box grows only once
+// two larger tiles fit, so widening the window never collapses the grid back to one column.
 // The empty spacers between rows carry the vertical growth: they widen evenly from GAP_MIN to
 // GAP_MAX when the screen has room; what is left goes one third above the block and two thirds
 // below it, so on tall screens the channels sit at the optical centre under the header rather
@@ -31,12 +32,28 @@ const TILE_PADDING = 12
 const COLUMN_GAP = 8
 const GAP_MIN = 8
 const GAP_MAX = 32
-const EXPANDED_WIDTH = 600
 const LOGO = {
   compact: { width: 220, height: 72 },
   expanded: { width: 288, height: 96 },
 }
 const TILE_MAX_WIDTH: Record<number, number> = { 1: 480, 2: 360 }
+
+type LogoBox = { width: number; height: number }
+export type TileLayout = { columns: 1 | 2; logo: LogoBox }
+
+function fitsTwo(width: number, logo: LogoBox): boolean {
+  return width - 2 * SCREEN_PADDING >= 2 * (logo.width + 2 * TILE_PADDING) + COLUMN_GAP
+}
+
+export function tileLayout(width: number): TileLayout {
+  if (fitsTwo(width, LOGO.expanded)) {
+    return { columns: 2, logo: LOGO.expanded }
+  }
+  if (fitsTwo(width, LOGO.compact)) {
+    return { columns: 2, logo: LOGO.compact }
+  }
+  return { columns: 1, logo: LOGO.compact }
+}
 
 export function chunk<T>(items: T[], size: number): T[][] {
   const rows: T[][] = []
@@ -51,9 +68,7 @@ export const StreamsScreen: React.FunctionComponent<
 > = (props) => {
   const { mainStore } = useStores()
   const { width } = useWindowDimensions()
-  const logo = width >= EXPANDED_WIDTH ? LOGO.expanded : LOGO.compact
-  const tileMinWidth = logo.width + 2 * TILE_PADDING
-  const columns = width - 2 * SCREEN_PADDING >= 2 * tileMinWidth + COLUMN_GAP ? 2 : 1
+  const { columns, logo } = tileLayout(width)
   const tileWidth = { maxWidth: TILE_MAX_WIDTH[columns] }
 
   const stationComponent = (station: Station) => {
@@ -102,12 +117,14 @@ export const StreamsScreen: React.FunctionComponent<
           icon="archive"
           text="streams_screen.archive"
           style={styles.footerLink}
+          testID="streams.link.archive"
         />
         <FooterLink
           url={mainStore.preferences.localizedUrl("youtube")}
           icon="video"
           text="streams_screen.youtube"
           style={styles.footerLink}
+          testID="streams.link.youtube"
         />
       </View>
     </Screen>
@@ -184,6 +201,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   footerLink: {
+    flexShrink: 1,
+    minHeight: 48,
     paddingHorizontal: 8,
     paddingVertical: 12,
   },
