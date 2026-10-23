@@ -39,6 +39,12 @@ test("renders station IDs and switches to a non-selected station", async () => {
 
   expect(screen.getByTestId("streams.item.svitle")).toBeTruthy()
   expect(screen.getByTestId("streams.item.svetloe")).toBeTruthy()
+  // The chosen station is announced as selected and the list scrolls on short screens.
+  expect(screen.getByTestId("streams.item.svitle")).toBeSelected()
+  expect(screen.getByTestId("streams.item.svetloe")).not.toBeSelected()
+  expect(screen.getByTestId("streams.list")).toContainElement(
+    screen.getByTestId("streams.item.svetloe"),
+  )
 
   fireEvent.press(screen.getByTestId("streams.item.svitle"))
   expect(setStation).not.toHaveBeenCalled()
