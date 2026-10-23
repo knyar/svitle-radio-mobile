@@ -1,7 +1,7 @@
 import React from "react"
 import { fireEvent, render, screen } from "@testing-library/react-native"
 import { RootStore, RootStoreProvider } from "../models/root-store"
-import { StreamsScreen } from "./streams-screen"
+import { StreamsScreen, chunk } from "./streams-screen"
 
 const setStation = jest.fn()
 const navigate = jest.fn()
@@ -48,4 +48,14 @@ test("marks the current station selected and switches to a non-selected station"
   fireEvent.press(screen.getByTestId("streams.item.svetloe"))
   expect(setStation).toHaveBeenCalledWith("svetloe")
   expect(navigate).toHaveBeenCalledWith("live")
+})
+
+test("chunk splits the stations into rows of the column count", () => {
+  expect(chunk(["a", "b", "c", "d"], 1)).toEqual([["a"], ["b"], ["c"], ["d"]])
+  expect(chunk(["a", "b", "c", "d"], 2)).toEqual([
+    ["a", "b"],
+    ["c", "d"],
+  ])
+  expect(chunk(["a", "b", "c"], 2)).toEqual([["a", "b"], ["c"]])
+  expect(chunk([], 2)).toEqual([])
 })
