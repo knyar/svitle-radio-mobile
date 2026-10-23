@@ -89,6 +89,8 @@ for profile in "${PROFILES[@]}"; do
     echo "   maestro failed; see $dir/maestro.log" >&2
     failed+=("$name")
   fi
+  # Maestro 2 files takeScreenshot output under <test-output-dir>/<flow>/takeScreenshot/.
+  find "$dir/maestro" -path '*takeScreenshot*' -name '*.png' -exec cp {} "$dir/" \;
 done
 
 if command -v montage >/dev/null; then
