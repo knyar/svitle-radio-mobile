@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		B7A3F130557337B777A72EB3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		F5A288C1252A900A0053038E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F5A288BD252A8FAF0053038E /* InfoPlist.strings */; };
 		F5B46AB3248C047C000533A4 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B46AB2248C047C000533A4 /* dummy.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		F5A288BC252A8FAF0053038E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F5A288BE252A900A0053038E /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F5A288BF252A900A0053038E /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F5A288C0252A900A0053038E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F5B46AB1248C047C000533A4 /* SvitleRadio-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SvitleRadio-Bridging-Header.h"; sourceTree = "<group>"; };
 		F5B46AB2248C047C000533A4 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = dummy.swift; path = SvitleRadio/dummy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +210,7 @@
 				en,
 				Base,
 				uk,
+				ru,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -227,6 +230,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				B7A3F130557337B777A72EB3 /* PrivacyInfo.xcprivacy in Resources */,
+				F5A288C1252A900A0053038E /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +388,7 @@
 			children = (
 				F5A288BC252A8FAF0053038E /* en */,
 				F5A288BF252A900A0053038E /* uk */,
+				F5A288C0252A900A0053038E /* ru */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

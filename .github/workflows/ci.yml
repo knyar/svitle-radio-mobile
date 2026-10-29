@@ -122,6 +122,11 @@ jobs:
           test -f "$APP/main.jsbundle"
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -qx org.svitle.app1
           /usr/libexec/PlistBuddy -c 'Print :API_URL' "$APP/Info.plist" | grep -qx 'http://127.0.0.1:8484/v2'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/Info.plist" | grep -qx 'Світле Радіо'
+          # These strings were previously absent from Resources and silently never shipped.
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/en.lproj/InfoPlist.strings" | grep -qx 'Світле Радіо'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/uk.lproj/InfoPlist.strings" | grep -qx 'Світле Радіо'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/ru.lproj/InfoPlist.strings" | grep -qx 'Светлое Радио'
       - name: Zip the .app (artifact zips drop executable bits, ditto keeps them)
         run: ditto -c -k --keepParent ios/build/Build/Products/Release-iphonesimulator/SvitleRadio.app SvitleRadio.app.zip
       - uses: actions/upload-artifact@v7
