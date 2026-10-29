@@ -310,6 +310,33 @@ test("rapid URL changes skip a load that has not started while a started load co
   ])
 })
 
+test("a stop that supersedes a requested load cancels the request", async () => {
+  const view = await mountPlayer({ url: "https://a", state: State.Playing, activeUrl: "https://a" })
+  // Block the queue on the metadata sync that a URL change enqueues ahead of its load, so the
+  // requested load for the new station is queued but has not started.
+  const pendingTrack = deferred<{ url: string }>()
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockImplementationOnce(() => pendingTrack.promise)
+  root.mainStore.local.play_requested = true
+  root.mainStore.local.station = "svetloe"
+
+  await view.rerender(player("https://b"))
+  await waitFor(() => expect(TrackPlayer.getActiveTrack).toHaveBeenCalledTimes(1))
+  fireEvent.press(screen.getByTestId("player.pause"))
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+  expect(root.mainStore.local.play_requested).toBe(false)
+
+  pendingTrack.resolve({ url: "https://a" })
+  await waitFor(() => expect(TrackPlayer.reset).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.add).not.toHaveBeenCalled()
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+
+  // A later URL change while stopped (for example a quality toggle) must not start playback.
+  ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
+  await view.rerender(player("https://c"))
+  await waitFor(() => expect(TrackPlayer.add).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+})
+
 test("a play request survives a superseded load", async () => {
   const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
   const pendingTrack = deferred<{ url: string }>()

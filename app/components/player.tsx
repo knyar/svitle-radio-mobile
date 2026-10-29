@@ -191,10 +191,13 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     [enqueue, mainStore, trackMetadata],
   )
 
+  // A stop also cancels a play request whose load has not started yet: that load is superseded
+  // here and would otherwise leave the request for an unrelated later URL change to consume.
   const stop = useCallback(() => {
     ++loadGenerationRef.current
+    mainStore.local.clearPlayRequest()
     return enqueue(() => safely(TrackPlayer.reset))
-  }, [enqueue])
+  }, [enqueue, mainStore])
 
   useEffect(() => {
     const sub = AppState.addEventListener("change", setAppState)
