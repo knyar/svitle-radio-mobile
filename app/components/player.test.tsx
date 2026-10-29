@@ -337,6 +337,33 @@ test("a stop that supersedes a requested load cancels the request", async () => 
   expect(TrackPlayer.play).not.toHaveBeenCalled()
 })
 
+test("a URL replaced while a requested load is in flight still ends playing", async () => {
+  // A station selected from persisted stream data mounts the Player with the persisted URL; the
+  // mount-time refresh then replaces it while that load is awaiting TrackPlayer.
+  root.mainStore.local.play_requested = true
+  const pendingAdd = deferred<void>()
+  ;(TrackPlayer.add as jest.Mock).mockImplementationOnce(() => pendingAdd.promise)
+  ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue(undefined)
+  const view = await render(player("https://b-old"))
+  jest.useRealTimers()
+  await waitFor(() => expect(TrackPlayer.add).toHaveBeenCalledTimes(1))
+
+  await view.rerender(player("https://b-new"))
+  expect(clearPlayRequest).not.toHaveBeenCalled()
+  pendingAdd.resolve()
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(2))
+  expect((TrackPlayer.add as jest.Mock).mock.calls.map(([track]) => track.url)).toEqual([
+    "https://b-old",
+    "https://b-new",
+  ])
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+  expect((TrackPlayer.add as jest.Mock).mock.invocationCallOrder[1]).toBeLessThan(
+    (TrackPlayer.play as jest.Mock).mock.invocationCallOrder[1],
+  )
+})
+
 test("a play request survives a superseded load", async () => {
   const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
   const pendingTrack = deferred<{ url: string }>()

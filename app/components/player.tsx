@@ -162,7 +162,6 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
         if (generation !== loadGenerationRef.current) return "skipped"
 
         const requested = mainStore.local.play_requested
-        if (url && requested) mainStore.local.clearPlayRequest()
         const play = autoplay || (!!url && requested)
         const running = await TrackPlayer.isServiceRunning()
         if (!running) {
@@ -183,6 +182,13 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
         }
         // A second play for an already loaded/playing URL is an RNTP no-op and is accepted.
         if (url && play) {
+          // A play request is consumed only while this load is still the latest. If the URL was
+          // replaced while this load was in flight (a stream-info refresh after a station was
+          // selected from persisted data), the queued replacement captured a non-playing state and
+          // inherits the request instead; a stop clears it. Consumed before play, so one attempt.
+          if (requested && generation === loadGenerationRef.current) {
+            mainStore.local.clearPlayRequest()
+          }
           await safely(TrackPlayer.play)
         }
         return active !== url ? "loaded" : "unchanged"
