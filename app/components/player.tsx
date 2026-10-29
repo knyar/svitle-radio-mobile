@@ -125,7 +125,6 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   // the URL effect; the metadata-sync effect below keys on the timestamp itself.
   const streamsUpdatedRef = useRef(props.streams_updated)
   streamsUpdatedRef.current = props.streams_updated
-  const lastStationRef = useRef(mainStore.local.station)
   const stateRef = useRef(playbackState.state)
   stateRef.current = playbackState.state
   const queueRef = useRef<Promise<unknown>>(Promise.resolve())
@@ -162,6 +161,9 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
       return enqueue(async () => {
         if (generation !== loadGenerationRef.current) return "skipped"
 
+        const requested = mainStore.local.play_requested
+        if (url && requested) mainStore.local.clearPlayRequest()
+        const play = autoplay || (!!url && requested)
         const running = await TrackPlayer.isServiceRunning()
         if (!running) {
           await setupPlayer()
@@ -180,13 +182,13 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
           await safely(TrackPlayer.add, track)
         }
         // A second play for an already loaded/playing URL is an RNTP no-op and is accepted.
-        if (url && autoplay) {
+        if (url && play) {
           await safely(TrackPlayer.play)
         }
         return active !== url ? "loaded" : "unchanged"
       })
     },
-    [enqueue, trackMetadata],
+    [enqueue, mainStore, trackMetadata],
   )
 
   const stop = useCallback(() => {
@@ -250,12 +252,10 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     console.log("Playback state: " + playbackState.state)
   }, [playbackState])
 
+  const station = mainStore.local.station
   useEffect(() => {
-    const station = mainStore.local.station
-    const stationChanged = !!station && station !== lastStationRef.current
-    lastStationRef.current = station
-    load(props.url, stateRef.current === State.Playing || stationChanged)
-  }, [props.url, load, mainStore])
+    load(props.url, stateRef.current === State.Playing)
+  }, [props.url, station, load])
 
   function togglePlayback() {
     if (stateRef.current === State.Playing) {

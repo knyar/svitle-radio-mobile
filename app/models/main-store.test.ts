@@ -37,6 +37,7 @@ test("savePreferences selects, keeps, and replaces stations", () => {
   const store = MainStoreModel.create({}, env)
   store.savePreferences({ stations, contacts: [] } as any)
   expect(store.local.station).toBe("one")
+  expect(store.local.play_requested).toBe(false)
   store.local.setStation("two")
   store.savePreferences({ stations, contacts: [] } as any)
   expect(store.local.station).toBe("two")

@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: "screen.streams"
+- extendedWaitUntil:
+    visible: { id: "streams.item.svetloe" }
+    timeout: 20000
+- tapOn:
+    id: "streams.item.svetloe"
+- assertVisible:
+    id: "screen.live"
+- extendedWaitUntil:
+    visible: { id: "logo.svetloe" }
+    timeout: 20000
+- extendedWaitUntil:
+    visible: { id: "player.pause" }
+    timeout: 30000
+- takeScreenshot: 06-select-station-autoplay-playing
+- tapOn:
+    id: "player.pause"
+- extendedWaitUntil:
+    visible: { id: "player.play" }
+    timeout: 10000

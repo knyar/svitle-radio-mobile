@@ -6,7 +6,15 @@ export const LocalSettingsModel = types
     low_quality: false,
     station: types.maybe(types.string),
   })
+  .volatile(() => ({ play_requested: false }))
   .actions((self) => ({
+    clearPlayRequest() {
+      self.play_requested = false
+    },
+    selectStation(station: string) {
+      self.station = station
+      self.play_requested = true
+    },
     setStation(station: string) {
       self.station = station
     },

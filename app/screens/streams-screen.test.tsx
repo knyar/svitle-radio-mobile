@@ -3,11 +3,11 @@ import { fireEvent, render, screen } from "@testing-library/react-native"
 import { RootStore, RootStoreProvider } from "../models/root-store"
 import { StreamsScreen, chunk, tileLayout } from "./streams-screen"
 
-const setStation = jest.fn()
+const selectStation = jest.fn()
 const navigate = jest.fn()
 const root = {
   mainStore: {
-    local: { station: "svitle", setStation },
+    local: { station: "svitle", selectStation },
     preferences: {
       stations: [
         { id: "svitle", name: "Svitle", logo: "svitle", lang: "ua" },
@@ -20,7 +20,7 @@ const root = {
 
 beforeEach(() => {
   jest.useFakeTimers()
-  setStation.mockReset()
+  selectStation.mockReset()
   navigate.mockReset()
 })
 
@@ -43,10 +43,10 @@ test("marks the current station selected and switches to a non-selected station"
   expect(screen.getByTestId("streams.item.svetloe")).toBeEnabled()
 
   fireEvent.press(screen.getByTestId("streams.item.svitle"))
-  expect(setStation).not.toHaveBeenCalled()
+  expect(selectStation).not.toHaveBeenCalled()
 
   fireEvent.press(screen.getByTestId("streams.item.svetloe"))
-  expect(setStation).toHaveBeenCalledWith("svetloe")
+  expect(selectStation).toHaveBeenCalledWith("svetloe")
   expect(navigate).toHaveBeenCalledWith("live")
 })
 

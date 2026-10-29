@@ -86,9 +86,10 @@ Use `yarn lint:fix` and `yarn format` to apply automatic fixes. Run one test fil
 
 ## End-to-end tests
 
-The Maestro flows in `.maestro/` launch the app, play and pause, navigate, background the app, and
-switch stations. They use the hermetic API and HLS fixtures in `scripts/e2e-api`, which the platform
-scripts start on fixed port 8484, and need a release-like build with the JavaScript bundle included.
+The Maestro flows in `.maestro/` launch the app, play and pause, navigate, background the app,
+switch stations, and verify that selecting a station before Live mounts starts playback. They use
+the hermetic API and HLS fixtures in `scripts/e2e-api`, which the platform scripts start on fixed
+port 8484, and need a release-like build with the JavaScript bundle included.
 
 Android, with an emulator running:
 
