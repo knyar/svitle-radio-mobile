@@ -8,7 +8,7 @@
   "url_youtube": "https://www.youtube.com/c/svitleradioEmmanuel/live",
   "stations": [
     { "id": "svitle", "name": "Світле Радіо Еммануїл", "logo": "svitle", "lang": "ua" },
-    { "id": "svid", "name": "Свідчення", "logo": "svitle", "lang": "ua" },
+    { "id": "svid", "name": "Свідчення", "logo": "svitle" },
     { "id": "svetloe", "name": "Светлое Радио", "logo": "svetloe", "lang": "ru" },
     { "id": "kids", "name": "Дитяче Світле Радіо", "logo": "kids", "lang": "ua" }
   ],

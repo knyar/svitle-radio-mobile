@@ -92,7 +92,9 @@ export const StreamsScreen: React.FunctionComponent<
         <Text style={[styles.streamText, selected && styles.streamTextSelected]}>
           {station.name}
         </Text>
-        <Text style={styles.streamLang}>{i18n.t("streams_screen.lang." + station.lang)}</Text>
+        {station.lang ? (
+          <Text style={styles.streamLang}>{i18n.t("streams_screen.lang." + station.lang)}</Text>
+        ) : null}
       </TouchableOpacity>
     )
   }
@@ -102,7 +104,7 @@ export const StreamsScreen: React.FunctionComponent<
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
         <View style={styles.selector}>
           <View style={styles.lead} />
-          {chunk(mainStore.preferences.stations, columns).map((row, index) => (
+          {chunk<Station>(mainStore.preferences.stations, columns).map((row, index) => (
             <React.Fragment key={row.map((station) => station.id).join("|")}>
               {index > 0 && <View style={styles.gap} />}
               <View style={styles.row}>{row.map(stationComponent)}</View>

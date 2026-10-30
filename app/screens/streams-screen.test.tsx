@@ -1,4 +1,5 @@
 import React from "react"
+import i18n from "i18n-js"
 import { fireEvent, render, screen } from "@testing-library/react-native"
 import { RootStore, RootStoreProvider } from "../models/root-store"
 import { StreamsScreen, chunk, tileLayout } from "./streams-screen"
@@ -12,6 +13,7 @@ const root = {
       stations: [
         { id: "svitle", name: "Svitle", logo: "svitle", lang: "ua" },
         { id: "svetloe", name: "Svetloe", logo: "svetloe", lang: "ru" },
+        { id: "svid", name: "Svid", logo: "svitle" },
       ],
       localizedUrl: jest.fn((key: string) => `https://example.com/${key}`),
     },
@@ -48,6 +50,26 @@ test("marks the current station selected and switches to a non-selected station"
   fireEvent.press(screen.getByTestId("streams.item.svetloe"))
   expect(selectStation).toHaveBeenCalledWith("svetloe")
   expect(navigate).toHaveBeenCalledWith("live")
+})
+
+test("shows the language line only for stations that declare a language", async () => {
+  await render(
+    <RootStoreProvider value={root}>
+      <StreamsScreen {...({ navigation: { navigate }, route: {} } as any)} />
+    </RootStoreProvider>,
+  )
+  jest.useRealTimers()
+
+  // toHaveTextContent matches the tile's whole text: the name followed by the language line.
+  expect(screen.getByTestId("streams.item.svitle")).toHaveTextContent(
+    "Svitle" + i18n.t("streams_screen.lang.ua"),
+  )
+  expect(screen.getByTestId("streams.item.svetloe")).toHaveTextContent(
+    "Svetloe" + i18n.t("streams_screen.lang.ru"),
+  )
+  // A station without `lang` shows only its name: no language line and no i18n placeholder.
+  expect(screen.getByTestId("streams.item.svid")).toHaveTextContent("Svid")
+  expect(screen.queryByText(/missing/)).toBeNull()
 })
 
 test("footer links are 48 dp tall and may shrink to wrap long labels", async () => {
