@@ -6,9 +6,12 @@ import { convertStreamInfo } from "../../app/services/api/api"
 
 const fixture = (name: string) => JSON.parse(readFileSync(join(__dirname, name), "utf8"))
 
-test("preferences fixture is accepted by the app model", () => {
+test("preferences fixture is accepted by the app model, including a station without lang", () => {
   const preferences = PreferencesModel.create(fixture("preferences.svitle.json"))
-  expect(preferences.stations.find((station) => station.id === "svid")?.logo).toBe("svitle")
+  const svid = preferences.stations.find((station) => station.id === "svid")
+  expect(svid?.logo).toBe("svitle")
+  expect(svid?.lang).toBeUndefined()
+  expect(preferences.stations.find((station) => station.id === "svitle")?.lang).toBe("ua")
 })
 
 test("status fixture supplies both streams for every station", () => {
