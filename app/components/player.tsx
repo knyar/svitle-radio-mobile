@@ -125,7 +125,6 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   // the URL effect; the metadata-sync effect below keys on the timestamp itself.
   const streamsUpdatedRef = useRef(props.streams_updated)
   streamsUpdatedRef.current = props.streams_updated
-  const lastStationRef = useRef(mainStore.local.station)
   const stateRef = useRef(playbackState.state)
   stateRef.current = playbackState.state
   const queueRef = useRef<Promise<unknown>>(Promise.resolve())
@@ -162,6 +161,8 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
       return enqueue(async () => {
         if (generation !== loadGenerationRef.current) return "skipped"
 
+        const requested = mainStore.local.play_requested
+        const play = autoplay || (!!url && requested)
         const running = await TrackPlayer.isServiceRunning()
         if (!running) {
           await setupPlayer()
@@ -180,19 +181,29 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
           await safely(TrackPlayer.add, track)
         }
         // A second play for an already loaded/playing URL is an RNTP no-op and is accepted.
-        if (url && autoplay) {
+        if (url && play) {
+          // A play request is consumed only while this load is still the latest. If the URL was
+          // replaced while this load was in flight (a stream-info refresh after a station was
+          // selected from persisted data), the queued replacement captured a non-playing state and
+          // inherits the request instead; a stop clears it. Consumed before play, so one attempt.
+          if (requested && generation === loadGenerationRef.current) {
+            mainStore.local.clearPlayRequest()
+          }
           await safely(TrackPlayer.play)
         }
         return active !== url ? "loaded" : "unchanged"
       })
     },
-    [enqueue, trackMetadata],
+    [enqueue, mainStore, trackMetadata],
   )
 
+  // A stop also cancels a play request whose load has not started yet: that load is superseded
+  // here and would otherwise leave the request for an unrelated later URL change to consume.
   const stop = useCallback(() => {
     ++loadGenerationRef.current
+    mainStore.local.clearPlayRequest()
     return enqueue(() => safely(TrackPlayer.reset))
-  }, [enqueue])
+  }, [enqueue, mainStore])
 
   useEffect(() => {
     const sub = AppState.addEventListener("change", setAppState)
@@ -250,12 +261,10 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     console.log("Playback state: " + playbackState.state)
   }, [playbackState])
 
+  const station = mainStore.local.station
   useEffect(() => {
-    const station = mainStore.local.station
-    const stationChanged = !!station && station !== lastStationRef.current
-    lastStationRef.current = station
-    load(props.url, stateRef.current === State.Playing || stationChanged)
-  }, [props.url, load, mainStore])
+    load(props.url, stateRef.current === State.Playing)
+  }, [props.url, station, load])
 
   function togglePlayback() {
     if (stateRef.current === State.Playing) {

@@ -73,7 +73,7 @@ export const StreamsScreen: React.FunctionComponent<
 
   const stationComponent = (station: Station) => {
     const onPress = () => {
-      mainStore.local.setStation(station.id)
+      mainStore.local.selectStation(station.id)
       props.navigation.navigate("live")
     }
 

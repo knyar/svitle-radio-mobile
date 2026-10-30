@@ -9,8 +9,9 @@ import { REFRESH_INTERVAL } from "../config/env"
 
 const originalAppState = AppState.currentState
 const { resetTrackPlayerMock } = require("react-native-track-player")
+const clearPlayRequest = jest.fn()
 const testMainStore = {
-  local: { station: "svitle" },
+  local: { station: "svitle", play_requested: false, clearPlayRequest },
   current_station: { id: "svitle", name: "Svitle", logo: "svitle", lang: "ua" },
   current_track: "Song",
   next_track: "Next",
@@ -26,6 +27,11 @@ beforeEach(() => {
   ;(AppState.addEventListener as jest.Mock).mockReturnValue({ remove: jest.fn() })
   ;(AppState as any).currentState = "active"
   root.mainStore.local.station = "svitle"
+  root.mainStore.local.play_requested = false
+  clearPlayRequest.mockReset()
+  clearPlayRequest.mockImplementation(() => {
+    root.mainStore.local.play_requested = false
+  })
   testMainStore.current_station = {
     id: "svitle",
     name: "Svitle",
@@ -48,12 +54,14 @@ async function mountPlayer({
   activeUrl,
   streamsUpdated: updatedAt = streamsUpdated,
   keepFakeTimers = false,
+  clearLoadMocks = true,
 }: {
-  url: string
+  url?: string
   state: State
   activeUrl?: string
   streamsUpdated?: number
   keepFakeTimers?: boolean
+  clearLoadMocks?: boolean
 }) {
   ;(usePlaybackState as jest.Mock).mockReturnValue({ state })
   ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue(
@@ -71,14 +79,16 @@ async function mountPlayer({
   await waitFor(() => expect(TrackPlayer.isServiceRunning).toHaveBeenCalled())
   await waitFor(() => expect(TrackPlayer.getActiveTrack).toHaveBeenCalled())
   await flushPromises()
-  ;(TrackPlayer.add as jest.Mock).mockClear()
-  ;(TrackPlayer.play as jest.Mock).mockClear()
-  ;(TrackPlayer.reset as jest.Mock).mockClear()
-  ;(TrackPlayer.getActiveTrack as jest.Mock).mockClear()
+  if (clearLoadMocks) {
+    ;(TrackPlayer.add as jest.Mock).mockClear()
+    ;(TrackPlayer.play as jest.Mock).mockClear()
+    ;(TrackPlayer.reset as jest.Mock).mockClear()
+    ;(TrackPlayer.getActiveTrack as jest.Mock).mockClear()
+  }
   return view
 }
 
-function player(url: string, currentTrack = "Song", updatedAt = streamsUpdated) {
+function player(url: string | undefined, currentTrack = "Song", updatedAt = streamsUpdated) {
   return (
     <RootStoreProvider value={root}>
       <Player url={url} current_track={currentTrack} streams_updated={updatedAt} />
@@ -173,9 +183,51 @@ test("stopping playback does not re-add the track", async () => {
   expect(TrackPlayer.add).not.toHaveBeenCalled()
 })
 
+test("a station selected before the Player mounts starts playback on mount", async () => {
+  root.mainStore.local.play_requested = true
+
+  await mountPlayer({
+    url: "https://radio",
+    state: State.None,
+    clearLoadMocks: false,
+  })
+
+  expect(TrackPlayer.add).toHaveBeenCalledTimes(1)
+  expect(TrackPlayer.play).toHaveBeenCalledTimes(1)
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+  expect((TrackPlayer.add as jest.Mock).mock.invocationCallOrder[0]).toBeLessThan(
+    (TrackPlayer.play as jest.Mock).mock.invocationCallOrder[0],
+  )
+})
+
+test("a play request waits for the URL", async () => {
+  root.mainStore.local.play_requested = true
+  const view = await mountPlayer({ url: undefined, state: State.None })
+
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+  expect(clearPlayRequest).not.toHaveBeenCalled()
+
+  await view.rerender(player("https://radio"))
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(1))
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+})
+
+test("a station change without a play request does not start playback", async () => {
+  const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
+  root.mainStore.local.station = "svetloe"
+
+  await view.rerender(player("https://b"))
+
+  await waitFor(() => expect(TrackPlayer.add).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+  expect(clearPlayRequest).not.toHaveBeenCalled()
+})
+
 test("switching station while playing loads once and plays exactly once", async () => {
   const view = await mountPlayer({ url: "https://a", state: State.Playing, activeUrl: "https://a" })
   root.mainStore.local.station = "svetloe"
+  root.mainStore.local.play_requested = true
   testMainStore.current_station = {
     id: "svetloe",
     name: "Svetloe",
@@ -200,6 +252,7 @@ test("switching station while playing loads once and plays exactly once", async 
 test("switching station while stopped starts playback once", async () => {
   const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
   root.mainStore.local.station = "svetloe"
+  root.mainStore.local.play_requested = true
 
   await view.rerender(player("https://b"))
 
@@ -257,11 +310,117 @@ test("rapid URL changes skip a load that has not started while a started load co
   ])
 })
 
+test("a stop that supersedes a requested load cancels the request", async () => {
+  const view = await mountPlayer({ url: "https://a", state: State.Playing, activeUrl: "https://a" })
+  // Block the queue on the metadata sync that a URL change enqueues ahead of its load, so the
+  // requested load for the new station is queued but has not started.
+  const pendingTrack = deferred<{ url: string }>()
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockImplementationOnce(() => pendingTrack.promise)
+  root.mainStore.local.play_requested = true
+  root.mainStore.local.station = "svetloe"
+
+  await view.rerender(player("https://b"))
+  await waitFor(() => expect(TrackPlayer.getActiveTrack).toHaveBeenCalledTimes(1))
+  fireEvent.press(screen.getByTestId("player.pause"))
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+  expect(root.mainStore.local.play_requested).toBe(false)
+
+  pendingTrack.resolve({ url: "https://a" })
+  await waitFor(() => expect(TrackPlayer.reset).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.add).not.toHaveBeenCalled()
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+
+  // A later URL change while stopped (for example a quality toggle) must not start playback.
+  ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
+  await view.rerender(player("https://c"))
+  await waitFor(() => expect(TrackPlayer.add).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.play).not.toHaveBeenCalled()
+})
+
+test("a URL replaced while a requested load is in flight still ends playing", async () => {
+  // A station selected from persisted stream data mounts the Player with the persisted URL; the
+  // mount-time refresh then replaces it while that load is awaiting TrackPlayer.
+  root.mainStore.local.play_requested = true
+  const pendingAdd = deferred<void>()
+  ;(TrackPlayer.add as jest.Mock).mockImplementationOnce(() => pendingAdd.promise)
+  ;(usePlaybackState as jest.Mock).mockReturnValue({ state: State.None })
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockResolvedValue(undefined)
+  const view = await render(player("https://b-old"))
+  jest.useRealTimers()
+  await waitFor(() => expect(TrackPlayer.add).toHaveBeenCalledTimes(1))
+
+  await view.rerender(player("https://b-new"))
+  expect(clearPlayRequest).not.toHaveBeenCalled()
+  pendingAdd.resolve()
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(2))
+  expect((TrackPlayer.add as jest.Mock).mock.calls.map(([track]) => track.url)).toEqual([
+    "https://b-old",
+    "https://b-new",
+  ])
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+  expect((TrackPlayer.add as jest.Mock).mock.invocationCallOrder[1]).toBeLessThan(
+    (TrackPlayer.play as jest.Mock).mock.invocationCallOrder[1],
+  )
+})
+
+test("a play request survives a superseded load", async () => {
+  const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
+  const pendingTrack = deferred<{ url: string }>()
+  ;(TrackPlayer.getActiveTrack as jest.Mock).mockImplementationOnce(() => pendingTrack.promise)
+
+  await view.rerender(player("https://b"))
+  await waitFor(() => expect(TrackPlayer.getActiveTrack).toHaveBeenCalledTimes(1))
+  root.mainStore.local.play_requested = true
+  await view.rerender(player("https://c"))
+  await view.rerender(player("https://d"))
+  pendingTrack.resolve({ url: "https://a" })
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(1))
+  expect((TrackPlayer.add as jest.Mock).mock.calls.map(([track]) => track.url)).toEqual([
+    "https://b",
+    "https://d",
+  ])
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+})
+
+test("a station change with the same URL still plays once", async () => {
+  const url = "https://radio"
+  const view = await mountPlayer({ url, state: State.None, activeUrl: url })
+  root.mainStore.local.play_requested = true
+  root.mainStore.local.station = "svetloe"
+
+  await view.rerender(player(url))
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(1))
+  expect(TrackPlayer.add).not.toHaveBeenCalled()
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+})
+
+test("a failed play still consumes the request", async () => {
+  const url = "https://radio"
+  const view = await mountPlayer({ url, state: State.None, activeUrl: url })
+  ;(TrackPlayer.play as jest.Mock).mockRejectedValueOnce(new Error("play failed"))
+  root.mainStore.local.play_requested = true
+  root.mainStore.local.station = "svetloe"
+
+  await view.rerender(player(url))
+
+  await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(1))
+  expect(clearPlayRequest).toHaveBeenCalledTimes(1)
+
+  root.mainStore.local.station = "svitle"
+  await view.rerender(player(url))
+  await flushPromises()
+  expect(TrackPlayer.play).toHaveBeenCalledTimes(1)
+})
+
 test("pressing play while the URL effect is loading does not reload the track", async () => {
   const view = await mountPlayer({ url: "https://a", state: State.None, activeUrl: "https://a" })
   const pendingPlay = deferred<void>()
   ;(TrackPlayer.play as jest.Mock).mockImplementationOnce(() => pendingPlay.promise)
   root.mainStore.local.station = "svetloe"
+  root.mainStore.local.play_requested = true
 
   await view.rerender(player("https://b"))
   await waitFor(() => expect(TrackPlayer.play).toHaveBeenCalledTimes(1))
