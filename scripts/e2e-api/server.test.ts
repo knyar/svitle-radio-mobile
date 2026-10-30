@@ -103,16 +103,50 @@ function rawRequest(
   })
 }
 
-test("serves preferences and rewrites the status origin", async () => {
+test("serves preferences and rewrites fixture origins", async () => {
   const preferences = await fetch(`${origin}/v2/preferences.svitle`)
   const body = await preferences.json()
   expect(body.stations.find((station: { id: string }) => station.id === "svid").logo).toBe("svitle")
+  expect(body.stations.find((station: { id: string }) => station.id === "kids").logo).toBe(
+    `${origin}/logos/kids.svg`,
+  )
+  expect(JSON.stringify(body)).not.toContain("{{origin}}")
   expect(preferences.headers.get("cache-control")).toBe("no-store")
 
   const status = await rawRequest("/v2/status?recent_tracks=0", { Host: "10.0.2.2:1234" })
   expect(status.status).toBe(200)
   expect(status.body).toContain("http://10.0.2.2:1234/hls/svitle/default.m3u8")
   expect(status.body).not.toContain("{{origin}}")
+})
+
+test("serves logo fixtures and rejects invalid logo paths", async () => {
+  const logo = await fetch(`${origin}/logos/kids.svg`)
+  expect(logo.status).toBe(200)
+  expect(logo.headers.get("content-type")).toBe("image/svg+xml")
+  expect(logo.headers.get("cache-control")).toBe("max-age=3600")
+  expect(logo.headers.get("x-content-type-options")).toBe("nosniff")
+  expect(await logo.text()).toBe(readFileSync(join(__dirname, "logos/kids.svg"), "utf8"))
+
+  for (const rawPath of [
+    "/logos/missing.png",
+    "/logos/../server.js",
+    "/logos/%2e%2e%2fserver.js",
+  ]) {
+    expect(await rawRequest(rawPath)).toEqual({
+      status: 404,
+      body: '{"error":"not found"}',
+    })
+  }
+})
+
+test("uses the bound loopback origin when the Host header is invalid", async () => {
+  const response = await rawRequest("/v2/preferences.svitle", { Host: "invalid/host" })
+  expect(response.status).toBe(200)
+  const body = JSON.parse(response.body)
+  expect(body.stations.find((station: { id: string }) => station.id === "kids").logo).toBe(
+    `${origin}/logos/kids.svg`,
+  )
+  expect(response.body).not.toContain("{{origin}}")
 })
 
 test("serves live playlists and media", async () => {

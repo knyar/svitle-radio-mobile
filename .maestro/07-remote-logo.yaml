@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: { id: "streams.item.kids" }
+    timeout: 20000
+- extendedWaitUntil:
+    visible: { id: "logo.remote.loaded" }
+    timeout: 20000
+- takeScreenshot: 07-remote-logo-streams
+- tapOn:
+    id: "streams.item.kids"
+- assertVisible:
+    id: "screen.live"
+- extendedWaitUntil:
+    visible: { id: "logo.remote.loaded" }
+    timeout: 20000
+- takeScreenshot: 07-remote-logo-live

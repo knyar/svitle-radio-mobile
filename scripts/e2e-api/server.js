@@ -5,6 +5,8 @@ const path = require("path")
 
 const ROOT = __dirname
 const HLS_ROOT = path.join(ROOT, "hls")
+const LOGOS_ROOT = path.join(ROOT, "logos")
+const VALID_HOST = /^[A-Za-z0-9.-]+(:\d+)?$/
 
 function parsePlaylist(fixture) {
   const lines = fixture.trim().split(/\r?\n/)
@@ -100,19 +102,37 @@ function createRequestHandler({
       response.end(body)
     }
 
+    const host = request.headers.host
+    const fallbackHost = `127.0.0.1:${request.socket.localPort}`
+    const origin = `http://${host && VALID_HOST.test(host) ? host : fallbackHost}`
+
     if (request.method === "GET" && requestPath === "/v2/preferences.svitle") {
       finish(
         200,
         { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
-        preferences,
+        preferences.replaceAll("{{origin}}", origin),
       )
     } else if (request.method === "GET" && requestPath === "/v2/status") {
-      const origin = `http://${request.headers.host || "127.0.0.1"}`
       finish(
         200,
         { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
         status.replaceAll("{{origin}}", origin),
       )
+    } else if (request.method === "GET" && requestPath.startsWith("/logos/")) {
+      const match = requestPath.match(/^\/logos\/([a-z0-9-]+\.(svg|png))$/)
+      if (match && fs.existsSync(path.join(LOGOS_ROOT, match[1]))) {
+        finish(
+          200,
+          {
+            "Content-Type": match[2] === "svg" ? "image/svg+xml" : "image/png",
+            "Cache-Control": "max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+          },
+          fs.readFileSync(path.join(LOGOS_ROOT, match[1])),
+        )
+      } else {
+        finish(404, { "Content-Type": "application/json; charset=utf-8" }, '{"error":"not found"}')
+      }
     } else if (
       request.method === "GET" &&
       /^\/hls\/[a-z0-9]+\/[a-z0-9]+\.m3u8$/.test(requestPath)

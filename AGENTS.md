@@ -40,8 +40,9 @@ committing.
   targets, fmt consteval). Remove them only when upgrading to a React Native release that has the
   upstream fixes (0.83.5+ for fmt, react-native#58687 for resource bundles).
 - Maestro flows match stable IDs only: `screen.*`, `nav.*`, `player.play|pause|disabled`,
-  `streams.item.<id>`, and `logo.<logo>`. Never match visible text; the app is localised. When adding
-  a control a flow needs, give it a stable `testID` and assert state rather than text.
+  `streams.item.<id>`, `logo.<logo>`, `logo.remote`, and `logo.remote.loaded`. Never match visible
+  text; the app is localised. When adding a control a flow needs, give it a stable `testID` and
+  assert state rather than text.
 - When a flow flakes, first lengthen its state wait. Quarantine only with an owner, reason, and
   expiry recorded in the flow.
 
