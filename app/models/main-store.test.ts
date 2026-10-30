@@ -5,6 +5,7 @@ import { RootStoreModel } from "./root-store"
 const stations = [
   { id: "one", name: "One", logo: "svitle", lang: "uk" },
   { id: "two", name: "Two", logo: "svetloe", lang: "uk" },
+  { id: "remote", name: "Remote", logo: "https://cdn.example/logo.png", lang: "uk" },
 ]
 
 const env = {
@@ -114,6 +115,9 @@ test("persisted state omits tracks and restores preferences and URLs", () => {
   expect(restored.mainStore.local.station).toBe("one")
   expect(restored.mainStore.local.low_quality).toBe(true)
   expect(restored.mainStore.streams.get("one")?.stream_url).toBe("https://high")
+  expect(
+    restored.mainStore.preferences.stations.find((station) => station.id === "remote")?.logo,
+  ).toBe("https://cdn.example/logo.png")
   expect(restored.mainStore.current_track).toBeUndefined()
   expect(restored.mainStore.next_track).toBeUndefined()
 })

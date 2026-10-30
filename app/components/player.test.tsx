@@ -133,6 +133,39 @@ test.each([
   )
 })
 
+test.each([
+  ["https://cdn.example/logo.png", "https://cdn.example/logo.png"],
+  ["https://cdn.example/logo.png?x=1", "https://cdn.example/logo.png?x=1"],
+  ["https://cdn.example/logo.svg", undefined],
+  ["https://cdn.example/logo.svg?x=1", undefined],
+  ["https://cdn.example/logo.svg#a", undefined],
+])("loads remote logo %s with artwork %s", async (logo, expectedArtwork) => {
+  testMainStore.current_station.logo = logo
+  await mountPlayer({ url: "https://radio", state: State.None, clearLoadMocks: false })
+  expect(TrackPlayer.add).toHaveBeenCalledWith(
+    expect.objectContaining({ artwork: expectedArtwork }),
+  )
+})
+
+test("uses remote raster artwork on a metadata refresh", async () => {
+  const url = "https://radio"
+  const logo = "https://cdn.example/logo.png"
+  testMainStore.current_station.logo = logo
+  const view = await mountPlayer({ url, state: State.Playing, activeUrl: url })
+  ;(TrackPlayer.getCurrentTrack as jest.Mock).mockResolvedValue(0)
+  ;(TrackPlayer.updateMetadataForTrack as jest.Mock).mockClear()
+  testMainStore.current_track = "Updated"
+
+  await view.rerender(player(url, "Updated"))
+
+  await waitFor(() =>
+    expect(TrackPlayer.updateMetadataForTrack).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ artwork: logo, title: "Updated" }),
+    ),
+  )
+})
+
 test("pressing while playing resets playback", async () => {
   const url = "https://radio"
   await mountPlayer({ url, state: State.Playing, activeUrl: url })

@@ -8,6 +8,15 @@ API to discover station metadata.
 
 JSON API is also open source, available [here](https://github.com/knyar/svitle-api)
 
+## Station logos
+
+A station's `logo` in the preferences API is either a bundled id (`svitle`, `svetloe`, or `kids`) or
+an `http(s)` URL to a PNG, JPEG, or SVG image, which the app loads at run time and replaces with the
+default logo if the download fails. Production URLs must use HTTPS: Android release builds block
+cleartext. SVG URLs must end in `.svg` before any query or fragment, and a redirect must keep the
+media type. A raster URL also serves as the lock-screen artwork; an SVG URL gives none. Treat logo
+hosts as trusted: an SVG is fetched as text and parsed in JavaScript, so keep the files small.
+
 ## Prerequisites
 
 The commands below assume macOS with [Homebrew](https://brew.sh/). Linux works for the JavaScript
@@ -87,9 +96,10 @@ Use `yarn lint:fix` and `yarn format` to apply automatic fixes. Run one test fil
 ## End-to-end tests
 
 The Maestro flows in `.maestro/` launch the app, play and pause, navigate, background the app,
-switch stations, and verify that selecting a station before Live mounts starts playback. They use
-the hermetic API and HLS fixtures in `scripts/e2e-api`, which the platform scripts start on fixed
-port 8484, and need a release-like build with the JavaScript bundle included.
+switch stations, verify that selecting a station before Live mounts starts playback, and load a
+station logo from a URL. They use the hermetic API, logo, and HLS fixtures in `scripts/e2e-api`,
+which the platform scripts start on fixed port 8484, and need a release-like build with the
+JavaScript bundle included.
 
 Android, with an emulator running:
 

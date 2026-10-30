@@ -10,7 +10,12 @@
     { "id": "svitle", "name": "Світле Радіо Еммануїл", "logo": "svitle", "lang": "ua" },
     { "id": "svid", "name": "Свідчення", "logo": "svitle", "lang": "ua" },
     { "id": "svetloe", "name": "Светлое Радио", "logo": "svetloe", "lang": "ru" },
-    { "id": "kids", "name": "Дитяче Світле Радіо", "logo": "kids", "lang": "ua" }
+    {
+      "id": "kids",
+      "name": "Дитяче Світле Радіо",
+      "logo": "{{origin}}/logos/kids.svg",
+      "lang": "ua"
+    }
   ],
   "contacts": [
     {

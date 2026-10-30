@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { readFileSync } from "fs"
+import { existsSync, readFileSync } from "fs"
 import { join } from "path"
 import { PreferencesModel } from "../../app/models/preferences"
 import { convertStreamInfo } from "../../app/services/api/api"
@@ -9,6 +9,10 @@ const fixture = (name: string) => JSON.parse(readFileSync(join(__dirname, name),
 test("preferences fixture is accepted by the app model", () => {
   const preferences = PreferencesModel.create(fixture("preferences.svitle.json"))
   expect(preferences.stations.find((station) => station.id === "svid")?.logo).toBe("svitle")
+  expect(preferences.stations.find((station) => station.id === "kids")?.logo).toBe(
+    "{{origin}}/logos/kids.svg",
+  )
+  expect(existsSync(join(__dirname, "logos/kids.svg"))).toBe(true)
 })
 
 test("status fixture supplies both streams for every station", () => {

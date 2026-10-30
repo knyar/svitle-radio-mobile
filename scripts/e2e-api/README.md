@@ -1,9 +1,10 @@
 # Hermetic end-to-end API
 
-`server.js` serves the preferences and status endpoints used by the app and a looping live HLS
-stream for every fixture station. It uses only Node built-ins, binds to `127.0.0.1:8484` by default,
-and derives stream origins from the request's `Host` header so Android can use `10.0.2.2` while iOS
-uses host loopback.
+`server.js` serves the preferences and status endpoints used by the app, logo fixtures under
+`/logos/`, and a looping live HLS stream for every fixture station. It uses only Node built-ins,
+binds to `127.0.0.1:8484` by default, and derives fixture origins from a validated request `Host`
+header so Android can use `10.0.2.2` while iOS uses host loopback. Both preferences and status
+fixtures may use `{{origin}}`, which is replaced with that request origin.
 
 Run it directly with `node scripts/e2e-api/server.js`. `--host` and `--port` override the bind
 address; `--port 0` chooses an ephemeral port for tests. The e2e scripts always use fixed port 8484

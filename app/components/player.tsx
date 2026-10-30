@@ -23,6 +23,7 @@ import { REFRESH_INTERVAL } from "../config/env"
 import { LogoId } from "../models/station"
 import { lookup } from "./logo"
 import { errorMessage } from "../utils/errors"
+import { isRemoteLogo, isSvgUrl } from "../utils/logo-source"
 
 const PLAYER_OPTIONS: PlayerOptions = {
   playBuffer: 5, // Android only
@@ -55,6 +56,9 @@ const backgrounds: Record<Flavor, number> = {
 const BACKGROUND = backgrounds[FLAVOR]
 
 const artwork = (logo: string): any => {
+  if (isRemoteLogo(logo)) {
+    return isSvgUrl(logo) ? undefined : logo
+  }
   const artworks: Record<LogoId, any> = {
     svitle: require("../images/artwork.svitle.png"),
     svetloe: require("../images/artwork.svetloe.png"),
