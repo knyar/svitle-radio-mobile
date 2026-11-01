@@ -1,4 +1,4 @@
-import { Api, convertStreamInfo } from "./api"
+import { API_CAP, Api, convertStreamInfo } from "./api"
 
 const station = {
   current_track: "Now",
@@ -16,6 +16,22 @@ function apiWith(response: any) {
 }
 
 beforeEach(() => jest.spyOn(console, "log").mockImplementation())
+
+test("every request carries the client capability version", async () => {
+  const api = new Api()
+  api.setup()
+  const sent: any[] = []
+  api.apisauce.axiosInstance.defaults.adapter = async (config: any) => {
+    sent.push(config.headers)
+    return { status: 200, statusText: "OK", headers: {}, config, data: { stations: {} } }
+  }
+  await api.getPreferences()
+  await api.getStreamInfo()
+  expect(sent).toHaveLength(2)
+  for (const headers of sent) {
+    expect(headers.get("X-Svitle-API-Cap")).toBe(String(API_CAP))
+  }
+})
 
 test("getStreamInfo parses high and low streams", async () => {
   const api = apiWith({ ok: true, data: { stations: { svitle: station } } })
