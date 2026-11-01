@@ -1,7 +1,9 @@
 # Hermetic end-to-end API
 
 `server.js` serves the preferences and status endpoints used by the app and a looping live HLS
-stream for every fixture station. It uses only Node built-ins, binds to `127.0.0.1:8484` by default,
+stream for every fixture station. The API endpoints live under `/v2/<cap>/`, where `<cap>` is the
+client capability version (`API_CAP` in `app/services/api/api.ts`); any number is accepted, and
+paths without it return 404. It uses only Node built-ins, binds to `127.0.0.1:8484` by default,
 and derives stream origins from the request's `Host` header so Android can use `10.0.2.2` while iOS
 uses host loopback.
 

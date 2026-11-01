@@ -4,6 +4,7 @@ import { readFileSync, statSync } from "fs"
 import { request } from "http"
 import { join } from "path"
 import { createInterface } from "readline"
+import { API_CAP } from "../../app/services/api/api"
 
 const serverModule = require("./server") as {
   livePlaylist: (fixture: PlaylistFixture, nowMs: number, window?: number) => string
@@ -104,15 +105,23 @@ function rawRequest(
 }
 
 test("serves preferences and rewrites the status origin", async () => {
-  const preferences = await fetch(`${origin}/v2/preferences.svitle`)
+  const preferences = await fetch(`${origin}/v2/${API_CAP}/preferences.svitle`)
   const body = await preferences.json()
   expect(body.stations.find((station: { id: string }) => station.id === "svid").logo).toBe("svitle")
   expect(preferences.headers.get("cache-control")).toBe("no-store")
 
-  const status = await rawRequest("/v2/status?recent_tracks=0", { Host: "10.0.2.2:1234" })
+  const status = await rawRequest(`/v2/${API_CAP}/status?recent_tracks=0`, {
+    Host: "10.0.2.2:1234",
+  })
   expect(status.status).toBe(200)
   expect(status.body).toContain("http://10.0.2.2:1234/hls/svitle/default.m3u8")
   expect(status.body).not.toContain("{{origin}}")
+})
+
+test("API paths require the capability segment", async () => {
+  expect((await fetch(`${origin}/v2/preferences.svitle`)).status).toBe(404)
+  expect((await rawRequest("/v2/status?recent_tracks=0")).status).toBe(404)
+  expect((await fetch(`${origin}/v2/7/preferences.svitle`)).status).toBe(200)
 })
 
 test("serves live playlists and media", async () => {
