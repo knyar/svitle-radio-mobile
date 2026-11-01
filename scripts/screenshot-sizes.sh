@@ -47,14 +47,14 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if curl -sf "http://127.0.0.1:$E2E_API_PORT/v2/preferences.svitle" >/dev/null; then
+if curl -sf "http://127.0.0.1:$E2E_API_PORT/v2/1/preferences.svitle" >/dev/null; then
   echo "using the local e2e API already listening on port $E2E_API_PORT"
 else
   node "$(dirname "$FLOW")/../../scripts/e2e-api/server.js" --port "$E2E_API_PORT" > "$OUT/api-server.log" 2>&1 &
   api_pid=$!
   api_ready=0
   for _attempt in {1..20}; do
-    if curl -sf "http://127.0.0.1:$E2E_API_PORT/v2/preferences.svitle" >/dev/null; then
+    if curl -sf "http://127.0.0.1:$E2E_API_PORT/v2/1/preferences.svitle" >/dev/null; then
       api_ready=1
       break
     fi

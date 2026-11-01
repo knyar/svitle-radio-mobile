@@ -44,8 +44,9 @@ own channel line-up (main station, testimonies channel, kids channel) and the li
   Streams (channel list with logo, name, and language; selecting a channel switches to Live and
   starts playback), Contacts (blocks of phone, messenger, web, and e-mail links from the API).
 - Station metadata, channel list, stream URLs, and contacts come from the open-source JSON API at
-  `https://m.svitle.org/v2`; the app renders whatever the API delivers and refreshes
-  now/next every 30 s in production.
+  `https://m.svitle.org/v2` (requests go to `/v2/<cap>/...`, `<cap>` being the client capability
+  version); the app renders whatever the API delivers and refreshes now/next every 30 s in
+  production.
 - Playback runs through react-native-track-player as a foreground media service with
   lock-screen and notification controls; HLS and plain streams.
 - Listening often happens on metered or weak mobile connections, abroad and in Ukraine. The

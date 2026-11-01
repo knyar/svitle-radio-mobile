@@ -100,13 +100,13 @@ function createRequestHandler({
       response.end(body)
     }
 
-    if (request.method === "GET" && requestPath === "/v2/preferences.svitle") {
+    if (request.method === "GET" && /^\/v2\/\d+\/preferences\.svitle$/.test(requestPath)) {
       finish(
         200,
         { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
         preferences,
       )
-    } else if (request.method === "GET" && requestPath === "/v2/status") {
+    } else if (request.method === "GET" && /^\/v2\/\d+\/status$/.test(requestPath)) {
       const origin = `http://${request.headers.host || "127.0.0.1"}`
       finish(
         200,

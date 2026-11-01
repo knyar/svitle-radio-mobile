@@ -17,21 +17,24 @@ function apiWith(response: any) {
 
 beforeEach(() => jest.spyOn(console, "log").mockImplementation())
 
-test("every request carries the client capability version", async () => {
-  const api = new Api()
-  api.setup()
-  const sent: any[] = []
-  api.apisauce.axiosInstance.defaults.adapter = async (config: any) => {
-    sent.push(config.headers)
-    return { status: 200, statusText: "OK", headers: {}, config, data: { stations: {} } }
-  }
-  await api.getPreferences()
-  await api.getStreamInfo()
-  expect(sent).toHaveLength(2)
-  for (const headers of sent) {
-    expect(headers.get("X-Svitle-API-Cap")).toBe(String(API_CAP))
-  }
-})
+test.each(["https://api.test/v2", "https://api.test/v2/"])(
+  "every request puts the client capability version in the path (base %s)",
+  async (url) => {
+    const api = new Api({ url, timeout: 1000 })
+    api.setup()
+    const sent: any[] = []
+    api.apisauce.axiosInstance.defaults.adapter = async (config: any) => {
+      sent.push(config)
+      return { status: 200, statusText: "OK", headers: {}, config, data: { stations: {} } }
+    }
+    await api.getPreferences()
+    await api.getStreamInfo()
+    expect(sent.map((config) => api.apisauce.axiosInstance.getUri(config))).toEqual([
+      `https://api.test/v2/${API_CAP}/preferences.svitle`,
+      `https://api.test/v2/${API_CAP}/status?recent_tracks=0`,
+    ])
+  },
+)
 
 test("getStreamInfo parses high and low streams", async () => {
   const api = apiWith({ ok: true, data: { stations: { svitle: station } } })

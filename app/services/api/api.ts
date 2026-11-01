@@ -6,9 +6,9 @@ import { StreamInfo } from "../../models/stream-info"
 import * as Types from "./api.types"
 
 /**
- * The client capability version, sent with every API request as `X-Svitle-API-Cap` so the API can
- * tell which response shapes the client understands. Increment it whenever client behaviour
- * changes in a way the API may rely on, and add a line here.
+ * The client capability version, sent as the path segment after the API base URL of every request
+ * (`<API_URL>/<API_CAP>/status`) so the API can tell which response shapes the client understands.
+ * Increment it whenever client behaviour changes in a way the API may rely on, and add a line here.
  *
  * 1: a station in the preferences response may omit `lang`.
  */
@@ -46,13 +46,12 @@ export class Api {
    */
   setup() {
     this.apisauce = create({
-      baseURL: this.config.url,
+      baseURL: `${this.config.url.replace(/\/+$/, "")}/${API_CAP}`,
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
         "Cache-Control": "no-cache",
         "User-Agent": UserAgent(),
-        "X-Svitle-API-Cap": String(API_CAP),
       },
     })
   }
