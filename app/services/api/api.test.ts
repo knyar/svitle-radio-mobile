@@ -1,4 +1,4 @@
-import { Api, convertStreamInfo } from "./api"
+import { API_CAP, Api, convertStreamInfo } from "./api"
 
 const station = {
   current_track: "Now",
@@ -29,7 +29,7 @@ test("every request carries the client capability version", async () => {
   await api.getStreamInfo()
   expect(sent).toHaveLength(2)
   for (const headers of sent) {
-    expect(headers.get("X-Svitle-API-Cap")).toBe("1")
+    expect(headers.get("X-Svitle-API-Cap")).toBe(String(API_CAP))
   }
 })
 
