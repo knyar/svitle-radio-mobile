@@ -17,7 +17,7 @@ import PlayButton from "../images/button.play.svg"
 import PauseButton from "../images/button.pause.svg"
 import { colors } from "../theme"
 import { UserAgent } from "../services/api"
-import { buttonState, isStreamInfoStale } from "../utils/player-state"
+import { buttonState, liveTrack } from "../utils/player-state"
 import { FLAVOR, Flavor } from "../config/flavor"
 import { REFRESH_INTERVAL } from "../config/env"
 import { LogoId } from "../models/station"
@@ -77,6 +77,14 @@ const NowPlaying: React.FunctionComponent<NowPlayingProps> = (props) => {
       <Text style={styles.npText}>{props.text}</Text>
     </View>
   )
+}
+
+// Shown in place of the current track when there is none, so the screen still says what is on.
+const StationName: React.FunctionComponent<{ name?: string }> = (props) => {
+  if (!props.name) {
+    return null
+  }
+  return <Text style={styles.npStation}>{props.name}</Text>
 }
 
 interface ButtonProps {
@@ -147,11 +155,16 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
   // Hide stream info older than twice the refresh interval. This covers a frozen process, offline
   // operation, and failed refreshes; iOS suspends JavaScript in the background anyway.
   const trackMetadata = useCallback((): TrackMetadataBase => {
-    const stale = isStreamInfoStale(streamsUpdatedRef.current, Date.now(), REFRESH_INTERVAL)
     return {
       artwork: artwork(mainStore.current_station?.logo ?? ""),
       artist: mainStore.current_station?.name ?? "",
-      title: stale ? "" : mainStore.current_track ?? "",
+      title:
+        liveTrack(
+          mainStore.current_track,
+          streamsUpdatedRef.current,
+          Date.now(),
+          REFRESH_INTERVAL,
+        ) ?? "",
     }
   }, [mainStore])
 
@@ -274,17 +287,27 @@ export const Player: React.FunctionComponent<PlayerProps> = (props) => {
     }
   }
 
-  return useObserver(() => (
-    <View style={styles.container}>
-      <ImageBackground style={styles.lines} source={BACKGROUND} resizeMode="stretch">
-        <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback} />
-      </ImageBackground>
-      <View style={styles.npContainer}>
-        <NowPlaying header="live_screen.player_now" text={mainStore.current_track} />
-        <NowPlaying header="live_screen.player_next" text={mainStore.next_track} />
+  return useObserver(() => {
+    // Re-evaluated on every render; the refresh tick re-renders, so stale info disappears on time.
+    const live = (track: string | undefined) =>
+      liveTrack(track, props.streams_updated, Date.now(), REFRESH_INTERVAL)
+    const currentTrack = live(mainStore.current_track)
+    return (
+      <View style={styles.container}>
+        <ImageBackground style={styles.lines} source={BACKGROUND} resizeMode="stretch">
+          <Button url={props.url} playbackState={playbackState.state} toggle={togglePlayback} />
+        </ImageBackground>
+        <View style={styles.npContainer}>
+          {currentTrack ? (
+            <NowPlaying header="live_screen.player_now" text={currentTrack} />
+          ) : (
+            <StationName name={mainStore.current_station?.name} />
+          )}
+          <NowPlaying header="live_screen.player_next" text={live(mainStore.next_track)} />
+        </View>
       </View>
-    </View>
-  ))
+    )
+  })
 }
 
 const styles = StyleSheet.create({
@@ -324,6 +347,11 @@ const styles = StyleSheet.create({
   },
   npText: {
     marginBottom: 10,
+    color: colors.text,
+  },
+  npStation: {
+    marginBottom: 10,
+    fontWeight: "bold",
     color: colors.text,
   },
 })
