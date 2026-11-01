@@ -6,6 +6,15 @@ import { StreamInfo } from "../../models/stream-info"
 import * as Types from "./api.types"
 
 /**
+ * The client capability version, sent with every API request as `X-Svitle-API-Cap` so the API can
+ * tell which response shapes the client understands. Increment it whenever client behaviour
+ * changes in a way the API may rely on, and add a line here.
+ *
+ * 1: a station in the preferences response may omit `lang`.
+ */
+export const API_CAP = 1
+
+/**
  * Manages all requests to the API.
  */
 export class Api {
@@ -43,6 +52,7 @@ export class Api {
         Accept: "application/json",
         "Cache-Control": "no-cache",
         "User-Agent": UserAgent(),
+        "X-Svitle-API-Cap": String(API_CAP),
       },
     })
   }
