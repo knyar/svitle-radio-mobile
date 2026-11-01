@@ -13,7 +13,7 @@ const clearPlayRequest = jest.fn()
 const testMainStore = {
   local: { station: "svitle", play_requested: false, clearPlayRequest },
   current_station: { id: "svitle", name: "Svitle", logo: "svitle", lang: "ua" },
-  current_track: "Song",
+  current_track: "Song" as string | undefined,
   next_track: "Next",
   updateStreamInfo: jest.fn(),
 }
@@ -593,5 +593,46 @@ test("the title blanks on the periodic tick when no refresh arrives", async () =
     0,
     expect.objectContaining({ title: "" }),
   )
+  jest.useRealTimers()
+})
+
+test("shows the station name instead of the current track when there is none", async () => {
+  testMainStore.current_track = undefined
+  await mountPlayer({ url: "https://radio", state: State.None })
+
+  expect(screen.getByText("Svitle")).toBeTruthy()
+  expect(screen.queryByText(i18n.t("live_screen.player_now"))).toBeNull()
+  expect(screen.getByText("Next")).toBeTruthy()
+})
+
+test("shows the current track, not the station name, when there is one", async () => {
+  await mountPlayer({ url: "https://radio", state: State.None })
+
+  expect(screen.getByText(i18n.t("live_screen.player_now"))).toBeTruthy()
+  expect(screen.getByText("Song")).toBeTruthy()
+  expect(screen.queryByText("Svitle")).toBeNull()
+})
+
+test("shows the station name and hides stale tracks when stream info is stale", async () => {
+  await mountPlayer({
+    url: "https://radio",
+    state: State.None,
+    streamsUpdated: Date.now() - 3 * REFRESH_INTERVAL,
+  })
+
+  expect(screen.getByText("Svitle")).toBeTruthy()
+  expect(screen.queryByText("Song")).toBeNull()
+  expect(screen.queryByText("Next")).toBeNull()
+})
+
+test("the station name replaces the tracks on the periodic tick when no refresh arrives", async () => {
+  await mountPlayer({ url: "https://radio", state: State.None, keepFakeTimers: true })
+  expect(screen.getByText("Song")).toBeTruthy()
+
+  await act(() => jest.advanceTimersByTimeAsync(3 * REFRESH_INTERVAL))
+
+  expect(screen.getByText("Svitle")).toBeTruthy()
+  expect(screen.queryByText("Song")).toBeNull()
+  expect(screen.queryByText("Next")).toBeNull()
   jest.useRealTimers()
 })

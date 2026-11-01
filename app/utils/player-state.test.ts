@@ -1,5 +1,5 @@
 import { State } from "react-native-track-player"
-import { buttonState, isStreamInfoStale } from "./player-state"
+import { buttonState, isStreamInfoStale, liveTrack } from "./player-state"
 
 test.each([
   ["fresh", 90, 100, 10, false],
@@ -8,6 +8,15 @@ test.each([
   ["never fetched", 0, 100, 10, true],
 ])("stream info is %s", (_case, updatedAt, now, refreshInterval, expected) => {
   expect(isStreamInfoStale(updatedAt, now, refreshInterval)).toBe(expected)
+})
+
+test.each([
+  ["a fresh track", "Song", 90, "Song"],
+  ["a stale track", "Song", 79, undefined],
+  ["no track", undefined, 90, undefined],
+  ["an empty track", "", 90, undefined],
+])("liveTrack returns %s as expected", (_case, track, updatedAt, expected) => {
+  expect(liveTrack(track, updatedAt, 100, 10)).toBe(expected)
 })
 
 test.each([
